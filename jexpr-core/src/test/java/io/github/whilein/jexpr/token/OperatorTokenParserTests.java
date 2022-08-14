@@ -47,7 +47,7 @@ class OperatorTokenParserTests extends AbstractTokenParserTests {
     }
 
     private void testOperator(final String operator, final Class<? extends Operator> type) {
-        update(operator);
+        tokenParser.submit(operator);
 
         val tokens = tokenVisitor.getTokens();
         assertEquals(1, tokens.size());

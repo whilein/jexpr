@@ -33,37 +33,37 @@ class StringTokenParserTests extends AbstractTokenParserTests {
 
     @Test
     void parseDoubleQuotedString() {
-        update("\"Hello world!\"");
+        tokenParser.submit("\"Hello world!\"");
         assertTokens("Hello world!");
     }
 
     @Test
     void parseSingleQuotedString() {
-        update("'Hello world!'");
+        tokenParser.submit("'Hello world!'");
         assertTokens("Hello world!");
     }
 
     @Test
     void parseEscapedDoubleQuoteString() {
-        update("\"\\\"\"");
+        tokenParser.submit("\"\\\"\"");
         assertTokens("\"");
     }
 
     @Test
     void parseEscapedSingleQuoteString() {
-        update("'\\''");
+        tokenParser.submit("'\\''");
         assertTokens("'");
     }
 
     @Test
     void parseTabString() {
-        update("\"\\t\"");
+        tokenParser.submit("\"\\t\"");
         assertTokens("\t");
     }
 
 //    @Test
 //    void testUnicode() {
-//        update("\"\\u00a7\"");
+//        tokenParser.submit("\"\\u00a7\"");
 //        assertTokens("§");
 //    }
 
@@ -71,19 +71,19 @@ class StringTokenParserTests extends AbstractTokenParserTests {
 //    void testUnicodeEmoji() {
 //        System.out.println(Arrays.toString("\uD83E\uDD21".getBytes()));
 //
-//        update("\"\\uD83E\\uDD21\"");
+//        tokenParser.submit("\"\\uD83E\\uDD21\"");
 //        assertTokens("\uD83E\uDD21");
 //    }
 
     @Test
     void parseNewLineString() {
-        update("\"\\n\"");
+        tokenParser.submit("\"\\n\"");
         assertTokens("\n");
     }
 
     @Test
     void parseCarriageReturnString() {
-        update("\"\\r\"");
+        tokenParser.submit("\"\\r\"");
         assertTokens("\r");
     }
 

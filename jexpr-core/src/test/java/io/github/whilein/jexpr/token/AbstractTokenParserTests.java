@@ -16,7 +16,6 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.util.TokenParserUtils;
 import org.junit.jupiter.api.AfterEach;
 
 import java.util.Arrays;
@@ -41,7 +40,4 @@ abstract class AbstractTokenParserTests {
         assertEquals(Arrays.asList(tokens), tokenVisitor.getTokens());
     }
 
-    protected int update(final String text) {
-        return TokenParserUtils.update(tokenParser, text);
-    }
 }

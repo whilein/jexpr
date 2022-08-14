@@ -36,7 +36,7 @@ class SequenceTokenParserTests extends AbstractTokenParserTests {
 
     @Test
     void testSequence() {
-        update("1 + 2");
+        tokenParser.submit("1 + 2");
 
         assertTokens(
                 '(',
@@ -47,7 +47,7 @@ class SequenceTokenParserTests extends AbstractTokenParserTests {
 
     @Test
     void testComplexSequence() {
-        update("0xFaL / .5 + '23\\n' ^ (var >> 2 - (-1))");
+        tokenParser.submit("0xFaL / .5 + '23\\n' ^ (var >> 2 - (-1))");
 
         assertTokens(
                 '(',

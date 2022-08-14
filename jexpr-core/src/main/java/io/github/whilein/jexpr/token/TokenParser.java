@@ -17,6 +17,8 @@
 package io.github.whilein.jexpr.token;
 
 import io.github.whilein.jexpr.SyntaxException;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
@@ -26,6 +28,28 @@ public interface TokenParser {
     boolean shouldStayActive(int ch);
 
     boolean shouldActivate(int ch);
+
+    default int submit(final @NotNull String value) throws SyntaxException {
+        if (!shouldActivate(value.charAt(0))) {
+            throw new IllegalStateException(this + " cannot be activated at " + value.charAt(0));
+        }
+
+        try {
+            for (int i = 0, j = value.length(); i < j; i++) {
+                val ch = value.charAt(i);
+
+                if (!shouldStayActive(ch)) {
+                    return j - i - 1;
+                }
+
+                update(ch);
+            }
+
+            return 0;
+        } finally {
+            doFinal();
+        }
+    }
 
     /**
      * Ввести какой-то символ в парсер
