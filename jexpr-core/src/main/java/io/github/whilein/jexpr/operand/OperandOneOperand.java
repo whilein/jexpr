@@ -65,33 +65,33 @@ public final class OperandOneOperand implements OperandDynamic {
     }
 
     @Override
-    public @NotNull Operand applyToInt(int number, @NotNull Operator operator) {
-        return null;
+    public @NotNull Operand applyToInt(final int number, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(OperandInteger.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToLong(long number, @NotNull Operator operator) {
-        return null;
+    public @NotNull Operand applyToLong(final long number, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(OperandLong.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToDouble(double number, @NotNull Operator operator) {
-        return null;
+    public @NotNull Operand applyToDouble(final double number, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(OperandDouble.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToFloat(float number, @NotNull Operator operator) {
-        return null;
+    public @NotNull Operand applyToFloat(final float number, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(OperandFloat.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToString(@NotNull String value, @NotNull Operator operator) {
-        return null;
+    public @NotNull Operand applyToString(final @NotNull String value, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(OperandString.valueOf(value), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToBoolean(boolean value, @NotNull Operator operator) {
-        return null;
+    public @NotNull Operand applyToBoolean(final boolean value, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(OperandBoolean.valueOf(value), this, operator);
     }
 
     @Override
