@@ -59,12 +59,12 @@ public final class OperandDouble extends OperandNumber {
     }
 
     @Override
-    public @NotNull Operand applyToDouble(final double number, @NotNull final Operator operator) {
+    public @NotNull Operand applyToDouble(final double number, final @NotNull Operator operator) {
         return operator.apply(number, value);
     }
 
     @Override
-    public @NotNull Operand applyToFloat(final float number, @NotNull final Operator operator) {
+    public @NotNull Operand applyToFloat(final float number, final @NotNull Operator operator) {
         return operator.apply(number, value);
     }
 
@@ -74,7 +74,7 @@ public final class OperandDouble extends OperandNumber {
     }
 
     @Override
-    public @NotNull Operand applyToBoolean(final boolean value, @NotNull final Operator operator) {
+    public @NotNull Operand applyToBoolean(final boolean value, final @NotNull Operator operator) {
         return operator.apply(value, this.value);
     }
 

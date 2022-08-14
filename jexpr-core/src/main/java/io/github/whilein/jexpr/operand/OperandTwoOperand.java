@@ -67,32 +67,32 @@ public final class OperandTwoOperand implements OperandDynamic {
     }
 
     @Override
-    public @NotNull Operand applyToInt(final int number, @NotNull final Operator operator) {
+    public @NotNull Operand applyToInt(final int number, final @NotNull Operator operator) {
         return OperandTwoOperand.valueOf(OperandInteger.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToLong(final long number, @NotNull final Operator operator) {
+    public @NotNull Operand applyToLong(final long number, final @NotNull Operator operator) {
         return OperandTwoOperand.valueOf(OperandLong.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToDouble(final double number, @NotNull final Operator operator) {
+    public @NotNull Operand applyToDouble(final double number, final @NotNull Operator operator) {
         return OperandTwoOperand.valueOf(OperandDouble.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToFloat(final float number, @NotNull final Operator operator) {
+    public @NotNull Operand applyToFloat(final float number, final @NotNull Operator operator) {
         return OperandTwoOperand.valueOf(OperandFloat.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToString(@NotNull final String value, @NotNull final Operator operator) {
+    public @NotNull Operand applyToString(final @NotNull String value, final @NotNull Operator operator) {
         return OperandTwoOperand.valueOf(OperandString.valueOf(value), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToBoolean(final boolean value, @NotNull final Operator operator) {
+    public @NotNull Operand applyToBoolean(final boolean value, final @NotNull Operator operator) {
         return OperandTwoOperand.valueOf(OperandBoolean.valueOf(value), this, operator);
     }
 
@@ -122,7 +122,7 @@ public final class OperandTwoOperand implements OperandDynamic {
     }
 
     @Override
-    public @NotNull Operand apply(@NotNull final Operator operator) {
+    public @NotNull Operand apply(final @NotNull Operator operator) {
         return OperandOneOperand.valueOf(this, operator);
     }
 
