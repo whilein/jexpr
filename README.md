@@ -13,7 +13,7 @@
 ```java
 class Example {
     @Test
-    public void sumTwoNumbers() {
+    public void testArithmeticEvaluation() {
         ExpressionParser expressionParser = DefaultExpressionParser.create();
         TokenParser tokenParser = SequenceTokenParser.createDefault(expressionParser);
 
@@ -24,6 +24,37 @@ class Example {
 }
 ```
 
+> Выполнение арифметического выражения с неизвестными числами
+
+```java
+class Example {
+    @Test
+    public void testArithmeticEvaluation() {
+        ExpressionParser expressionParser = DefaultExpressionParser.create();
+        TokenParser tokenParser = SequenceTokenParser.createDefault(expressionParser);
+
+        TokenParserUtils.update(tokenParser, "x + y * z");
+
+        Operand dynamicOperand = expressionParser.getResult();
+
+        Operand solvedOperand = dynamicOperand.solve(value -> {
+            switch (value) {
+                case "x":
+                    return 1;
+                case "y":
+                    return 2;
+                case "z":
+                    return 3;
+                default:
+                    throw new IllegalArgumentException(value);
+            }
+        });
+
+        assertEquals(7, solvedOperand.getValue());
+    }
+}
+```
 
 ## Лицензия
+
 Код под лицензией [Apache License 2.0](LICENSE)
