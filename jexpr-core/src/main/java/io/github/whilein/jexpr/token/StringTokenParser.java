@@ -107,6 +107,9 @@ public final class StringTokenParser extends AbstractTokenParser {
 
         val unicodeCharacter = (char) unicode;
 
+        unicode = 0;
+        unicodeRadix = 0;
+
         if (Character.isHighSurrogate(unicodeCharacter)) {
             highSurrogate = unicodeCharacter;
             return;
