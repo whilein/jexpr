@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author whilein
  */
-class ExpressionParserTests {
+final class ExpressionParserTests {
 
     ExpressionParser expressionParser;
 
@@ -102,6 +102,8 @@ class ExpressionParserTests {
 
         //noinspection ConstantConditions
         assertEquals((x > y) || z != 1, solvedResult.getValue());
+
+        // laziness check
         assertEquals(Arrays.asList("x", "y"), map.getHistory());
     }
 

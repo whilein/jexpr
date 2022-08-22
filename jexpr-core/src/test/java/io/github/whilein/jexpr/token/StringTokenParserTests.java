@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * @author whilein
  */
-class StringTokenParserTests extends AbstractTokenParserTests {
+final class StringTokenParserTests extends AbstractTokenParserTests {
 
 
     @BeforeEach

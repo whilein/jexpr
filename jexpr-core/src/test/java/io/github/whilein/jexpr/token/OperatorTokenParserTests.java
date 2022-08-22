@@ -16,20 +16,7 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operator.Operator;
 import io.github.whilein.jexpr.operator.OperatorRegistry;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseAnd;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseComplement;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseLeftShift;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseOr;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseRightShift;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseUnsignedRightShift;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseXor;
-import io.github.whilein.jexpr.operator.type.OperatorDivide;
-import io.github.whilein.jexpr.operator.type.OperatorMinus;
-import io.github.whilein.jexpr.operator.type.OperatorMultiply;
-import io.github.whilein.jexpr.operator.type.OperatorPlus;
-import io.github.whilein.jexpr.operator.type.OperatorRemainder;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,14 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author whilein
  */
-class OperatorTokenParserTests extends AbstractTokenParserTests {
+final class OperatorTokenParserTests extends AbstractTokenParserTests {
 
     @BeforeEach
     void setup() {
         tokenParser = new OperatorTokenParser(tokenVisitor, OperatorRegistry.createDefault());
     }
 
-    private void testOperator(final String operator, final Class<? extends Operator> type) {
+    private void testOperator(final String operator, final String type) {
         tokenParser.submit(operator);
 
         val tokens = tokenVisitor.getTokens();
@@ -56,64 +43,107 @@ class OperatorTokenParserTests extends AbstractTokenParserTests {
 
     @Test
     void testBitwiseComplement() {
-        testOperator("~", OperatorBitwiseComplement.class);
+        testOperator("~", "BITWISE_COMPLEMENT");
+    }
+
+    @Test
+    void testAnd() {
+        testOperator("&&", "AND");
+    }
+
+    @Test
+    void testOr() {
+        testOperator("||", "OR");
+    }
+
+    @Test
+    void testNegate() {
+        testOperator("!", "NEGATE");
+    }
+
+    @Test
+    void testLess() {
+        testOperator("<=", "LESS");
+    }
+
+    @Test
+    void testGreater() {
+        testOperator(">=", "GREATER");
+    }
+
+    @Test
+    void testStrictLess() {
+        testOperator("<", "STRICT_LESS");
+    }
+
+    @Test
+    void testStrictGreater() {
+        testOperator(">", "STRICT_GREATER");
+    }
+
+    @Test
+    void testEquals() {
+        testOperator("==", "EQUALS");
+    }
+
+    @Test
+    void testNotEquals() {
+        testOperator("!=", "NOT_EQUALS");
     }
 
     @Test
     void testBitwiseXor() {
-        testOperator("^", OperatorBitwiseXor.class);
+        testOperator("^", "BITWISE_XOR");
     }
-
 
     @Test
     void testPlus() {
-        testOperator("+", OperatorPlus.class);
+        testOperator("+", "PLUS");
     }
 
     @Test
     void testMinus() {
-        testOperator("-", OperatorMinus.class);
+        testOperator("-", "MINUS");
     }
 
     @Test
     void testDivide() {
-        testOperator("/", OperatorDivide.class);
+        testOperator("/", "DIVIDE");
     }
 
     @Test
     void testMultiply() {
-        testOperator("*", OperatorMultiply.class);
+        testOperator("*", "MULTIPLY");
     }
 
     @Test
     void testRemainder() {
-        testOperator("%", OperatorRemainder.class);
+        testOperator("%", "REMAINDER");
     }
 
     @Test
     void testBitwiseAnd() {
-        testOperator("&", OperatorBitwiseAnd.class);
+        testOperator("&", "BITWISE_AND");
     }
 
     @Test
     void testBitwiseOr() {
-        testOperator("|", OperatorBitwiseOr.class);
+        testOperator("|", "BITWISE_OR");
     }
 
     @Test
     void testBitwiseLeftShift() {
-        testOperator("<<", OperatorBitwiseLeftShift.class);
+        testOperator("<<", "BITWISE_LEFT_SHIFT");
     }
 
     @Test
     void testBitwiseRightShift() {
-        testOperator(">>", OperatorBitwiseRightShift.class);
+        testOperator(">>", "BITWISE_RIGHT_SHIFT");
     }
 
     @Test
     void testBitwiseUnsignedRightShift() {
-        testOperator(">>>", OperatorBitwiseUnsignedRightShift.class);
+        testOperator(">>>", "BITWISE_UNSIGNED_RIGHT_SHIFT");
     }
-
 
 }

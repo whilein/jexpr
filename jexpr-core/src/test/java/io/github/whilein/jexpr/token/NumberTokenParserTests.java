@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author whilein
  */
-class NumberTokenParserTests extends AbstractTokenParserTests {
-    
+final class NumberTokenParserTests extends AbstractTokenParserTests {
+
     @BeforeEach
     void setup() {
         tokenParser = new NumberTokenParser(tokenVisitor, new ByteArrayOutput());

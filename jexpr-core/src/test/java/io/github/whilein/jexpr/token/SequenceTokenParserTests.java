@@ -16,11 +16,6 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseRightShift;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseXor;
-import io.github.whilein.jexpr.operator.type.OperatorDivide;
-import io.github.whilein.jexpr.operator.type.OperatorMinus;
-import io.github.whilein.jexpr.operator.type.OperatorPlus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +35,7 @@ class SequenceTokenParserTests extends AbstractTokenParserTests {
 
         assertTokens(
                 '(',
-                1, OperatorPlus.class, 2,
+                1, "PLUS", 2,
                 ')'
         );
     }
@@ -51,8 +46,8 @@ class SequenceTokenParserTests extends AbstractTokenParserTests {
 
         assertTokens(
                 '(',
-                0xFaL, OperatorDivide.class, .5, OperatorPlus.class, "23\n", OperatorBitwiseXor.class,
-                '(', "var", OperatorBitwiseRightShift.class, 2, OperatorMinus.class, '(', OperatorMinus.class, 1, ')', ')',
+                0xFaL, "DIVIDE", .5, "PLUS", "23\n", "BITWISE_XOR",
+                '(', "var", "BITWISE_RIGHT_SHIFT", 2, "MINUS", '(', "MINUS", 1, ')', ')',
                 ')'
         );
     }

@@ -46,7 +46,7 @@ public final class StoringTokenVisitor implements TokenVisitor {
 
     @Override
     public void visitOperator(final @NotNull Operator operator) {
-        tokens.add(operator.getClass());
+        tokens.add(operator.toString());
     }
 
     @Override

@@ -28,6 +28,7 @@ import io.github.whilein.jexpr.operator.Operator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,25 +36,26 @@ import org.jetbrains.annotations.NotNull;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandOneOperand implements OperandUndefined {
+public final class OperandUndefinedSequence implements OperandUndefined {
 
-    Operand value;
+    Operand left, right;
     Operator operator;
 
     @Override
     public String toString() {
-        return operator.getValue() + value;
+        return left + " " + operator.getValue() + " " + right;
     }
 
     public static @NotNull Operand valueOf(
-            final @NotNull Operand value,
+            final @NotNull Operand left,
+            final @NotNull Operand right,
             final @NotNull Operator operator
     ) {
-        if (value.isDefined()) {
-            throw new IllegalStateException("Cannot create undefined expression from defined operand");
+        if (left.isDefined() && right.isDefined()) {
+            throw new IllegalStateException("Cannot create undefined expression from defined operands");
         }
 
-        return new OperandOneOperand(value, operator);
+        return new OperandUndefinedSequence(left, right, operator);
     }
 
     @Override
@@ -73,37 +75,37 @@ public final class OperandOneOperand implements OperandUndefined {
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(OperandInteger.valueOf(number), this, operator);
+        return OperandUndefinedSequence.valueOf(OperandInteger.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(OperandLong.valueOf(number), this, operator);
+        return OperandUndefinedSequence.valueOf(OperandLong.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(OperandDouble.valueOf(number), this, operator);
+        return OperandUndefinedSequence.valueOf(OperandDouble.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(OperandFloat.valueOf(number), this, operator);
+        return OperandUndefinedSequence.valueOf(OperandFloat.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(OperandString.valueOf(value), this, operator);
+        return OperandUndefinedSequence.valueOf(OperandString.valueOf(value), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(OperandBoolean.valueOf(value), this, operator);
+        return OperandUndefinedSequence.valueOf(OperandBoolean.valueOf(value), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(undefined, this, operator);
+        return OperandUndefinedSequence.valueOf(undefined, this, operator);
     }
 
     @Override
@@ -128,11 +130,16 @@ public final class OperandOneOperand implements OperandUndefined {
 
     @Override
     public @NotNull Operand apply(final @NotNull Operator operator) {
-        return OperandOneOperand.valueOf(this, operator);
+        return OperandUndefinedMember.valueOf(this, operator);
     }
 
     @Override
     public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
-        return value.solve(resolver).apply(operator);
+        val solvedLeft = left.solve(resolver);
+
+        return !solvedLeft.isPredicable(operator)
+                ? solvedLeft.apply(right.solve(resolver), operator)
+                : solvedLeft.apply(operator);
     }
+
 }
