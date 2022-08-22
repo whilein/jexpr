@@ -14,23 +14,24 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.defined;
 
-import io.github.whilein.jexpr.DynamicResolver;
+import io.github.whilein.jexpr.UndefinedResolver;
+import io.github.whilein.jexpr.operand.Operand;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface OperandStatic extends Operand {
+public interface OperandDefined extends Operand {
 
     @Override
-    default boolean isDynamic() {
-        return false;
+    default boolean isDefined() {
+        return true;
     }
 
     @Override
-    default @NotNull Operand solve(final @NotNull DynamicResolver resolver) {
+    default @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
         return this;
     }
 

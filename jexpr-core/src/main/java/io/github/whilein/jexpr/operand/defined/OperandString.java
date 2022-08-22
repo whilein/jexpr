@@ -14,79 +14,97 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.defined;
 
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.OperandDelegate;
+import io.github.whilein.jexpr.operand.undefined.OperandTwoOperand;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
 import io.github.whilein.jexpr.operator.Operator;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class OperandFloat extends OperandNumber {
+public final class OperandString extends OperandDelegate<String> implements OperandDefined {
 
-    float value;
-
-    private OperandFloat(final float value) {
-        super(value);
-
-        this.value = value;
+    private OperandString(final String delegatedValue) {
+        super(delegatedValue);
     }
 
-    public static @NotNull Operand valueOf(final float value) {
-        return new OperandFloat(value);
+    public static @NotNull Operand valueOf(final String value) {
+        return new OperandString(value);
     }
 
     @Override
     public boolean isPredicable(final @NotNull Operator operator) {
-        return operator.isPredictable(value);
+        return operator.isPredictable(delegatedValue);
+    }
+
+    @Override
+    public @NotNull Number toNumber() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
-        return operand.applyToFloat(value, operator);
+        return operand.applyToString(delegatedValue, operator);
     }
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull Operator operator) {
-        return operator.apply(number, value);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull Operator operator) {
-        return operator.apply(number, value);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull Operator operator) {
-        return operator.apply(number, value);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull Operator operator) {
-        return operator.apply(number, value);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull Operator operator) {
-        return operator.apply(value, this.value);
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull Operator operator) {
-        return operator.apply(value, this.value);
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToDynamic(final @NotNull OperandDynamic dynamic, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(dynamic, this, operator);
+    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(undefined, this, operator);
     }
+
+    @Override
+    public boolean isNumber() {
+        return false;
+    }
+
+    @Override
+    public boolean isString() {
+        return true;
+    }
+
+    @Override
+    public boolean isBoolean() {
+        return false;
+    }
+
 
     @Override
     public @NotNull Operand apply(final @NotNull Operator operator) {
-        return operator.apply(value);
+        return operator.apply(delegatedValue);
     }
 
 }

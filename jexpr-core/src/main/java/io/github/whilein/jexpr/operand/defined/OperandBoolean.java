@@ -14,15 +14,19 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.defined;
 
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.OperandDelegate;
+import io.github.whilein.jexpr.operand.undefined.OperandTwoOperand;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
 import io.github.whilein.jexpr.operator.Operator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperandBoolean extends OperandDelegate<Boolean> implements OperandStatic {
+public final class OperandBoolean extends OperandDelegate<Boolean> implements OperandDefined {
 
     boolean value;
 
@@ -84,8 +88,8 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
     }
 
     @Override
-    public @NotNull Operand applyToDynamic(final @NotNull OperandDynamic dynamic, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(dynamic, this, operator);
+    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(undefined, this, operator);
     }
 
     @Override

@@ -16,8 +16,8 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.operand.OperandBoolean;
-import io.github.whilein.jexpr.operand.OperandDouble;
+import io.github.whilein.jexpr.operand.defined.OperandBoolean;
+import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operator.OperatorException;
 import io.github.whilein.jexpr.token.SequenceTokenParser;
 import io.github.whilein.jexpr.token.TokenParser;
@@ -29,7 +29,6 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author whilein
@@ -47,23 +46,7 @@ class ExpressionParserTests {
     }
 
     protected int update(final String text) {
-        assertTrue(tokenParser.shouldActivate(text.charAt(0)));
-
-        try {
-            for (int i = 0, j = text.length(); i < j; i++) {
-                val ch = text.charAt(i);
-
-                if (!tokenParser.shouldStayActive(ch)) {
-                    return j - i - 1;
-                }
-
-                tokenParser.update(text.charAt(i));
-            }
-
-            return 0;
-        } finally {
-            tokenParser.doFinal();
-        }
+        return tokenParser.submit(text);
     }
 
     @Test
@@ -87,7 +70,7 @@ class ExpressionParserTests {
     }
 
     @Test
-    void testLogicalStaticExpression() {
+    void testLogicalDefinedExpression() {
         assertEquals(0, update("(3 > 8) || (6 > 8) && !false"));
 
         val result = expressionParser.getResult();
@@ -102,7 +85,7 @@ class ExpressionParserTests {
     }
 
     @Test
-    void testDynamicEvaluation() {
+    void testUndefinedEvaluation() {
         val x = 3;
         val y = 2;
         val z = 1;
@@ -123,7 +106,7 @@ class ExpressionParserTests {
     }
 
     @Test
-    void testStaticEvaluation() {
+    void testDefinedEvaluation() {
         assertEquals(0, update("(0xFaL ^ -~0b10) + 009_9.9_9d)"));
 
         val result = expressionParser.getResult();

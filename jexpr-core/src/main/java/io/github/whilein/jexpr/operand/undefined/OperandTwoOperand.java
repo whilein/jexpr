@@ -14,9 +14,16 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.undefined;
 
-import io.github.whilein.jexpr.DynamicResolver;
+import io.github.whilein.jexpr.UndefinedResolver;
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.defined.OperandBoolean;
+import io.github.whilein.jexpr.operand.defined.OperandDouble;
+import io.github.whilein.jexpr.operand.defined.OperandFloat;
+import io.github.whilein.jexpr.operand.defined.OperandInteger;
+import io.github.whilein.jexpr.operand.defined.OperandLong;
+import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operator.Operator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandTwoOperand implements OperandDynamic {
+public final class OperandTwoOperand implements OperandUndefined {
 
     Operand left, right;
     Operator operator;
@@ -44,8 +51,8 @@ public final class OperandTwoOperand implements OperandDynamic {
             final @NotNull Operand right,
             final @NotNull Operator operator
     ) {
-        if (!left.isDynamic() && !right.isDynamic()) {
-            throw new IllegalStateException("Cannot create dynamic expression using static operands only");
+        if (left.isDefined() && right.isDefined()) {
+            throw new IllegalStateException("Cannot create undefined expression from defined operands");
         }
 
         return new OperandTwoOperand(left, right, operator);
@@ -63,7 +70,7 @@ public final class OperandTwoOperand implements OperandDynamic {
 
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
-        return operand.applyToDynamic(this, operator);
+        return operand.applyToUndefined(this, operator);
     }
 
     @Override
@@ -97,8 +104,8 @@ public final class OperandTwoOperand implements OperandDynamic {
     }
 
     @Override
-    public @NotNull Operand applyToDynamic(final @NotNull OperandDynamic dynamic, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(dynamic, this, operator);
+    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(undefined, this, operator);
     }
 
     @Override
@@ -127,7 +134,7 @@ public final class OperandTwoOperand implements OperandDynamic {
     }
 
     @Override
-    public @NotNull Operand solve(final @NotNull DynamicResolver resolver) {
+    public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
         val solvedLeft = left.solve(resolver);
 
         return !solvedLeft.isPredicable(operator)

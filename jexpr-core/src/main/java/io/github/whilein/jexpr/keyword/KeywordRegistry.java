@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.keyword;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.OperandBoolean;
+import io.github.whilein.jexpr.operand.defined.OperandBoolean;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

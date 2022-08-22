@@ -17,10 +17,10 @@
 package io.github.whilein.jexpr.operator.type;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.OperandDouble;
-import io.github.whilein.jexpr.operand.OperandFloat;
-import io.github.whilein.jexpr.operand.OperandInteger;
-import io.github.whilein.jexpr.operand.OperandLong;
+import io.github.whilein.jexpr.operand.defined.OperandDouble;
+import io.github.whilein.jexpr.operand.defined.OperandFloat;
+import io.github.whilein.jexpr.operand.defined.OperandInteger;
+import io.github.whilein.jexpr.operand.defined.OperandLong;
 import io.github.whilein.jexpr.operator.AbstractOperator;
 import org.jetbrains.annotations.NotNull;
 

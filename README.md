@@ -35,7 +35,7 @@ class Example {
         TokenParser tokenParser = SequenceTokenParser.createDefault(expressionParser);
         tokenParser.submit("x + y * z");
 
-        // Переменные запрашиваются через DynamicResolver,
+        // Переменные запрашиваются через UndefinedResolver,
         // реализацией которого может быть всё что угодно.
         //
         // В данном примере, для простоты демонстрации,
@@ -47,8 +47,8 @@ class Example {
                 "z", OperandInteger.valueOf(3)
         );
 
-        Operand dynamicOperand = expressionParser.getResult();
-        Operand solvedOperand = dynamicOperand.solve(variables::get);
+        Operand undefinedOperand = expressionParser.getResult();
+        Operand solvedOperand = undefinedOperand.solve(variables::get);
 
         assertEquals(7, solvedOperand.getValue());
     }

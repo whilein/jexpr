@@ -14,36 +14,17 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.undefined;
 
-import org.jetbrains.annotations.NotNull;
+import io.github.whilein.jexpr.operand.Operand;
 
 /**
  * @author whilein
  */
-public abstract class OperandNumber extends OperandDelegate<Number> implements OperandStatic {
-
-    protected OperandNumber(final Number number) {
-        super(number);
-    }
+public interface OperandUndefined extends Operand {
 
     @Override
-    public @NotNull Number toNumber() {
-        return delegatedValue;
-    }
-
-    @Override
-    public boolean isNumber() {
-        return true;
-    }
-
-    @Override
-    public boolean isString() {
-        return false;
-    }
-
-    @Override
-    public boolean isBoolean() {
+    default boolean isDefined() {
         return false;
     }
 

@@ -14,16 +14,38 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.defined;
+
+import io.github.whilein.jexpr.operand.OperandDelegate;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface OperandDynamic extends Operand {
+public abstract class OperandNumber extends OperandDelegate<Number> implements OperandDefined {
+
+    protected OperandNumber(final Number number) {
+        super(number);
+    }
 
     @Override
-    default boolean isDynamic() {
+    public @NotNull Number toNumber() {
+        return delegatedValue;
+    }
+
+    @Override
+    public boolean isNumber() {
         return true;
+    }
+
+    @Override
+    public boolean isString() {
+        return false;
+    }
+
+    @Override
+    public boolean isBoolean() {
+        return false;
     }
 
 }

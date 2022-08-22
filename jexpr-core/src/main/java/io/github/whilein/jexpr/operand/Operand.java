@@ -16,7 +16,8 @@
 
 package io.github.whilein.jexpr.operand;
 
-import io.github.whilein.jexpr.DynamicResolver;
+import io.github.whilein.jexpr.UndefinedResolver;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
 import io.github.whilein.jexpr.operator.Operator;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,7 @@ public interface Operand {
 
     @NotNull Operand applyToBoolean(boolean value, @NotNull Operator operator);
 
-    @NotNull Operand applyToDynamic(@NotNull OperandDynamic dynamic, @NotNull Operator operator);
+    @NotNull Operand applyToUndefined(@NotNull OperandUndefined undefined, @NotNull Operator operator);
 
     //@NotNull Operand applyToNull(@NotNull Operator operator);
 
@@ -55,10 +56,10 @@ public interface Operand {
 
     boolean isBoolean();
 
-    boolean isDynamic();
+    boolean isDefined();
 
     @NotNull Operand apply(@NotNull Operator operator);
 
-    @NotNull Operand solve(@NotNull DynamicResolver resolver);
+    @NotNull Operand solve(@NotNull UndefinedResolver resolver);
 
 }

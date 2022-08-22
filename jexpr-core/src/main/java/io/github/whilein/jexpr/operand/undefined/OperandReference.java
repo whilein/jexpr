@@ -14,16 +14,24 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.undefined;
 
-import io.github.whilein.jexpr.DynamicResolver;
+import io.github.whilein.jexpr.UndefinedResolver;
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.OperandDelegate;
+import io.github.whilein.jexpr.operand.defined.OperandBoolean;
+import io.github.whilein.jexpr.operand.defined.OperandDouble;
+import io.github.whilein.jexpr.operand.defined.OperandFloat;
+import io.github.whilein.jexpr.operand.defined.OperandInteger;
+import io.github.whilein.jexpr.operand.defined.OperandLong;
+import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operator.Operator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperandReference extends OperandDelegate<String> implements OperandDynamic {
+public final class OperandReference extends OperandDelegate<String> implements OperandUndefined {
 
     private OperandReference(final String value) {
         super(value);
@@ -45,7 +53,7 @@ public final class OperandReference extends OperandDelegate<String> implements O
 
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
-        return operand.applyToDynamic(this, operator);
+        return operand.applyToUndefined(this, operator);
     }
 
     @Override
@@ -79,8 +87,8 @@ public final class OperandReference extends OperandDelegate<String> implements O
     }
 
     @Override
-    public @NotNull Operand applyToDynamic(final @NotNull OperandDynamic dynamic, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(dynamic, this, operator);
+    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(undefined, this, operator);
     }
 
     @Override
@@ -104,7 +112,7 @@ public final class OperandReference extends OperandDelegate<String> implements O
     }
 
     @Override
-    public @NotNull Operand solve(final @NotNull DynamicResolver resolver) {
+    public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
         return resolver.resolve(delegatedValue);
     }
 

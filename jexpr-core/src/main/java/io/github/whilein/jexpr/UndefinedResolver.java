@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author whilein
  */
-public interface DynamicResolver {
+public interface UndefinedResolver {
 
     @NotNull Operand resolve(@NotNull String reference);
 

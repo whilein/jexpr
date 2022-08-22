@@ -14,8 +14,11 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.defined;
 
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.undefined.OperandTwoOperand;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
 import io.github.whilein.jexpr.operator.Operator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -25,18 +28,26 @@ import org.jetbrains.annotations.NotNull;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class OperandDouble extends OperandNumber {
+public final class OperandInteger extends OperandNumber {
 
-    double value;
+    int value;
 
-    private OperandDouble(final double value) {
+    private OperandInteger(final int value) {
         super(value);
 
         this.value = value;
     }
 
-    public static @NotNull Operand valueOf(final double value) {
-        return new OperandDouble(value);
+    private static final OperandInteger[] CACHE = new OperandInteger[256];
+
+    static {
+        for (int i = -128; i <= 127; i++) {
+            CACHE[i + 128] = new OperandInteger(i);
+        }
+    }
+
+    public static @NotNull Operand valueOf(final int value) {
+        return value >= -128 && value <= 127 ? CACHE[value + 128] : new OperandInteger(value);
     }
 
     @Override
@@ -44,10 +55,12 @@ public final class OperandDouble extends OperandNumber {
         return operator.isPredictable(value);
     }
 
+
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
-        return operand.applyToDouble(value, operator);
+        return operand.applyToInt(value, operator);
     }
+
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull Operator operator) {
         return operator.apply(number, value);
@@ -79,12 +92,13 @@ public final class OperandDouble extends OperandNumber {
     }
 
     @Override
-    public @NotNull Operand applyToDynamic(final @NotNull OperandDynamic dynamic, final @NotNull Operator operator) {
-        return OperandTwoOperand.valueOf(dynamic, this, operator);
+    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
+        return OperandTwoOperand.valueOf(undefined, this, operator);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull Operator operator) {
         return operator.apply(value);
     }
+
 }

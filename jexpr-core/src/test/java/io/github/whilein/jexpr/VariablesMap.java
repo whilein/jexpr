@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.OperandInteger;
+import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author whilein
  */
-public class VariablesMap implements DynamicResolver {
+public class VariablesMap implements UndefinedResolver {
 
     @Getter
     private final List<String> history = new ArrayList<>();
