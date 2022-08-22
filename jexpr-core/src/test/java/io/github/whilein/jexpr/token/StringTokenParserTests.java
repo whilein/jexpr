@@ -16,9 +16,13 @@
 
 package io.github.whilein.jexpr.token;
 
+import io.github.whilein.jexpr.SyntaxException;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author whilein
@@ -61,19 +65,77 @@ class StringTokenParserTests extends AbstractTokenParserTests {
         assertTokens("\t");
     }
 
-//    @Test
-//    void testUnicode() {
-//        tokenParser.submit("\"\\u00a7\"");
-//        assertTokens("§");
-//    }
+    @Test
+    void testUnicodeHex() {
+        tokenParser.submit("\"\\u00a7\"");
+        assertTokens("§");
+    }
 
-//    @Test
-//    void testUnicodeEmoji() {
-//        System.out.println(Arrays.toString("\uD83E\uDD21".getBytes()));
-//
-//        tokenParser.submit("\"\\uD83E\\uDD21\"");
-//        assertTokens("\uD83E\uDD21");
-//    }
+    @Test
+    void testIllegalEscape() {
+        try {
+            tokenParser.submit("\"\\a\"");
+
+            fail();
+        } catch (final SyntaxException e) {
+            assertEquals("Unexpected character 'a' {quoteCharacter=\", state=2}",
+                    e.getMessage());
+        }
+    }
+
+    @Test
+    void testUnicodeHexError() {
+        try {
+            tokenParser.submit("\"\\u00a\"");
+
+            fail();
+        } catch (final SyntaxException e) {
+            assertEquals("Unexpected end of unicode escape notation {quoteCharacter=\", state=3, unicode=000a, unicodeMin=4, unicodeMax=4, unicodeSize=3, unicodeRadix=16}",
+                    e.getMessage());
+        }
+    }
+
+    @Test
+    void testUnicodeOctal() {
+        tokenParser.submit("\"\\0a\"");
+        assertTokens("\0a");
+    }
+
+    @Test
+    void testUnicodeOctal_1to3OctalOctal() {
+        tokenParser.submit("\"\\012\"");
+        assertTokens("\012");
+    }
+
+    @Test
+    void testUnicodeOctal_1to3Octal() {
+        tokenParser.submit("\"\\01\"");
+        assertTokens("\01");
+    }
+
+    @Test
+    void testUnicodeOctal_1to3() {
+        tokenParser.submit("\"\\0\"");
+        assertTokens("\0");
+    }
+
+    @Test
+    void testUnicodeOctal_Octal() {
+        tokenParser.submit("\"\\7\"");
+        assertTokens("\7");
+    }
+
+    @Test
+    void testUnicodeOctal_OctalOctal() {
+        tokenParser.submit("\"\\777\"");
+        assertTokens("\777");
+    }
+
+    @Test
+    void testUnicodeEmoji() {
+        tokenParser.submit("\"\\uD83E\\uDD21\"");
+        assertTokens("\uD83E\uDD21");
+    }
 
     @Test
     void parseNewLineString() {

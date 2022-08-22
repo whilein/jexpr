@@ -59,14 +59,7 @@ public final class SequenceTokenParser extends AbstractTokenParser {
     public static @NotNull TokenParser createDefault(
             final @NotNull TokenVisitor tokenVisitor
     ) {
-        val buffer = new ByteArrayOutput();
-
-        return new SequenceTokenParser(tokenVisitor, Arrays.asList(
-                new NumberTokenParser(tokenVisitor, buffer),
-                new StringTokenParser(tokenVisitor, buffer),
-                new OperatorTokenParser(tokenVisitor, OperatorRegistry.createDefault()),
-                new ReferenceTokenParser(tokenVisitor, KeywordRegistry.createDefault(), buffer)
-        ));
+        return createDefault(tokenVisitor, OperatorRegistry.createDefault(), KeywordRegistry.createDefault());
     }
 
     public static @NotNull TokenParser createDefault(

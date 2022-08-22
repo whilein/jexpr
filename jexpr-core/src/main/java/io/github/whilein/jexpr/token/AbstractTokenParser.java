@@ -20,7 +20,7 @@ import io.github.whilein.jexpr.SyntaxException;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -53,7 +53,7 @@ public abstract class AbstractTokenParser implements TokenParser {
     protected abstract void writeSyntaxReport(Map<String, Object> map);
 
     private String createSyntaxReport() {
-        val map = new HashMap<String, Object>();
+        val map = new LinkedHashMap<String, Object>();
 
         writeSyntaxReport(map);
 

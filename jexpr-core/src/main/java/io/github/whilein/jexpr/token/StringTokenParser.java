@@ -25,6 +25,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.val;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -51,7 +52,16 @@ public final class StringTokenParser extends AbstractTokenParser {
     int unicode;
 
     @NonFinal
+    char highSurrogate;
+
+    @NonFinal
     int unicodeSize;
+
+    @NonFinal
+    int unicodeMaxSize, unicodeMinSize;
+
+    @NonFinal
+    int unicodeRadix;
 
     TokenVisitor tokenVisitor;
 
@@ -61,6 +71,14 @@ public final class StringTokenParser extends AbstractTokenParser {
     protected void writeSyntaxReport(final Map<String, Object> map) {
         map.put("quoteCharacter", (char) quoteCharacter);
         map.put("state", state);
+
+        if (unicodeRadix != 0) {
+            map.put("unicode", String.format("%4x", unicode).replace(' ', '0'));
+            map.put("unicodeMin", unicodeMinSize);
+            map.put("unicodeMax", unicodeMaxSize);
+            map.put("unicodeSize", unicodeSize);
+            map.put("unicodeRadix", unicodeRadix);
+        }
     }
 
     @Override
@@ -74,59 +92,95 @@ public final class StringTokenParser extends AbstractTokenParser {
     }
 
 
+    private void completeUnicode() {
+        completeUnicode(0);
+    }
+
+    private void completeUnicode(final int ch) {
+        if (unicodeMinSize > unicodeSize) {
+            throw invalidSyntax(ch == 0
+                    ? "Unexpected end of unicode escape notation"
+                    : "Unexpected character: " + (char) ch);
+        }
+
+        state = STATE_CONTENT;
+
+        val unicodeCharacter = (char) unicode;
+
+        if (Character.isHighSurrogate(unicodeCharacter)) {
+            highSurrogate = unicodeCharacter;
+            return;
+        } else if (Character.isLowSurrogate(unicodeCharacter)) {
+            if (Character.isSurrogatePair(highSurrogate, unicodeCharacter)) {
+                val codePoint = Character.toCodePoint(highSurrogate, unicodeCharacter);
+                highSurrogate = 0;
+
+                put(new String(Character.toChars(codePoint)).getBytes(StandardCharsets.UTF_8));
+                return;
+            }
+        }
+
+        put(getBytes(unicodeCharacter));
+
+        if (ch != 0) {
+            update(ch);
+        }
+    }
+
     @Override
     public void update(final int ch) throws SyntaxException {
-        if (state == STATE_LEADING_QUOTE) {
-            quoteCharacter = ch;
-            state = STATE_CONTENT;
-            return;
-        }
-
-        if (state == STATE_UNICODE) {
-            unicode *= 16;
-            unicode += Character.digit(ch, 16);
-
-            if (++unicodeSize == 4) {
+        switch (state) {
+            case STATE_LEADING_QUOTE: {
+                quoteCharacter = ch;
                 state = STATE_CONTENT;
-
+                return;
             }
+            case STATE_ESCAPE: {
+                switch (ch) {
+                    case 'u':
+                        startUnicode(16, 4, 4);
+                        return;
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                        startUnicode(8, 3, 1);
+                        addUnicode(ch);
+                        return;
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                        startUnicode(8, 2, 1);
+                        addUnicode(ch);
+                        return;
+                    case '\\':
+                    case '\'':
+                    case '"':
+                        put(ch);
+                        break;
+                    case 'n':
+                        put('\n');
+                        break;
+                    case 'r':
+                        put('\r');
+                        break;
+                    case 't':
+                        put('\t');
+                        break;
+                    case 'f':
+                        put('\f');
+                        break;
+                    case 'b':
+                        put('\b');
+                        break;
+                    default:
+                        throw unexpected(ch);
+                }
 
-            return;
-        }
-
-        if (state == STATE_ESCAPE) {
-            switch (ch) {
-                case 'u':
-                    state = STATE_UNICODE;
-                    unicode = 0;
-                    unicodeSize = 0;
-                    return;
-                case '\\':
-                case '\'':
-                case '"':
-                    buffer.put(ch);
-                    break;
-                case 'n':
-                    buffer.put('\n');
-                    break;
-                case 'r':
-                    buffer.put('\r');
-                    break;
-                case 't':
-                    buffer.put('\t');
-                    break;
-                case 'f':
-                    buffer.put('\f');
-                    break;
-                case 'b':
-                    buffer.put('\b');
-                    break;
-                default:
-                    throw unexpected(ch);
+                state = STATE_CONTENT;
+                return;
             }
-
-            state = STATE_CONTENT;
-            return;
         }
 
         if (ch == '\\') {
@@ -135,10 +189,73 @@ public final class StringTokenParser extends AbstractTokenParser {
         }
 
         if (ch == quoteCharacter) {
+            if (state == STATE_UNICODE) {
+                completeUnicode();
+            }
+
             state = STATE_FINISH_QUOTE;
+
             return;
         }
 
+        if (state == STATE_UNICODE) {
+            addUnicode(ch);
+
+            return;
+        }
+
+        put(ch);
+    }
+
+    private void addUnicode(final int ch) {
+        val digit = Character.digit((char) ch, unicodeRadix);
+
+        if (digit < 0) {
+            completeUnicode(ch);
+            return;
+        }
+
+        unicode = (unicode * unicodeRadix) + digit;
+
+        if (++unicodeSize == unicodeMaxSize) {
+            completeUnicode();
+        }
+    }
+
+    private void startUnicode(final int radix, final int max, final int min) {
+        this.state = STATE_UNICODE;
+        this.unicode = 0;
+        this.unicodeRadix = radix;
+        this.unicodeMaxSize = max;
+        this.unicodeMinSize = min;
+        this.unicodeSize = 0;
+    }
+
+    private void put(final byte[] bytes) {
+        flushHighSurrogate();
+
+        for (val b : bytes) {
+            buffer.put(b);
+        }
+    }
+
+
+    private static byte[] getBytes(final char ch) {
+        return Character.toString(ch).getBytes(StandardCharsets.UTF_8);
+    }
+
+    private void flushHighSurrogate() {
+        if (highSurrogate != 0) {
+            for (val b : getBytes(highSurrogate)) {
+                buffer.put(b);
+            }
+
+            highSurrogate = 0;
+        }
+    }
+
+    private void put(final int ch) {
+        flushHighSurrogate();
         buffer.put(ch);
     }
 
