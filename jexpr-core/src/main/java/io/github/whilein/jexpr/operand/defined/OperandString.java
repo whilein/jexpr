@@ -47,6 +47,11 @@ public final class OperandString extends OperandDelegate<String> implements Oper
     }
 
     @Override
+    public boolean toBoolean() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
         return operand.applyToString(delegatedValue, operator);
     }

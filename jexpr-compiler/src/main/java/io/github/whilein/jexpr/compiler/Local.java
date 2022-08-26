@@ -14,28 +14,18 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.undefined;
+package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.operand.Operand;
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public interface OperandUndefined extends Operand {
-    @Override
-    default @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
-    }
+public interface Local {
 
-    @Override
-    default boolean toBoolean() {
-        throw new UnsupportedOperationException();
-    }
+    int getIndex();
 
-    @Override
-    default boolean isDefined() {
-        return false;
-    }
+    @NotNull Type getType();
 
 }

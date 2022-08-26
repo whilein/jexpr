@@ -28,6 +28,8 @@ public interface Operand {
 
     @NotNull Number toNumber();
 
+    boolean toBoolean();
+
     boolean isPredicable(@NotNull Operator operator);
 
     @NotNull Operand apply(@NotNull Operand operand, @NotNull Operator operator);

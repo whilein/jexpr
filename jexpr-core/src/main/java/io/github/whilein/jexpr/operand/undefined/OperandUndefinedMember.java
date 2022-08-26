@@ -26,6 +26,7 @@ import io.github.whilein.jexpr.operand.defined.OperandLong;
 import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operator.Operator;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
@@ -33,16 +34,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author whilein
  */
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OperandUndefinedMember implements OperandUndefined {
 
-    Operand value;
+    Operand member;
     Operator operator;
 
     @Override
     public String toString() {
-        return operator.getValue() + value;
+        return operator.getValue() + member;
     }
 
     public static @NotNull Operand valueOf(
@@ -54,11 +56,6 @@ public final class OperandUndefinedMember implements OperandUndefined {
         }
 
         return new OperandUndefinedMember(value, operator);
-    }
-
-    @Override
-    public @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -133,6 +130,6 @@ public final class OperandUndefinedMember implements OperandUndefined {
 
     @Override
     public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
-        return value.solve(resolver).apply(operator);
+        return member.solve(resolver).apply(operator);
     }
 }

@@ -26,6 +26,7 @@ import io.github.whilein.jexpr.operand.defined.OperandLong;
 import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operator.Operator;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author whilein
  */
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OperandUndefinedSequence implements OperandUndefined {
@@ -56,11 +58,6 @@ public final class OperandUndefinedSequence implements OperandUndefined {
         }
 
         return new OperandUndefinedSequence(left, right, operator);
-    }
-
-    @Override
-    public @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
     }
 
     @Override

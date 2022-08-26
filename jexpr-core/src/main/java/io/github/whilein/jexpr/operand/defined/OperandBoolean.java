@@ -93,6 +93,11 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
     }
 
     @Override
+    public boolean toBoolean() {
+        return value;
+    }
+
+    @Override
     public boolean isNumber() {
         return false;
     }

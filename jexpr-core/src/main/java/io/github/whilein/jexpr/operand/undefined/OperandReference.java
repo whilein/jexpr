@@ -47,11 +47,6 @@ public final class OperandReference extends OperandDelegate<String> implements O
     }
 
     @Override
-    public @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
         return operand.applyToUndefined(this, operator);
     }

@@ -14,28 +14,18 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.undefined;
+package io.github.whilein.jexpr.compiler.analyzer;
 
-import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.compiler.operator.AsmOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface OperandUndefined extends Operand {
-    @Override
-    default @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
-    }
+public interface AnalyzedMember extends AnalyzedOperand {
 
-    @Override
-    default boolean toBoolean() {
-        throw new UnsupportedOperationException();
-    }
+    @NotNull AnalyzedOperand getMember();
 
-    @Override
-    default boolean isDefined() {
-        return false;
-    }
+    @NotNull AsmOperator getOperator();
 
 }

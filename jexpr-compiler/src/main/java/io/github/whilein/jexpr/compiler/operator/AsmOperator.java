@@ -14,43 +14,31 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.defined;
+package io.github.whilein.jexpr.compiler.operator;
 
-import io.github.whilein.jexpr.operand.OperandDelegate;
+import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
+import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public abstract class OperandNumber extends OperandDelegate<Number> implements OperandDefined {
+public interface AsmOperator {
 
-    protected OperandNumber(final Number number) {
-        super(number);
-    }
+    @NotNull Type getOutputType(@NotNull Type value);
 
-    @Override
-    public @NotNull Number toNumber() {
-        return delegatedValue;
-    }
+    @NotNull Type getOutputType(@NotNull Type left, @NotNull Type right);
 
-    @Override
-    public boolean toBoolean() {
-        throw new UnsupportedOperationException();
-    }
+    void compile(
+            @NotNull AsmMethodCompiler compiler,
+            @NotNull StackLazyOperand left,
+            @NotNull StackLazyOperand right
+    );
 
-    @Override
-    public boolean isNumber() {
-        return true;
-    }
-
-    @Override
-    public boolean isString() {
-        return false;
-    }
-
-    @Override
-    public boolean isBoolean() {
-        return false;
-    }
+    void compile(
+            @NotNull AsmMethodCompiler compiler,
+            @NotNull StackLazyOperand operand
+    );
 
 }

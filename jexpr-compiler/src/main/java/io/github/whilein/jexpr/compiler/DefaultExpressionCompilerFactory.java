@@ -14,43 +14,29 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.defined;
+package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.operand.OperandDelegate;
+import io.github.whilein.jexpr.compiler.analyzer.Analyzer;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.MethodVisitor;
 
 /**
  * @author whilein
  */
-public abstract class OperandNumber extends OperandDelegate<Number> implements OperandDefined {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+public final class DefaultExpressionCompilerFactory implements ExpressionCompilerFactory {
 
-    protected OperandNumber(final Number number) {
-        super(number);
-    }
-
-    @Override
-    public @NotNull Number toNumber() {
-        return delegatedValue;
-    }
+    Analyzer analyzer;
 
     @Override
-    public boolean toBoolean() {
-        throw new UnsupportedOperationException();
+    public @NotNull ExpressionCompiler create(
+            final @NotNull MethodVisitor mv,
+            final @NotNull LocalMap localMap
+    ) {
+        return new DefaultExpressionCompiler(new AsmMethodCompiler(mv), localMap, analyzer);
     }
-
-    @Override
-    public boolean isNumber() {
-        return true;
-    }
-
-    @Override
-    public boolean isString() {
-        return false;
-    }
-
-    @Override
-    public boolean isBoolean() {
-        return false;
-    }
-
 }
