@@ -20,12 +20,6 @@ import io.github.whilein.jexpr.DefaultExpressionParser;
 import io.github.whilein.jexpr.ExpressionParser;
 import io.github.whilein.jexpr.compiler.analyzer.DefaultAnalyzer;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandDouble;
-import io.github.whilein.jexpr.operand.defined.OperandFloat;
-import io.github.whilein.jexpr.operand.defined.OperandInteger;
-import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.token.SequenceTokenParser;
 import io.github.whilein.jexpr.token.TokenParser;
 import lombok.SneakyThrows;
@@ -40,6 +34,7 @@ import sun.misc.Unsafe;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -67,205 +62,114 @@ final class DefaultExpressionCompilerTests {
     }
 
     @Test
-    void testComplexSequence() {
-        tokenParser.submit("(a + b - (c - d)) * e");
-        val operand = expressionParser.getResult();
-
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "(IIIII)I", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create()
-                .add("a", 0, Type.INT_TYPE)
-                .add("b", 1, Type.INT_TYPE)
-                .add("c", 2, Type.INT_TYPE)
-                .add("d", 3, Type.INT_TYPE)
-                .add("e", 4, Type.INT_TYPE));
-
-        compiler.compile(operand);
-
-        mv.visitInsn(Opcodes.IRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(((10 + 15 - (3 - 123)) * 666), call(cw, 10, 15, 3, 123, 666));
+    void testDifficultExpression() {
+        val test = createTest("(a + b - (c - d)) * e",
+                int.class, int.class, int.class,
+                int.class, int.class, int.class);
+        assertEquals((2 + 3 - (4 - 5)) * 6, call(test, 2, 3, 4, 5, 6));
     }
 
     @Test
     void testTwoOperand() {
-        tokenParser.submit("-x - y ");
-
-        val operand = expressionParser.getResult();
-
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "(Ljava/lang/Double;I)D", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create()
-                .add("x", 0, Type.getObjectType("java/lang/Double"))
-                .add("y", 1, Type.INT_TYPE));
-
-        compiler.compile(operand);
-
-        mv.visitInsn(Opcodes.DRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(-10D - 30, call(cw, 10D, 30));
+        val test = createTest("a + b", double.class, double.class, int.class);
+        assertEquals(5.5, call(test, 2.5, 3));
     }
 
     @Test
     void testOneOperand() {
-        tokenParser.submit("-x");
-
-        val operand = expressionParser.getResult();
-
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "(Ljava/lang/Integer;)I", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create()
-                .add("x", 0, Type.getObjectType("java/lang/Integer")));
-
-        compiler.compile(operand);
-
-        mv.visitInsn(Opcodes.IRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(-10, call(cw, 10));
+        val test = createTest("-a", int.class, int.class);
+        assertEquals(-15, call(test, 15));
     }
 
     @Test
     void testReference() {
-        tokenParser.submit("x");
-
-        val operand = expressionParser.getResult();
-
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "(I)I", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create()
-                .add("x", 0, Type.INT_TYPE));
-
-        compiler.compile(operand);
-
-        mv.visitInsn(Opcodes.IRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(10, call(cw, 10));
+        val test = createTest("a", int.class, int.class);
+        assertEquals(10, call(test, 10));
     }
 
     @Test
     void testDefinedString() {
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "()Ljava/lang/String;", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create());
-        compiler.compile(OperandString.valueOf("Hello world!"));
-
-        mv.visitInsn(Opcodes.ARETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals("Hello world!", call(cw));
+        val test = createTest("'Hello world!'", String.class);
+        assertEquals("Hello world!", call(test));
     }
 
     @Test
     void testDefinedBoolean() {
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "()Z", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create());
-        compiler.compile(OperandBoolean.valueOf(true));
-
-        mv.visitInsn(Opcodes.IRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(true, call(cw));
+        val test = createTest("true", boolean.class);
+        assertEquals(true, call(test));
     }
 
     @Test
     void testDefinedLong() {
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "()J", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create());
-        compiler.compile(OperandLong.valueOf(1L));
-
-        mv.visitInsn(Opcodes.LRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(1L, call(cw));
+        val test = createTest("1L", long.class);
+        assertEquals(1L, call(test));
     }
 
     @Test
     void testDefinedDouble() {
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "()D", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create());
-        compiler.compile(OperandDouble.valueOf(1.1d));
-
-        mv.visitInsn(Opcodes.DRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(1.1d, call(cw));
+        val test = createTest("1.1d", double.class);
+        assertEquals(1.1d, call(test));
     }
 
     @Test
     void testDefinedFloat() {
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "()F", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create());
-        compiler.compile(OperandFloat.valueOf(1.1f));
-
-        mv.visitInsn(Opcodes.FRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(1.1f, call(cw));
+        val test = createTest("1.1f", float.class);
+        assertEquals(1.1f, call(test));
     }
 
     @Test
     void testDefinedInteger() {
-        val cw = createTestClass();
-
-        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
-                "()I", null, null);
-
-        val compiler = compilerFactory.create(mv, SimpleLocalMap.create());
-        compiler.compile(OperandInteger.valueOf(3));
-
-        mv.visitInsn(Opcodes.IRETURN);
-        mv.visitMaxs(0, 0);
-        mv.visitEnd();
-
-        assertEquals(3, call(cw));
+        val test = createTest("3", int.class);
+        assertEquals(3, call(test));
     }
 
     @SneakyThrows
-    private Object call(final ClassWriter cw, final Object... params) {
+    private Object call(final Class<?> type, final Object... params) {
+        for (val method : type.getDeclaredMethods()) {
+            if (method.getName().equals("perform")) {
+                return method.invoke(null, params);
+            }
+        }
+
+        throw new IllegalStateException("Unable to find perform in " + type);
+    }
+
+    @SneakyThrows
+    private Class<?> createTest(final String query, final Class<?> returnType, final Class<?>... parameters) {
+        val cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+
+        cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, testType, null,
+                "java/lang/Object", null);
+
+        val mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "perform",
+                Type.getMethodDescriptor(Type.getType(returnType), Arrays.stream(parameters)
+                        .map(Type::getType)
+                        .toArray(Type[]::new)), null, null);
+
+        tokenParser.submit(query);
+        val result = expressionParser.getResult();
+
+        val localMap = SimpleLocalMap.create();
+
+        int index = 0;
+        int local = 0;
+
+        for (val param : parameters) {
+            val paramType = Type.getType(param);
+            localMap.add(String.valueOf((char) ('a' + index)), local, paramType);
+            index++;
+            local += paramType.getSize();
+        }
+
+        val compiler = compilerFactory.create(mv, localMap);
+        compiler.compile(result);
+
+        mv.visitInsn(Type.getType(returnType).getOpcode(Opcodes.IRETURN));
+        mv.visitMaxs(0, 0);
+
+        mv.visitEnd();
+        cw.visitEnd();
+
         val bytes = cw.toByteArray();
 
         {
@@ -286,16 +190,8 @@ final class DefaultExpressionCompilerTests {
         val unsafe = Unsafe.class.getDeclaredField("theUnsafe");
         unsafe.setAccessible(true);
 
-        val type = ((Unsafe) unsafe.get(null))
+        return ((Unsafe) unsafe.get(null))
                 .defineClass(testType, bytes, 0, bytes.length, null, null);
-
-        for (val method : type.getDeclaredMethods()) {
-            if (method.getName().equals("perform")) {
-                return method.invoke(null, params);
-            }
-        }
-
-        throw new IllegalStateException("Unable to find perform in " + type);
     }
 
     private ClassWriter createTestClass() {
