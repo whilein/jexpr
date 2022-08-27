@@ -43,7 +43,7 @@ public final class OperatorBitwiseUnsignedRightShift extends AbstractOperator {
 
     @Override
     public @NotNull Operand apply(final int left, final long right) {
-        return OperandLong.valueOf(left >>> right);
+        return OperandInteger.valueOf(left >>> right);
     }
 
     @Override
