@@ -74,6 +74,24 @@ final class ExpressionCompilerTests {
     }
 
     @Test
+    void testAnd() {
+        val test = createTest("a && b", boolean.class, boolean.class, boolean.class);
+        assertEquals(true, call(test, true, true));
+        assertEquals(false, call(test, false, true));
+        assertEquals(false, call(test, true, false));
+        assertEquals(false, call(test, false, false));
+    }
+
+    @Test
+    void testOr() {
+        val test = createTest("a || b", boolean.class, boolean.class, boolean.class);
+        assertEquals(true, call(test, true, true));
+        assertEquals(true, call(test, false, true));
+        assertEquals(true, call(test, true, false));
+        assertEquals(false, call(test, false, false));
+    }
+
+    @Test
     void testStrictGreaterFloat() {
         val test = createTest("a > b", boolean.class, float.class, int.class);
         assertEquals(false, call(test, 1F, 2));
@@ -332,15 +350,6 @@ final class ExpressionCompilerTests {
 
         return ((Unsafe) unsafe.get(null))
                 .defineClass(testType, bytes, 0, bytes.length, null, null);
-    }
-
-    private ClassWriter createTestClass() {
-        val cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-
-        cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, testType, null,
-                "java/lang/Object", null);
-
-        return cw;
     }
 
 }

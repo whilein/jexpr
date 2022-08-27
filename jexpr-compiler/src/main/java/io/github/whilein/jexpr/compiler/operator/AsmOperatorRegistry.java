@@ -16,6 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorAnd;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseAnd;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseComplement;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseLeftShift;
@@ -28,11 +29,13 @@ import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorGreater;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorLess;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorMinus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorMultiply;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorOr;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorPlus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorRemainder;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorStrictGreater;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorStrictLess;
 import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.operator.type.OperatorAnd;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseAnd;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseComplement;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseLeftShift;
@@ -45,6 +48,7 @@ import io.github.whilein.jexpr.operator.type.OperatorGreater;
 import io.github.whilein.jexpr.operator.type.OperatorLess;
 import io.github.whilein.jexpr.operator.type.OperatorMinus;
 import io.github.whilein.jexpr.operator.type.OperatorMultiply;
+import io.github.whilein.jexpr.operator.type.OperatorOr;
 import io.github.whilein.jexpr.operator.type.OperatorPlus;
 import io.github.whilein.jexpr.operator.type.OperatorRemainder;
 import io.github.whilein.jexpr.operator.type.OperatorStrictGreater;
@@ -89,6 +93,8 @@ public final class AsmOperatorRegistry {
         defaultOperatorMap.put(OperatorStrictGreater.class, new AsmOperatorStrictGreater());
         defaultOperatorMap.put(OperatorLess.class, new AsmOperatorLess());
         defaultOperatorMap.put(OperatorStrictLess.class, new AsmOperatorStrictLess());
+        defaultOperatorMap.put(OperatorAnd.class, new AsmOperatorAnd());
+        defaultOperatorMap.put(OperatorOr.class, new AsmOperatorOr());
 
         DEFAULT_OPERATOR_MAP = Collections.unmodifiableMap(defaultOperatorMap);
     }
