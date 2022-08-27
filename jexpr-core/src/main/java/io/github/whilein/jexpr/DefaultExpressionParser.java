@@ -197,6 +197,11 @@ public final class DefaultExpressionParser extends AbstractTokenVisitor implemen
 
             return operandStack.pop();
         } finally {
+            operators.clear();
+            operandStack.clear();
+            operatorStack.clear();
+
+            previousOperand = null;
             state = STATE_OPEN_PARENTHESES;
         }
     }
