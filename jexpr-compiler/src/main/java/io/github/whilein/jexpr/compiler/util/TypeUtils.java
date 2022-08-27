@@ -55,6 +55,9 @@ public class TypeUtils {
         return INTEGRAL_WRAPPERS.contains(type.getInternalName());
     }
 
+    public boolean isNumber(final @NotNull Type type) {
+        return isPrimitiveNumber(type) || isNumberWrapper(type);
+    }
 
     public boolean isNumberWrapper(final @NotNull Type type) {
         return isWrapper(type) && !type.getInternalName().equals("java/lang/Boolean");

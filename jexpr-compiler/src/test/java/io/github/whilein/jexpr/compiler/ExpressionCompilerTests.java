@@ -66,11 +66,26 @@ final class ExpressionCompilerTests {
     }
 
     @Test
-    void testDifficultExpression() {
+    void testDifficultArithmeticalExpression() {
         val test = createTest("(a + b - (c - d)) * e",
                 int.class, int.class, int.class,
                 int.class, int.class, int.class);
         assertEquals((2 + 3 - (4 - 5)) * 6, call(test, 2, 3, 4, 5, 6));
+    }
+
+    @Test
+    void testDifficultLogicalExpression() {
+        val test = createTest("!(a != b) || a + b > c && d",
+                boolean.class, int.class, int.class,
+                int.class, boolean.class);
+        assertEquals(true, call(test, 10, 20, 15, true));
+    }
+
+    @Test
+    void testEquals() {
+        val test = createTest("a == b", boolean.class, int.class, int.class);
+        assertEquals(true, call(test, 1, 1));
+        assertEquals(false, call(test, 1, 2));
     }
 
     @Test

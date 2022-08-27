@@ -25,15 +25,13 @@ import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseRightShi
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseUnsignedRightShift;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseXor;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorDivide;
-import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorGreater;
-import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorLess;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorEquals;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorMinus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorMultiply;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorNegate;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorOr;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorPlus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorRemainder;
-import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorStrictGreater;
-import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorStrictLess;
 import io.github.whilein.jexpr.operator.Operator;
 import io.github.whilein.jexpr.operator.type.OperatorAnd;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseAnd;
@@ -44,10 +42,13 @@ import io.github.whilein.jexpr.operator.type.OperatorBitwiseRightShift;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseUnsignedRightShift;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseXor;
 import io.github.whilein.jexpr.operator.type.OperatorDivide;
+import io.github.whilein.jexpr.operator.type.OperatorEquals;
 import io.github.whilein.jexpr.operator.type.OperatorGreater;
 import io.github.whilein.jexpr.operator.type.OperatorLess;
 import io.github.whilein.jexpr.operator.type.OperatorMinus;
 import io.github.whilein.jexpr.operator.type.OperatorMultiply;
+import io.github.whilein.jexpr.operator.type.OperatorNegate;
+import io.github.whilein.jexpr.operator.type.OperatorNotEquals;
 import io.github.whilein.jexpr.operator.type.OperatorOr;
 import io.github.whilein.jexpr.operator.type.OperatorPlus;
 import io.github.whilein.jexpr.operator.type.OperatorRemainder;
@@ -59,6 +60,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.objectweb.asm.Opcodes;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,12 +91,25 @@ public final class AsmOperatorRegistry {
         defaultOperatorMap.put(OperatorBitwiseRightShift.class, new AsmOperatorBitwiseRightShift());
         defaultOperatorMap.put(OperatorBitwiseUnsignedRightShift.class, new AsmOperatorBitwiseUnsignedRightShift());
         defaultOperatorMap.put(OperatorBitwiseComplement.class, new AsmOperatorBitwiseComplement());
-        defaultOperatorMap.put(OperatorGreater.class, new AsmOperatorGreater());
-        defaultOperatorMap.put(OperatorStrictGreater.class, new AsmOperatorStrictGreater());
-        defaultOperatorMap.put(OperatorLess.class, new AsmOperatorLess());
-        defaultOperatorMap.put(OperatorStrictLess.class, new AsmOperatorStrictLess());
+
+        defaultOperatorMap.put(OperatorGreater.class,
+                new AsmOperatorCompare(Opcodes.IF_ICMPLT, Opcodes.IFLT, Opcodes.DCMPL, Opcodes.FCMPL));
+
+        defaultOperatorMap.put(OperatorStrictGreater.class,
+                new AsmOperatorCompare(Opcodes.IF_ICMPLE, Opcodes.IFLE, Opcodes.DCMPL, Opcodes.FCMPL));
+
+        defaultOperatorMap.put(OperatorLess.class,
+                new AsmOperatorCompare(Opcodes.IF_ICMPGT, Opcodes.IFGT, Opcodes.DCMPG, Opcodes.FCMPG));
+
+        defaultOperatorMap.put(OperatorStrictLess.class,
+                new AsmOperatorCompare(Opcodes.IF_ICMPGE, Opcodes.IFGE, Opcodes.DCMPG, Opcodes.FCMPG));
+
         defaultOperatorMap.put(OperatorAnd.class, new AsmOperatorAnd());
         defaultOperatorMap.put(OperatorOr.class, new AsmOperatorOr());
+
+        defaultOperatorMap.put(OperatorEquals.class, new AsmOperatorEquals(false));
+        defaultOperatorMap.put(OperatorNotEquals.class, new AsmOperatorEquals(true));
+        defaultOperatorMap.put(OperatorNegate.class, new AsmOperatorNegate());
 
         DEFAULT_OPERATOR_MAP = Collections.unmodifiableMap(defaultOperatorMap);
     }

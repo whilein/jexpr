@@ -114,6 +114,14 @@ public abstract class AbstractAsmOperator implements AsmOperator {
         throw new UnsupportedOperationException("operator is not applicable to " + type);
     }
 
+    protected static void ensureNumberType(final Type type) {
+        if (TypeUtils.isPrimitiveNumber(type) || TypeUtils.isNumberWrapper(type)) {
+            return;
+        }
+
+        throw new UnsupportedOperationException("operator is not applicable to " + type);
+    }
+
     protected static Type getNumberType(final Type type) {
         if (TypeUtils.isPrimitiveNumber(type)) {
             return type;

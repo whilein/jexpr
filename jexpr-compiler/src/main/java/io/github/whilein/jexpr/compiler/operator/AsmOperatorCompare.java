@@ -18,6 +18,9 @@ package io.github.whilein.jexpr.compiler.operator;
 
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Label;
@@ -27,25 +30,28 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public abstract class AbstractAsmOperatorCompare extends AbstractAsmOperator {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+public final class AsmOperatorCompare extends AbstractAsmOperator {
 
+    int opcode;
+    int compareOpcode;
+    int doubleOpcode;
+    int floatOpcode;
 
     @Override
     public @NotNull Type getOutputType(final @NotNull Type left, final @NotNull Type right) {
-        val leftType = getIntegralType(left);
-        ensureIntegralType(right);
+        ensureNumberType(left);
+        ensureNumberType(right);
 
-        return leftType;
+        return Type.BOOLEAN_TYPE;
     }
 
-    protected static void compileCompare(
-            final AsmMethodCompiler compiler,
-            final StackLazyOperand left,
-            final StackLazyOperand right,
-            final int opcode,
-            final int compareOpcode,
-            final int doubleOpcode,
-            final int floatOpcode
+    @Override
+    public void compile(
+            final @NotNull AsmMethodCompiler compiler,
+            final @NotNull StackLazyOperand left,
+            final @NotNull StackLazyOperand right
     ) {
         val type = compileNumber(compiler, left, right);
 
