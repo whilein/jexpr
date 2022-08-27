@@ -24,6 +24,7 @@ import io.github.whilein.jexpr.token.SequenceTokenParser;
 import io.github.whilein.jexpr.token.TokenParser;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -45,20 +46,23 @@ final class ExpressionCompilerTests {
 
     String testType;
 
-    TokenParser tokenParser;
-    ExpressionParser expressionParser;
-    ExpressionCompilerFactory compilerFactory;
+    static TokenParser tokenParser;
+    static ExpressionParser expressionParser;
+    static ExpressionCompilerFactory compilerFactory;
+
+    @BeforeAll
+    static void setup() {
+        val asmOperatorRegistry = AsmOperatorRegistry.createDefault();
+
+        tokenParser = SequenceTokenParser.createDefault(expressionParser = DefaultExpressionParser.create());
+        compilerFactory = new DefaultExpressionCompilerFactory(DefaultAnalyzer.create(asmOperatorRegistry));
+    }
 
     @BeforeEach
     void setup(final TestInfo testInfo) {
         testType = "io/github/whilein/jexpr/compiler/Test_" + testInfo.getTestMethod()
                 .orElseThrow(RuntimeException::new)
                 .getName();
-
-        val asmOperatorRegistry = AsmOperatorRegistry.createDefault();
-
-        tokenParser = SequenceTokenParser.createDefault(expressionParser = DefaultExpressionParser.create());
-        compilerFactory = new DefaultExpressionCompilerFactory(DefaultAnalyzer.create(asmOperatorRegistry));
     }
 
     @Test
