@@ -17,13 +17,16 @@
 package io.github.whilein.jexpr.compiler.analyzer;
 
 import io.github.whilein.jexpr.operand.Operand;
-import org.jetbrains.annotations.NotNull;
+import lombok.Value;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public interface AnalyzedDefined extends AnalyzedOperand {
+@Value
+public class AnalyzedDefined implements AnalyzedOperand {
 
-    @NotNull Operand getValue();
+    Operand value;
+    Type type;
 
 }

@@ -16,9 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.analyzer;
 
-import io.github.whilein.jexpr.compiler.Local;
 import io.github.whilein.jexpr.compiler.LocalMap;
-import io.github.whilein.jexpr.compiler.operator.AsmOperator;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
@@ -32,7 +30,6 @@ import io.github.whilein.jexpr.operand.undefined.OperandUndefinedMember;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefinedSequence;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +45,7 @@ import java.util.Map;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DefaultAnalyzer implements Analyzer {
 
-    Map<Class<? extends Operand>, Type> typeMap = new HashMap<Class<? extends Operand>, Type>() {
+    private static final Map<Class<? extends Operand>, Type> TYPE_MAP = new HashMap<Class<? extends Operand>, Type>() {
         {
             put(OperandString.class, Type.getType(String.class));
             put(OperandInteger.class, Type.INT_TYPE);
@@ -68,9 +65,9 @@ public final class DefaultAnalyzer implements Analyzer {
     @Override
     public @NotNull AnalyzedOperand analyze(final @NotNull Operand operand, final @NotNull LocalMap map) {
         if (operand.isDefined()) {
-            return new AnalyzedDefinedImpl(operand, typeMap.get(operand.getClass()));
+            return new AnalyzedDefined(operand, TYPE_MAP.get(operand.getClass()));
         } else if (operand instanceof OperandReference) {
-            return new AnalyzedReferenceImpl(map.get((String) operand.getValue()));
+            return new AnalyzedReference(map.get((String) operand.getValue()));
         } else if (operand instanceof OperandUndefinedMember) {
             val member = (OperandUndefinedMember) operand;
 
@@ -79,7 +76,7 @@ public final class DefaultAnalyzer implements Analyzer {
 
             val analyzedMember = analyze(member.getMember(), map);
 
-            return new AnalyzedMemberImpl(
+            return new AnalyzedMember(
                     analyzedMember,
                     asmOperator,
                     asmOperator.getOutputType(analyzedMember.getType()));
@@ -91,7 +88,7 @@ public final class DefaultAnalyzer implements Analyzer {
             val operator = sequence.getOperator();
             val asmOperator = asmOperatorRegistry.getOperator(operator.getClass());
 
-            return new AnalyzedSequenceImpl(
+            return new AnalyzedSequence(
                     left,
                     right,
                     asmOperator,
@@ -102,33 +99,4 @@ public final class DefaultAnalyzer implements Analyzer {
         throw new IllegalStateException(operand.getClass().getName());
     }
 
-    @Value
-    private static class AnalyzedDefinedImpl implements AnalyzedDefined {
-        Operand value;
-        Type type;
-    }
-
-    @Value
-    private static class AnalyzedMemberImpl implements AnalyzedMember {
-        AnalyzedOperand member;
-        AsmOperator operator;
-        Type type;
-    }
-
-    @Value
-    private static class AnalyzedSequenceImpl implements AnalyzedSequence {
-        AnalyzedOperand left, right;
-        AsmOperator operator;
-        Type type;
-    }
-
-    @Value
-    private static class AnalyzedReferenceImpl implements AnalyzedReference {
-        Local local;
-
-        @Override
-        public @NotNull Type getType() {
-            return local.getType();
-        }
-    }
 }

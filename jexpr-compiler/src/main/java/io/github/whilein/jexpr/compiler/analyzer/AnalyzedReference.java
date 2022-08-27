@@ -17,13 +17,21 @@
 package io.github.whilein.jexpr.compiler.analyzer;
 
 import io.github.whilein.jexpr.compiler.Local;
+import lombok.Value;
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public interface AnalyzedReference extends AnalyzedOperand {
+@Value
+public class AnalyzedReference implements AnalyzedOperand {
 
-    @NotNull Local getLocal();
+    Local local;
+
+    @Override
+    public @NotNull Type getType() {
+        return local.getType();
+    }
 
 }
