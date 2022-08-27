@@ -24,10 +24,14 @@ import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseRightShi
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseUnsignedRightShift;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseXor;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorDivide;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorGreater;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorLess;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorMinus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorMultiply;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorPlus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorRemainder;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorStrictGreater;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorStrictLess;
 import io.github.whilein.jexpr.operator.Operator;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseAnd;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseComplement;
@@ -37,10 +41,14 @@ import io.github.whilein.jexpr.operator.type.OperatorBitwiseRightShift;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseUnsignedRightShift;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseXor;
 import io.github.whilein.jexpr.operator.type.OperatorDivide;
+import io.github.whilein.jexpr.operator.type.OperatorGreater;
+import io.github.whilein.jexpr.operator.type.OperatorLess;
 import io.github.whilein.jexpr.operator.type.OperatorMinus;
 import io.github.whilein.jexpr.operator.type.OperatorMultiply;
 import io.github.whilein.jexpr.operator.type.OperatorPlus;
 import io.github.whilein.jexpr.operator.type.OperatorRemainder;
+import io.github.whilein.jexpr.operator.type.OperatorStrictGreater;
+import io.github.whilein.jexpr.operator.type.OperatorStrictLess;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -76,8 +84,11 @@ public final class AsmOperatorRegistry {
         defaultOperatorMap.put(OperatorBitwiseLeftShift.class, new AsmOperatorBitwiseLeftShift());
         defaultOperatorMap.put(OperatorBitwiseRightShift.class, new AsmOperatorBitwiseRightShift());
         defaultOperatorMap.put(OperatorBitwiseUnsignedRightShift.class, new AsmOperatorBitwiseUnsignedRightShift());
-
         defaultOperatorMap.put(OperatorBitwiseComplement.class, new AsmOperatorBitwiseComplement());
+        defaultOperatorMap.put(OperatorGreater.class, new AsmOperatorGreater());
+        defaultOperatorMap.put(OperatorStrictGreater.class, new AsmOperatorStrictGreater());
+        defaultOperatorMap.put(OperatorLess.class, new AsmOperatorLess());
+        defaultOperatorMap.put(OperatorStrictLess.class, new AsmOperatorStrictLess());
 
         DEFAULT_OPERATOR_MAP = Collections.unmodifiableMap(defaultOperatorMap);
     }

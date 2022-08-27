@@ -60,7 +60,26 @@ public abstract class AbstractAsmOperator implements AsmOperator {
 
             return TypeUtils.getPreferredNumber(leftNumber, rightNumber);
         } catch (final UnsupportedOperationException e) {
-            throw new UnsupportedOperationException("operator is not applicable to " + left + " & " + right);
+            throw new UnsupportedOperationException("operator is not applicable to " + left + " & " + right, e);
+        }
+    }
+
+    protected static void ensureBooleanType(final Type type) {
+        if (type.getSort() == Type.BOOLEAN || type.getInternalName().equals("java/lang/Boolean")) {
+            return;
+        }
+
+        throw new UnsupportedOperationException("operator is not applicable to " + type);
+    }
+
+    protected static Type getBooleanType(final Type left, final Type right) {
+        try {
+            ensureBooleanType(left);
+            ensureBooleanType(right);
+
+            return Type.BOOLEAN_TYPE;
+        } catch (final UnsupportedOperationException e) {
+            throw new UnsupportedOperationException("operator is not applicable to " + left + " & " + right, e);
         }
     }
 
@@ -71,7 +90,7 @@ public abstract class AbstractAsmOperator implements AsmOperator {
 
             return TypeUtils.getPreferredNumber(leftNumber, rightNumber);
         } catch (final UnsupportedOperationException e) {
-            throw new UnsupportedOperationException("operator is not applicable to " + left + " & " + right);
+            throw new UnsupportedOperationException("operator is not applicable to " + left + " & " + right, e);
         }
     }
 

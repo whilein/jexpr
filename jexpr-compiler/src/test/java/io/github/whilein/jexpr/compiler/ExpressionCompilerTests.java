@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author whilein
  */
-final class DefaultExpressionCompilerTests {
+final class ExpressionCompilerTests {
 
     String testType;
 
@@ -67,6 +67,118 @@ final class DefaultExpressionCompilerTests {
                 int.class, int.class, int.class,
                 int.class, int.class, int.class);
         assertEquals((2 + 3 - (4 - 5)) * 6, call(test, 2, 3, 4, 5, 6));
+    }
+
+    @Test
+    void testStrictGreaterFloat() {
+        val test = createTest("a > b", boolean.class, float.class, int.class);
+        assertEquals(false, call(test, 1F, 2));
+        assertEquals(true, call(test, 2F, 1));
+    }
+
+    @Test
+    void testStrictLessFloat() {
+        val test = createTest("a < b", boolean.class, float.class, int.class);
+        assertEquals(true, call(test, 1F, 2));
+        assertEquals(false, call(test, 2F, 1));
+    }
+
+    @Test
+    void testGreaterFloat() {
+        val test = createTest("a >= b", boolean.class, float.class, int.class);
+        assertEquals(false, call(test, 1F, 2));
+        assertEquals(true, call(test, 2F, 1));
+    }
+
+    @Test
+    void testLessFloat() {
+        val test = createTest("a <= b", boolean.class, float.class, int.class);
+        assertEquals(true, call(test, 1F, 2));
+        assertEquals(false, call(test, 2F, 1));
+    }
+
+    @Test
+    void testStrictGreaterDouble() {
+        val test = createTest("a > b", boolean.class, double.class, int.class);
+        assertEquals(false, call(test, 1D, 2));
+        assertEquals(true, call(test, 2D, 1));
+    }
+
+    @Test
+    void testStrictLessDouble() {
+        val test = createTest("a < b", boolean.class, double.class, int.class);
+        assertEquals(true, call(test, 1D, 2));
+        assertEquals(false, call(test, 2D, 1));
+    }
+
+    @Test
+    void testGreaterDouble() {
+        val test = createTest("a >= b", boolean.class, double.class, int.class);
+        assertEquals(false, call(test, 1D, 2));
+        assertEquals(true, call(test, 2D, 1));
+    }
+
+    @Test
+    void testLessDouble() {
+        val test = createTest("a <= b", boolean.class, double.class, int.class);
+        assertEquals(true, call(test, 1D, 2));
+        assertEquals(false, call(test, 2D, 1));
+    }
+
+    @Test
+    void testStrictGreaterLong() {
+        val test = createTest("a > b", boolean.class, long.class, int.class);
+        assertEquals(false, call(test, 1L, 2));
+        assertEquals(true, call(test, 2L, 1));
+    }
+
+    @Test
+    void testStrictLessLong() {
+        val test = createTest("a < b", boolean.class, long.class, int.class);
+        assertEquals(true, call(test, 1L, 2));
+        assertEquals(false, call(test, 2L, 1));
+    }
+
+    @Test
+    void testGreaterLong() {
+        val test = createTest("a >= b", boolean.class, long.class, int.class);
+        assertEquals(false, call(test, 1L, 2));
+        assertEquals(true, call(test, 2L, 1));
+    }
+
+    @Test
+    void testLessLong() {
+        val test = createTest("a <= b", boolean.class, long.class, int.class);
+        assertEquals(true, call(test, 1L, 2));
+        assertEquals(false, call(test, 2L, 1));
+    }
+
+    @Test
+    void testStrictGreaterInt() {
+        val test = createTest("a > b", boolean.class, int.class, int.class);
+        assertEquals(false, call(test, 1, 2));
+        assertEquals(true, call(test, 2, 1));
+    }
+
+    @Test
+    void testStrictLessInt() {
+        val test = createTest("a < b", boolean.class, int.class, int.class);
+        assertEquals(true, call(test, 1, 2));
+        assertEquals(false, call(test, 2, 1));
+    }
+
+    @Test
+    void testGreaterInt() {
+        val test = createTest("a >= b", boolean.class, int.class, int.class);
+        assertEquals(false, call(test, 1, 2));
+        assertEquals(true, call(test, 2, 1));
+    }
+
+    @Test
+    void testLessInt() {
+        val test = createTest("a <= b", boolean.class, int.class, int.class);
+        assertEquals(true, call(test, 1, 2));
+        assertEquals(false, call(test, 2, 1));
     }
 
     @Test
