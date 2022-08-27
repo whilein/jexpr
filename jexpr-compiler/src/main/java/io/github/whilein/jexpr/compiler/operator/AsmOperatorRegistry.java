@@ -16,12 +16,26 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseAnd;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseComplement;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseLeftShift;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseOr;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseRightShift;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseUnsignedRightShift;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorBitwiseXor;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorDivide;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorMinus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorMultiply;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorPlus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorRemainder;
 import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.operator.type.OperatorBitwiseAnd;
+import io.github.whilein.jexpr.operator.type.OperatorBitwiseComplement;
+import io.github.whilein.jexpr.operator.type.OperatorBitwiseLeftShift;
+import io.github.whilein.jexpr.operator.type.OperatorBitwiseOr;
+import io.github.whilein.jexpr.operator.type.OperatorBitwiseRightShift;
+import io.github.whilein.jexpr.operator.type.OperatorBitwiseUnsignedRightShift;
+import io.github.whilein.jexpr.operator.type.OperatorBitwiseXor;
 import io.github.whilein.jexpr.operator.type.OperatorDivide;
 import io.github.whilein.jexpr.operator.type.OperatorMinus;
 import io.github.whilein.jexpr.operator.type.OperatorMultiply;
@@ -56,6 +70,14 @@ public final class AsmOperatorRegistry {
         defaultOperatorMap.put(OperatorMultiply.class, new AsmOperatorMultiply());
         defaultOperatorMap.put(OperatorDivide.class, new AsmOperatorDivide());
         defaultOperatorMap.put(OperatorPlus.class, new AsmOperatorPlus());
+        defaultOperatorMap.put(OperatorBitwiseAnd.class, new AsmOperatorBitwiseAnd());
+        defaultOperatorMap.put(OperatorBitwiseOr.class, new AsmOperatorBitwiseOr());
+        defaultOperatorMap.put(OperatorBitwiseXor.class, new AsmOperatorBitwiseXor());
+        defaultOperatorMap.put(OperatorBitwiseLeftShift.class, new AsmOperatorBitwiseLeftShift());
+        defaultOperatorMap.put(OperatorBitwiseRightShift.class, new AsmOperatorBitwiseRightShift());
+        defaultOperatorMap.put(OperatorBitwiseUnsignedRightShift.class, new AsmOperatorBitwiseUnsignedRightShift());
+
+        defaultOperatorMap.put(OperatorBitwiseComplement.class, new AsmOperatorBitwiseComplement());
 
         DEFAULT_OPERATOR_MAP = Collections.unmodifiableMap(defaultOperatorMap);
     }

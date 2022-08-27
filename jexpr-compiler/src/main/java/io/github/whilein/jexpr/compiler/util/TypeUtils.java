@@ -42,6 +42,20 @@ public class TypeUtils {
             "java/lang/Boolean"
     ));
 
+    private final Set<String> INTEGRAL_WRAPPERS = new HashSet<>(Arrays.asList(
+            "java/lang/Byte",
+            "java/lang/Short",
+            "java/lang/Integer",
+            "java/lang/Long",
+            "java/lang/Character"
+    ));
+
+
+    public boolean isIntegralWrapper(final @NotNull Type type) {
+        return INTEGRAL_WRAPPERS.contains(type.getInternalName());
+    }
+
+
     public boolean isNumberWrapper(final @NotNull Type type) {
         return isWrapper(type) && !type.getInternalName().equals("java/lang/Boolean");
     }
@@ -121,8 +135,13 @@ public class TypeUtils {
         }
     }
 
+    public boolean isPrimitiveIntegral(final @NotNull Type type) {
+        return isPrimitiveNumber(type) && type.getSort() != Type.FLOAT && type.getSort() != Type.DOUBLE;
+    }
+
     public boolean isPrimitiveNumber(final @NotNull Type type) {
-        return isPrimitive(type) && type.getSort() != Type.BOOLEAN;
+        val sort = type.getSort();
+        return sort >= Type.CHAR && sort <= Type.DOUBLE;
     }
 
     public boolean isPrimitive(final @NotNull Type type) {

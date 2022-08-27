@@ -54,10 +54,45 @@ public abstract class AbstractAsmOperator implements AsmOperator {
     }
 
     protected static Type getNumberType(final Type left, final Type right) {
-        val leftNumber = getNumberType(left);
-        val rightNumber = getNumberType(right);
+        try {
+            val leftNumber = getNumberType(left);
+            val rightNumber = getNumberType(right);
 
-        return TypeUtils.getPreferredNumber(leftNumber, rightNumber);
+            return TypeUtils.getPreferredNumber(leftNumber, rightNumber);
+        } catch (final UnsupportedOperationException e) {
+            throw new UnsupportedOperationException("operator is not applicable to " + left + " & " + right);
+        }
+    }
+
+    protected static Type getIntegralType(final Type left, final Type right) {
+        try {
+            val leftNumber = getIntegralType(left);
+            val rightNumber = getIntegralType(right);
+
+            return TypeUtils.getPreferredNumber(leftNumber, rightNumber);
+        } catch (final UnsupportedOperationException e) {
+            throw new UnsupportedOperationException("operator is not applicable to " + left + " & " + right);
+        }
+    }
+
+    protected static void ensureIntegralType(final Type type) {
+        if (TypeUtils.isPrimitiveIntegral(type) || TypeUtils.isIntegralWrapper(type)) {
+            return;
+        }
+
+        throw new UnsupportedOperationException("operator is not applicable to " + type);
+    }
+
+    protected static Type getIntegralType(final Type type) {
+        if (TypeUtils.isPrimitiveIntegral(type)) {
+            return type;
+        }
+
+        if (TypeUtils.isIntegralWrapper(type)) {
+            return TypeUtils.getPrimitive(type);
+        }
+
+        throw new UnsupportedOperationException("operator is not applicable to " + type);
     }
 
     protected static Type getNumberType(final Type type) {

@@ -70,6 +70,30 @@ final class DefaultExpressionCompilerTests {
     }
 
     @Test
+    void testBitwiseShiftIntLong() {
+        val test = createTest("a << 8L", int.class, int.class);
+        assertEquals(32 << 8, call(test, 32));
+    }
+
+    @Test
+    void testBitwiseShiftLongInt() {
+        val test = createTest("8L >> a", long.class, int.class);
+        assertEquals(8L >> 32, call(test, 32));
+    }
+
+    @Test
+    void testBitwiseShiftLongLong() {
+        val test = createTest("8L >>> a", long.class, long.class);
+        assertEquals(8L >>> 4L, call(test, 4L));
+    }
+
+    @Test
+    void testBitwise() {
+        val test = createTest("~a | b & c ^ 123", long.class, long.class, int.class, int.class);
+        assertEquals(~1L | 2 & 3 ^ 123, call(test, 1L, 2, 3));
+    }
+
+    @Test
     void testTwoOperand() {
         val test = createTest("a + b", double.class, double.class, int.class);
         assertEquals(5.5, call(test, 2.5, 3));
@@ -135,7 +159,7 @@ final class DefaultExpressionCompilerTests {
     }
 
     @SneakyThrows
-    private Class<?> createTest(final String query, final Class<?> returnType, final Class<?>... parameters) {
+    private Class<?> createTest(final String expression, final Class<?> returnType, final Class<?>... parameters) {
         val cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
         cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, testType, null,
@@ -146,7 +170,7 @@ final class DefaultExpressionCompilerTests {
                         .map(Type::getType)
                         .toArray(Type[]::new)), null, null);
 
-        tokenParser.submit(query);
+        tokenParser.submit(expression);
         val result = expressionParser.getResult();
 
         val localMap = SimpleLocalMap.create();
