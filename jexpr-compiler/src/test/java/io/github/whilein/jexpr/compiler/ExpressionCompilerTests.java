@@ -16,12 +16,10 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.DefaultExpressionParser;
 import io.github.whilein.jexpr.ExpressionParser;
+import io.github.whilein.jexpr.SimpleExpressionParser;
 import io.github.whilein.jexpr.compiler.operand.DefaultAnalyzer;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
-import io.github.whilein.jexpr.token.SequenceTokenParser;
-import io.github.whilein.jexpr.token.TokenParser;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,7 +44,6 @@ final class ExpressionCompilerTests {
 
     String testType;
 
-    static TokenParser tokenParser;
     static ExpressionParser expressionParser;
     static ExpressionCompilerFactory compilerFactory;
 
@@ -54,7 +51,7 @@ final class ExpressionCompilerTests {
     static void setup() {
         val asmOperatorRegistry = AsmOperatorRegistry.createDefault();
 
-        tokenParser = SequenceTokenParser.createDefault(expressionParser = DefaultExpressionParser.create());
+        expressionParser = SimpleExpressionParser.createDefault();
         compilerFactory = new DefaultExpressionCompilerFactory(DefaultAnalyzer.create(asmOperatorRegistry));
     }
 
@@ -326,8 +323,7 @@ final class ExpressionCompilerTests {
                         .map(Type::getType)
                         .toArray(Type[]::new)), null, null);
 
-        tokenParser.submit(expression);
-        val result = expressionParser.getResult();
+        val result = expressionParser.parse(expression);
 
         val localMap = SimpleLocalMap.create();
 
