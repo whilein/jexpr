@@ -18,7 +18,6 @@ package io.github.whilein.jexpr.token;
 
 import io.github.whilein.jexpr.SyntaxException;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,28 +26,6 @@ import java.util.Map;
  * @author whilein
  */
 public abstract class AbstractTokenParser implements TokenParser {
-
-    public final int submit(final @NotNull String value) throws SyntaxException {
-        if (!shouldActivate(value.charAt(0))) {
-            throw new IllegalStateException(this + " cannot be activated at " + value.charAt(0));
-        }
-
-        try {
-            for (int i = 0, j = value.length(); i < j; i++) {
-                val ch = value.charAt(i);
-
-                if (!shouldStayActive(ch)) {
-                    return j - i - 1;
-                }
-
-                update(ch);
-            }
-
-            return 0;
-        } finally {
-            doFinal();
-        }
-    }
 
     protected abstract void writeSyntaxReport(Map<String, Object> map);
 

@@ -24,22 +24,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface TokenParser {
 
-    boolean shouldStayActive(int ch);
-
-    boolean shouldActivate(int ch);
-
-    int submit(@NotNull String value);
-
     /**
-     * Ввести какой-то символ в парсер
+     * Обработать символ токена. Из этих символов парсер составляет целый "токен",
+     * окончательный результат можно получить используя {@link #doFinal()}.
      *
-     * @param ch Символ
+     * @param ch символа
+     * @throws SyntaxException при неожиданных входных данных
      */
     void update(int ch) throws SyntaxException;
 
     /**
-     * Закончить ввод
+     * Завершить обработку токена.
+     *
+     * @return окончательный результат
+     * @throws SyntaxException при неожиданном завершении
      */
-    void doFinal() throws SyntaxException;
+    @NotNull Token doFinal() throws SyntaxException;
 
 }

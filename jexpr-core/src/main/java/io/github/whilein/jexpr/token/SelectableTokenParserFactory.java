@@ -14,27 +14,15 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr;
+package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operand.Operand;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.InputStream;
-import java.io.Reader;
 
 /**
  * @author whilein
  */
-public interface ExpressionParser {
+public interface SelectableTokenParserFactory {
 
-    @NotNull ExpressionStreamParser getStream();
-
-    @NotNull Operand parse(@NotNull String value);
-
-    @NotNull Operand parse(byte @NotNull [] value);
-
-    @NotNull Operand parse(@NotNull InputStream stream);
-
-    @NotNull Operand parse(@NotNull Reader reader);
+    @NotNull SelectableTokenParser create(@NotNull FactoryContext ctx);
 
 }

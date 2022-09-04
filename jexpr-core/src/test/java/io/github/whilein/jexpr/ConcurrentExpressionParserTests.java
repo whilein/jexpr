@@ -14,9 +14,25 @@
  *    limitations under the License.
  */
 
+package io.github.whilein.jexpr;
+
+import org.junit.jupiter.api.BeforeAll;
+
 /**
- * Низкоуровневая обработка входящих символов.
- *
  * @author whilein
  */
-package io.github.whilein.jexpr.token;
+final class ConcurrentExpressionParserTests extends ExpressionParserTests {
+
+    static ExpressionParser expressionParser;
+
+    @BeforeAll
+    static void setup() {
+        expressionParser = ConcurrentExpressionParser.createDefault();
+    }
+
+    @Override
+    protected ExpressionParser getExpressionParser() {
+        return expressionParser;
+    }
+
+}

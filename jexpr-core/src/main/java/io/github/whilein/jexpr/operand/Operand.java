@@ -19,12 +19,13 @@ package io.github.whilein.jexpr.operand;
 import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
 import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.token.Token;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface Operand {
+public interface Operand extends Token {
 
     @NotNull Number toNumber();
 

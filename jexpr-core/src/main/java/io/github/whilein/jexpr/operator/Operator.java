@@ -17,12 +17,13 @@
 package io.github.whilein.jexpr.operator;
 
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.token.Token;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface Operator {
+public interface Operator extends Token {
 
     boolean isPredictable(boolean value);
 

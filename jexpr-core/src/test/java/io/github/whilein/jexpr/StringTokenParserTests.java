@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token;
+package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.SyntaxException;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
+import io.github.whilein.jexpr.token.StringTokenParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,50 +32,43 @@ final class StringTokenParserTests extends AbstractTokenParserTests {
 
     @BeforeEach
     void setup() {
-        tokenParser = new StringTokenParser(tokenVisitor, new ByteArrayOutput());
+        tokenParser = new StringTokenParser(new ByteArrayOutput());
     }
 
     @Test
     void parseDoubleQuotedString() {
-        tokenParser.submit("\"Hello world!\"");
-        assertTokens("Hello world!");
+        assertEquals("Hello world!", parse("\"Hello world!\""));
     }
 
     @Test
     void parseSingleQuotedString() {
-        tokenParser.submit("'Hello world!'");
-        assertTokens("Hello world!");
+        assertEquals("Hello world!", parse("'Hello world!'"));
     }
 
     @Test
     void parseEscapedDoubleQuoteString() {
-        tokenParser.submit("\"\\\"\"");
-        assertTokens("\"");
+        assertEquals("\"", parse("\"\\\"\""));
     }
 
     @Test
     void parseEscapedSingleQuoteString() {
-        tokenParser.submit("'\\''");
-        assertTokens("'");
+        assertEquals("'", parse("'\\''"));
     }
 
     @Test
     void parseTabString() {
-        tokenParser.submit("\"\\t\"");
-        assertTokens("\t");
+        assertEquals("\t", parse("\"\\t\""));
     }
 
     @Test
     void testUnicodeHex() {
-        tokenParser.submit("\"\\u00a7\"");
-        assertTokens("§");
+        assertEquals("§", parse("\"\\u00a7\""));
     }
 
     @Test
     void testIllegalEscape() {
         try {
-            tokenParser.submit("\"\\a\"");
-
+            parse("\"\\a\"");
             fail();
         } catch (final SyntaxException e) {
             assertEquals("Unexpected character 'a' {quoteCharacter=\", state=2}",
@@ -86,8 +79,7 @@ final class StringTokenParserTests extends AbstractTokenParserTests {
     @Test
     void testUnicodeHexError() {
         try {
-            tokenParser.submit("\"\\u00a\"");
-
+            parse("\"\\u00a\"");
             fail();
         } catch (final SyntaxException e) {
             assertEquals("Unexpected end of unicode escape notation {quoteCharacter=\", state=3, unicode=000a, unicodeMin=4, unicodeMax=4, unicodeSize=3, unicodeRadix=16}",
@@ -97,56 +89,47 @@ final class StringTokenParserTests extends AbstractTokenParserTests {
 
     @Test
     void testUnicodeOctal() {
-        tokenParser.submit("\"\\0a\"");
-        assertTokens("\0a");
+        assertEquals("\0a", parse("\"\\0a\""));
     }
 
     @Test
     void testUnicodeOctal_1to3OctalOctal() {
-        tokenParser.submit("\"\\012\"");
-        assertTokens("\012");
+        assertEquals("\012", parse("\"\\012\""));
     }
 
     @Test
     void testUnicodeOctal_1to3Octal() {
-        tokenParser.submit("\"\\01\"");
-        assertTokens("\01");
+        assertEquals("\01", parse("\"\\01\""));
     }
 
     @Test
     void testUnicodeOctal_1to3() {
-        tokenParser.submit("\"\\0\"");
-        assertTokens("\0");
+        assertEquals("\0", parse("\"\\0\""));
     }
 
     @Test
     void testUnicodeOctal_Octal() {
-        tokenParser.submit("\"\\7\"");
-        assertTokens("\7");
+        assertEquals("\7", parse("\"\\7\""));
     }
 
     @Test
     void testUnicodeOctal_OctalOctal() {
-        tokenParser.submit("\"\\777\"");
-        assertTokens("\777");
+        assertEquals("\777", parse("\"\\777\""));
     }
 
     @Test
     void testUnicodeEmoji() {
-        tokenParser.submit("\"\\uD83E\\uDD21\"");
-        assertTokens("\uD83E\uDD21");
+        assertEquals("\uD83E\uDD21", parse("\"\\uD83E\\uDD21\""));
     }
 
     @Test
     void parseNewLineString() {
-        tokenParser.submit("\"\\n\"");
-        assertTokens("\n");
+        assertEquals("\n", parse("\"\\n\""));
     }
 
     @Test
     void parseCarriageReturnString() {
-        tokenParser.submit("\"\\r\"");
-        assertTokens("\r");
+        assertEquals("\r", parse("\"\\r\""));
     }
 
 }

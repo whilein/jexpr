@@ -14,27 +14,23 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr;
+package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operand.Operand;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.InputStream;
-import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author whilein
  */
-public interface ExpressionParser {
+public final class FactoryContext {
 
-    @NotNull ExpressionStreamParser getStream();
+    Map<Class<?>, Object> allocatedObjects = new HashMap<>();
 
-    @NotNull Operand parse(@NotNull String value);
-
-    @NotNull Operand parse(byte @NotNull [] value);
-
-    @NotNull Operand parse(@NotNull InputStream stream);
-
-    @NotNull Operand parse(@NotNull Reader reader);
+    public <T> @NotNull T allocateOnce(final @NotNull Class<T> type, final @NotNull Supplier<T> factory) {
+        return type.cast(allocatedObjects.computeIfAbsent(type, __ -> factory.get()));
+    }
 
 }

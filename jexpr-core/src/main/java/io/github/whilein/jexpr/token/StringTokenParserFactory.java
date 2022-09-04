@@ -14,27 +14,21 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr;
+package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.io.ByteArrayOutput;
+import lombok.Value;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.InputStream;
-import java.io.Reader;
 
 /**
  * @author whilein
  */
-public interface ExpressionParser {
+@Value
+public class StringTokenParserFactory implements SelectableTokenParserFactory {
 
-    @NotNull ExpressionStreamParser getStream();
-
-    @NotNull Operand parse(@NotNull String value);
-
-    @NotNull Operand parse(byte @NotNull [] value);
-
-    @NotNull Operand parse(@NotNull InputStream stream);
-
-    @NotNull Operand parse(@NotNull Reader reader);
+    @Override
+    public @NotNull SelectableTokenParser create(final @NotNull FactoryContext ctx) {
+        return new StringTokenParser(ctx.allocateOnce(ByteArrayOutput.class, ByteArrayOutput::new));
+    }
 
 }

@@ -14,30 +14,25 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token;
+package io.github.whilein.jexpr;
 
-import org.junit.jupiter.api.AfterEach;
-
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * @author whilein
  */
-abstract class AbstractTokenParserTests {
+final class SimpleExpressionParserTests extends ExpressionParserTests {
 
-    protected TokenParser tokenParser;
+    static ExpressionParser expressionParser;
 
-    protected final StoringTokenVisitor tokenVisitor = new StoringTokenVisitor();
-
-    @AfterEach
-    void destroy() {
-        tokenVisitor.clear();
+    @BeforeAll
+    static void setup() {
+        expressionParser = SimpleExpressionParser.createDefault();
     }
 
-    protected void assertTokens(final Object... tokens) {
-        assertEquals(Arrays.asList(tokens), tokenVisitor.getTokens());
+    @Override
+    protected ExpressionParser getExpressionParser() {
+        return expressionParser;
     }
 
 }

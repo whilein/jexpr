@@ -14,23 +14,19 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token;
+package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.token.TokenParser;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface TokenVisitor {
+public interface ExpressionStreamParser extends TokenParser, AutoCloseable {
 
-    void visitOperand(@NotNull Operand operand);
+    void close();
 
-    void visitOperator(@NotNull Operator operator);
-
-    void visitParenthesesOpen();
-
-    void visitParenthesesClose();
-
+    @Override
+    @NotNull Operand doFinal() throws SyntaxException;
 }
