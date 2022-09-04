@@ -16,7 +16,7 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.compiler.analyzer.Analyzer;
+import io.github.whilein.jexpr.compiler.operand.Analyzer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

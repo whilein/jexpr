@@ -19,6 +19,8 @@ package io.github.whilein.jexpr.compiler.operator.type;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
+import io.github.whilein.jexpr.compiler.util.TypeUtils;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -35,6 +37,10 @@ public final class AsmOperatorPlus extends AbstractAsmOperator {
 
     @Override
     public @NotNull Type getOutputType(final @NotNull Type left, final @NotNull Type right) {
+        if (left.equals(TypeUtils.STRING_TYPE) || right.equals(TypeUtils.STRING_TYPE)) {
+            return TypeUtils.STRING_TYPE; // Concatenation
+        }
+
         return getNumberType(left, right);
     }
 
@@ -51,6 +57,17 @@ public final class AsmOperatorPlus extends AbstractAsmOperator {
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
+        val leftType = left.getType();
+        val rightType = right.getType();
+
+        if (leftType.equals(TypeUtils.STRING_TYPE) || rightType.equals(TypeUtils.STRING_TYPE)) {
+            left.load();
+            right.load();
+
+            // TODO CONCAT
+            return;
+        }
+
         compiler.visitInsn(compileNumber(compiler, left, right).getOpcode(Opcodes.IADD));
     }
 

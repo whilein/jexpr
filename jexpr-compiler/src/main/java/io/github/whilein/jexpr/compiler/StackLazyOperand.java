@@ -16,7 +16,7 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.compiler.analyzer.AnalyzedOperand;
+import io.github.whilein.jexpr.compiler.operand.TypedOperand;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Type;
 
@@ -25,7 +25,7 @@ import org.objectweb.asm.Type;
  */
 public interface StackLazyOperand {
 
-    @NotNull AnalyzedOperand getOperand();
+    @NotNull TypedOperand getOperand();
 
     @NotNull Type getType();
 

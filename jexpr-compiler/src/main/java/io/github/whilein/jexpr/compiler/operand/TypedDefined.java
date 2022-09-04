@@ -14,17 +14,19 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.analyzer;
+package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.compiler.LocalMap;
 import io.github.whilein.jexpr.operand.Operand;
-import org.jetbrains.annotations.NotNull;
+import lombok.Value;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public interface Analyzer {
+@Value
+public class TypedDefined implements TypedOperand {
 
-    @NotNull AnalyzedOperand analyze(@NotNull Operand operand, @NotNull LocalMap localMap);
+    Operand value;
+    Type type;
 
 }

@@ -18,7 +18,7 @@ package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.DefaultExpressionParser;
 import io.github.whilein.jexpr.ExpressionParser;
-import io.github.whilein.jexpr.compiler.analyzer.DefaultAnalyzer;
+import io.github.whilein.jexpr.compiler.operand.DefaultAnalyzer;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
 import io.github.whilein.jexpr.token.SequenceTokenParser;
 import io.github.whilein.jexpr.token.TokenParser;
@@ -63,6 +63,13 @@ final class ExpressionCompilerTests {
         testType = "io/github/whilein/jexpr/compiler/Test_" + testInfo.getTestMethod()
                 .orElseThrow(RuntimeException::new)
                 .getName();
+    }
+
+    @Test
+    void testConcatenation() {
+        val test = createTest("a + b",
+                String.class, String.class, int.class);
+        assertEquals("Text123", call(test, "Text", 123));
     }
 
     @Test

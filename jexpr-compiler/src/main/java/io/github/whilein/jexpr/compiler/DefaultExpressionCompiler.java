@@ -16,12 +16,12 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.compiler.analyzer.AnalyzedDefined;
-import io.github.whilein.jexpr.compiler.analyzer.AnalyzedMember;
-import io.github.whilein.jexpr.compiler.analyzer.AnalyzedOperand;
-import io.github.whilein.jexpr.compiler.analyzer.AnalyzedReference;
-import io.github.whilein.jexpr.compiler.analyzer.AnalyzedSequence;
-import io.github.whilein.jexpr.compiler.analyzer.Analyzer;
+import io.github.whilein.jexpr.compiler.operand.Analyzer;
+import io.github.whilein.jexpr.compiler.operand.TypedDefined;
+import io.github.whilein.jexpr.compiler.operand.TypedMember;
+import io.github.whilein.jexpr.compiler.operand.TypedOperand;
+import io.github.whilein.jexpr.compiler.operand.TypedReference;
+import io.github.whilein.jexpr.compiler.operand.TypedSequence;
 import io.github.whilein.jexpr.operand.Operand;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -75,25 +75,25 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
         compile0(analyzedOperand);
     }
 
-    private void compile0(final AnalyzedOperand operand) {
-        if (operand instanceof AnalyzedDefined) {
-            val defined = (AnalyzedDefined) operand;
+    private void compile0(final TypedOperand operand) {
+        if (operand instanceof TypedDefined) {
+            val defined = (TypedDefined) operand;
             asmMethodCompiler.writeDefinedOperand(defined.getValue());
-        } else if (operand instanceof AnalyzedReference) {
-            val reference = (AnalyzedReference) operand;
+        } else if (operand instanceof TypedReference) {
+            val reference = (TypedReference) operand;
 
             val local = reference.getLocal();
             val localType = local.getType();
 
             asmMethodCompiler.visitVarInsn(localType.getOpcode(ILOAD), local.getIndex());
-        } else if (operand instanceof AnalyzedMember) {
-            val member = (AnalyzedMember) operand;
+        } else if (operand instanceof TypedMember) {
+            val member = (TypedMember) operand;
             val memberOperand = new StackLazyOperandImpl(member.getMember());
 
             val operator = member.getOperator();
             operator.compile(asmMethodCompiler, memberOperand);
-        } else if (operand instanceof AnalyzedSequence) {
-            val sequence = (AnalyzedSequence) operand;
+        } else if (operand instanceof TypedSequence) {
+            val sequence = (TypedSequence) operand;
 
             val left = new StackLazyOperandImpl(sequence.getLeft());
             val right = new StackLazyOperandImpl(sequence.getRight());
@@ -108,7 +108,7 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
     private final class StackLazyOperandImpl implements StackLazyOperand {
 
         @Getter
-        AnalyzedOperand operand;
+        TypedOperand operand;
 
         @Override
         public @NotNull Type getType() {

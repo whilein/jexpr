@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.analyzer;
+package io.github.whilein.jexpr.compiler.operand;
 
 import io.github.whilein.jexpr.compiler.LocalMap;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
@@ -63,11 +63,11 @@ public final class DefaultAnalyzer implements Analyzer {
     }
 
     @Override
-    public @NotNull AnalyzedOperand analyze(final @NotNull Operand operand, final @NotNull LocalMap map) {
+    public @NotNull TypedOperand analyze(final @NotNull Operand operand, final @NotNull LocalMap map) {
         if (operand.isDefined()) {
-            return new AnalyzedDefined(operand, TYPE_MAP.get(operand.getClass()));
+            return new TypedDefined(operand, TYPE_MAP.get(operand.getClass()));
         } else if (operand instanceof OperandReference) {
-            return new AnalyzedReference(map.get((String) operand.getValue()));
+            return new TypedReference(map.get((String) operand.getValue()));
         } else if (operand instanceof OperandUndefinedMember) {
             val member = (OperandUndefinedMember) operand;
 
@@ -76,7 +76,7 @@ public final class DefaultAnalyzer implements Analyzer {
 
             val analyzedMember = analyze(member.getMember(), map);
 
-            return new AnalyzedMember(
+            return new TypedMember(
                     analyzedMember,
                     asmOperator,
                     asmOperator.getOutputType(analyzedMember.getType()));
@@ -88,7 +88,7 @@ public final class DefaultAnalyzer implements Analyzer {
             val operator = sequence.getOperator();
             val asmOperator = asmOperatorRegistry.getOperator(operator.getClass());
 
-            return new AnalyzedSequence(
+            return new TypedSequence(
                     left,
                     right,
                     asmOperator,

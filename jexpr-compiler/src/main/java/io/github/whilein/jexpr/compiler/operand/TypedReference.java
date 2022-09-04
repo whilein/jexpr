@@ -14,20 +14,24 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.analyzer;
+package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.compiler.operator.AsmOperator;
+import io.github.whilein.jexpr.compiler.Local;
 import lombok.Value;
+import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
 @Value
-public class AnalyzedSequence implements AnalyzedOperand {
+public class TypedReference implements TypedOperand {
 
-    AnalyzedOperand left, right;
-    AsmOperator operator;
-    Type type;
+    Local local;
+
+    @Override
+    public @NotNull Type getType() {
+        return local.getType();
+    }
 
 }

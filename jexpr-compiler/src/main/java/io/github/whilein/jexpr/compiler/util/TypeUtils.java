@@ -30,6 +30,8 @@ import java.util.Set;
  */
 @UtilityClass
 public class TypeUtils {
+    public final Type STRING_TYPE = Type.getType(String.class);
+    public final Type BOOLEAN_TYPE = Type.getType(Boolean.class);
 
     private final Set<String> WRAPPERS = new HashSet<>(Arrays.asList(
             "java/lang/Byte",
@@ -60,7 +62,7 @@ public class TypeUtils {
     }
 
     public boolean isNumberWrapper(final @NotNull Type type) {
-        return isWrapper(type) && !type.getInternalName().equals("java/lang/Boolean");
+        return isWrapper(type) && !type.equals(BOOLEAN_TYPE);
     }
 
     public boolean isWrapper(final @NotNull Type type) {
