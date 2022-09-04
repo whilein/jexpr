@@ -3,9 +3,6 @@
 Библиотека позволяет вам обрабатывать и исполнять выражения. Синтаксис практически
 идентичен синтаксису Java.
 
-Данные пишутся в `TokenParser`, результат своей деятельности он пишет
-в `TokenVisitor`, реализацией которого является `ExpressionParser`.
-
 ## Примеры использования
 
 > Выполнение арифметического выражения с известными числами
@@ -14,12 +11,9 @@
 class Example {
     @Test
     public void testArithmeticEvaluation() {
-        ExpressionParser expressionParser = DefaultExpressionParser.create();
+        ExpressionParser expressionParser = SimpleExpressionParser.createDefault();
 
-        TokenParser tokenParser = SequenceTokenParser.createDefault(expressionParser);
-        tokenParser.submit("5 + 5 * 5");
-
-        assertEquals(30, expressionParser.getResult().getValue());
+        assertEquals(30, expressionParser.parse("5 + 5 * 5").getValue());
     }
 }
 ```
@@ -30,10 +24,7 @@ class Example {
 class Example {
     @Test
     public void testArithmeticEvaluation() {
-        ExpressionParser expressionParser = DefaultExpressionParser.create();
-
-        TokenParser tokenParser = SequenceTokenParser.createDefault(expressionParser);
-        tokenParser.submit("x + y * z");
+        ExpressionParser expressionParser = SimpleExpressionParser.createDefault();
 
         // Переменные запрашиваются через UndefinedResolver,
         // реализацией которого может быть всё что угодно.
@@ -47,7 +38,7 @@ class Example {
                 "z", OperandInteger.valueOf(3)
         );
 
-        Operand undefinedOperand = expressionParser.getResult();
+        Operand undefinedOperand = expressionParser.parse("x + y * z");
         Operand solvedOperand = undefinedOperand.solve(variables::get);
 
         assertEquals(7, solvedOperand.getValue());
