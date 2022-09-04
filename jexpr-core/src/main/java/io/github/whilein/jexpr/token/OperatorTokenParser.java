@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class OperatorTokenParser extends AbstractTokenParser {
+public final class OperatorTokenParser extends AbstractTokenParser implements SelectableTokenParser {
 
     OperatorRegistry operatorRegistry;
 

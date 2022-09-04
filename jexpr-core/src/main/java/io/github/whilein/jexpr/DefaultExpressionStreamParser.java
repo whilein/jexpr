@@ -16,18 +16,11 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.io.ByteArrayOutput;
-import io.github.whilein.jexpr.keyword.KeywordRegistry;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operator.Operator;
-import io.github.whilein.jexpr.operator.OperatorRegistry;
 import io.github.whilein.jexpr.token.AbstractTokenParser;
-import io.github.whilein.jexpr.token.NumberTokenParser;
-import io.github.whilein.jexpr.token.OperatorTokenParser;
-import io.github.whilein.jexpr.token.ReferenceTokenParser;
-import io.github.whilein.jexpr.token.StringTokenParser;
+import io.github.whilein.jexpr.token.SelectableTokenParser;
 import io.github.whilein.jexpr.token.Token;
-import io.github.whilein.jexpr.token.TokenParser;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,7 +29,7 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +39,8 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class DefaultExpressionStreamParser extends AbstractTokenParser implements ExpressionStreamParser {
+public final class DefaultExpressionStreamParser extends AbstractTokenParser
+        implements SelectableTokenParser, ExpressionStreamParser {
 
     private static final int STATE_LEADING_BRACKET = 0, STATE_CONTENT = 1, STATE_FINAL_BRACKET = 2;
 
@@ -62,10 +56,10 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser imp
     @NonFinal
     DefaultExpressionStreamParser nestedExpressionParser;
 
-    List<TokenParser> parsers;
+    List<SelectableTokenParser> parsers;
 
     @NonFinal
-    TokenParser activeParser;
+    SelectableTokenParser activeParser;
 
     @NonFinal
     int state = STATE_LEADING_BRACKET;
@@ -83,22 +77,8 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser imp
         return parent == null || ch == '(';
     }
 
-    public static @NotNull ExpressionStreamParser createDefault(
-            final @NotNull OperatorRegistry operatorRegistry,
-            final @NotNull KeywordRegistry keywordRegistry
-    ) {
-        val buffer = new ByteArrayOutput();
-
-        return new DefaultExpressionStreamParser(Arrays.asList(
-                new NumberTokenParser(buffer),
-                new StringTokenParser(buffer),
-                new OperatorTokenParser(operatorRegistry),
-                new ReferenceTokenParser(keywordRegistry, buffer)
-        ));
-    }
-
-    public static @NotNull ExpressionStreamParser create(final @NotNull List<@NotNull TokenParser> parsers) {
-        return new DefaultExpressionStreamParser(parsers);
+    public static @NotNull ExpressionStreamParser create(final @NotNull List<@NotNull SelectableTokenParser> parsers) {
+        return new DefaultExpressionStreamParser(new ArrayList<>(parsers));
     }
 
     @Override
@@ -203,14 +183,13 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser imp
         if (state == STATE_LEADING_BRACKET) {
             onParenthesesOpen();
 
-
             // ignoring leading bracket
             if (parent != null) {
                 return;
             }
         }
 
-        TokenParser activeParser = this.activeParser;
+        SelectableTokenParser activeParser = this.activeParser;
 
         if (activeParser != null && !activeParser.shouldStayActive(ch)) {
             if (activeParser == nestedExpressionParser) {
@@ -238,7 +217,7 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser imp
         activeParser.update(ch);
     }
 
-    private TokenParser initActiveParser(final int ch) {
+    private SelectableTokenParser initActiveParser(final int ch) {
         for (val parser : parsers) {
             if (parser.shouldActivate(ch)) {
                 return parser;
@@ -265,8 +244,12 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser imp
             if (nestedExpressionParser != null) {
                 this.nestedExpressionParser = null;
 
-                if (nestedExpressionParser.state == STATE_FINAL_BRACKET) {
-                    onToken(nestedExpressionParser.doFinal());
+                switch (nestedExpressionParser.state) {
+                    case STATE_FINAL_BRACKET:
+                        onToken(nestedExpressionParser.doFinal());
+                        break;
+                    case STATE_CONTENT:
+                        throw new SyntaxException("Unexpected end, nested parentheses isn't closed");
                 }
             }
 
@@ -300,4 +283,7 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser imp
         return ch <= 32;
     }
 
+    @Override
+    public void close() {
+    }
 }

@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class ReferenceTokenParser extends AbstractTokenParser {
+public final class ReferenceTokenParser extends AbstractTokenParser implements SelectableTokenParser {
 
     KeywordRegistry keywordRegistry;
 

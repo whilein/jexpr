@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class StringTokenParser extends AbstractTokenParser {
+public final class StringTokenParser extends AbstractTokenParser implements SelectableTokenParser {
 
     @NonFinal
     int quoteCharacter = 0;

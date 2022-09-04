@@ -17,8 +17,8 @@
 package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.token.SelectableTokenParser;
 import io.github.whilein.jexpr.token.Token;
-import io.github.whilein.jexpr.token.TokenParser;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  */
 abstract class AbstractTokenParserTests {
 
-    protected TokenParser tokenParser;
+    protected SelectableTokenParser tokenParser;
 
     public final Token parseAsToken(final @NotNull String value) throws SyntaxException {
         if (!tokenParser.shouldActivate(value.charAt(0))) {

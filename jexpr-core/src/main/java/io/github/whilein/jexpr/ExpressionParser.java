@@ -17,16 +17,24 @@
 package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.token.TokenParser;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * @author whilein
  */
-public interface ExpressionStreamParser extends TokenParser, AutoCloseable {
+public interface ExpressionParser {
 
-    void close();
+    @NotNull ExpressionStreamParser getStream();
 
-    @Override
-    @NotNull Operand doFinal() throws SyntaxException;
+    @NotNull Operand parse(@NotNull String value);
+
+    @NotNull Operand parse(byte @NotNull [] value);
+
+    @NotNull Operand parse(@NotNull InputStream stream);
+
+    @NotNull Operand parse(@NotNull Reader reader);
+
 }

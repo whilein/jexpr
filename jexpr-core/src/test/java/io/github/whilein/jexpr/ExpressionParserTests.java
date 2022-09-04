@@ -16,12 +16,9 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.keyword.KeywordRegistry;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operator.OperatorException;
-import io.github.whilein.jexpr.operator.OperatorRegistry;
 import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -32,39 +29,38 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author whilein
  */
-final class ExpressionStreamParserTests extends AbstractTokenParserTests {
+abstract class ExpressionParserTests {
 
-    @BeforeEach
-    void setup() {
-        tokenParser = DefaultExpressionStreamParser.createDefault(
-                OperatorRegistry.createDefault(),
-                KeywordRegistry.createDefault()
-        );
+    private Operand parse(final String text) {
+        return getExpressionParser().parse(text);
     }
+
+
+    protected abstract ExpressionParser getExpressionParser();
 
 
     @Test
     void testStringNotEquals() {
         //noinspection EqualsWithItself
-        assertEquals(!"123".equals("123"), parse("'123' != '123'"));
+        assertEquals(!"123".equals("123"), parse("'123' != '123'").getValue());
     }
 
 
     @Test
     void testStringEquals() {
         //noinspection EqualsWithItself
-        assertEquals("123".equals("123"), parse("'123' == '123'"));
+        assertEquals("123".equals("123"), parse("'123' == '123'").getValue());
     }
 
     @Test
     void testLogicalDefinedExpression() {
         //noinspection ConstantConditions,PointlessBooleanExpression
-        assertEquals((3 > 8) || (6 > 8) && !false, parse("(3 > 8) || (6 > 8) && !false"));
+        assertEquals((3 > 8) || (6 > 8) && !false, parse("(3 > 8) || (6 > 8) && !false").getValue());
     }
 
     @Test
     void testInapplicableOperators() {
-        assertThrows(OperatorException.class, () -> parse("1 - 'text'"));
+        assertThrows(OperatorException.class, () -> parse("1 - 'text'").getValue());
     }
 
     @Test
@@ -78,7 +74,7 @@ final class ExpressionStreamParserTests extends AbstractTokenParserTests {
                 .put("y", y)
                 .put("z", z);
 
-        val result = (Operand) parseAsToken("(x > y) || z != 1");
+        val result = parse("(x > y) || z != 1");
 
         val solvedResult = result.solve(map);
 
@@ -91,11 +87,7 @@ final class ExpressionStreamParserTests extends AbstractTokenParserTests {
 
     @Test
     void testDefinedEvaluation() {
-        System.out.println(0xFaL);
-        System.out.println(-~0b10);
-        System.out.println(009_9.9_9d);
-
-        assertEquals((0xFaL ^ -~0b10) + 009_9.9_9d, parse("(0xFaL ^ -~0b10) + 009_9.9_9d"));
+        assertEquals((0xFaL ^ -~0b10) + 009_9.9_9d, parse("(0xFaL ^ -~0b10) + 009_9.9_9d").getValue());
     }
 
 }

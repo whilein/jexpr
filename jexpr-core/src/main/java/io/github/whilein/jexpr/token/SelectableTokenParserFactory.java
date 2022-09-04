@@ -14,19 +14,15 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr;
+package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.token.TokenParser;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface ExpressionStreamParser extends TokenParser, AutoCloseable {
+public interface SelectableTokenParserFactory {
 
-    void close();
+    @NotNull SelectableTokenParser create(@NotNull FactoryContext ctx);
 
-    @Override
-    @NotNull Operand doFinal() throws SyntaxException;
 }

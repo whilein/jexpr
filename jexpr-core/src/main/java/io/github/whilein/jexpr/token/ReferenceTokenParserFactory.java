@@ -14,19 +14,24 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr;
+package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.token.TokenParser;
+import io.github.whilein.jexpr.io.ByteArrayOutput;
+import io.github.whilein.jexpr.keyword.KeywordRegistry;
+import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface ExpressionStreamParser extends TokenParser, AutoCloseable {
+@Value
+public class ReferenceTokenParserFactory implements SelectableTokenParserFactory {
 
-    void close();
+    KeywordRegistry keywordRegistry;
 
     @Override
-    @NotNull Operand doFinal() throws SyntaxException;
+    public @NotNull SelectableTokenParser create(final @NotNull FactoryContext ctx) {
+        return new ReferenceTokenParser(keywordRegistry, ctx.allocateOnce(ByteArrayOutput.class, ByteArrayOutput::new));
+    }
+
 }

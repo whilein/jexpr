@@ -36,7 +36,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class NumberTokenParser extends AbstractTokenParser {
+public final class NumberTokenParser extends AbstractTokenParser implements SelectableTokenParser {
 
     ByteArrayOutput buffer;
 

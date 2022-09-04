@@ -116,8 +116,6 @@ final class NumberTokenParserTests extends AbstractTokenParserTests {
 
     @Test
     void parseFloatOctal() {
-        System.out.println(0999f);
-
         assertEquals(0999f, parse("0999f"));
     }
 

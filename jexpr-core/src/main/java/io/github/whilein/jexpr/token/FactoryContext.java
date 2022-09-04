@@ -14,19 +14,23 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr;
+package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.token.TokenParser;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author whilein
  */
-public interface ExpressionStreamParser extends TokenParser, AutoCloseable {
+public final class FactoryContext {
 
-    void close();
+    Map<Class<?>, Object> allocatedObjects = new HashMap<>();
 
-    @Override
-    @NotNull Operand doFinal() throws SyntaxException;
+    public <T> @NotNull T allocateOnce(final @NotNull Class<T> type, final @NotNull Supplier<T> factory) {
+        return type.cast(allocatedObjects.computeIfAbsent(type, __ -> factory.get()));
+    }
+
 }

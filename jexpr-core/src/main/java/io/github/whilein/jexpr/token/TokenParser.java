@@ -24,12 +24,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface TokenParser {
 
-    boolean shouldStayActive(int ch);
-
-    boolean shouldActivate(int ch);
-
+    /**
+     * Обработать символ токена. Из этих символов парсер составляет целый "токен",
+     * окончательный результат можно получить используя {@link #doFinal()}.
+     *
+     * @param ch символа
+     * @throws SyntaxException при неожиданных входных данных
+     */
     void update(int ch) throws SyntaxException;
 
+    /**
+     * Завершить обработку токена.
+     *
+     * @return окончательный результат
+     * @throws SyntaxException при неожиданном завершении
+     */
     @NotNull Token doFinal() throws SyntaxException;
 
 }

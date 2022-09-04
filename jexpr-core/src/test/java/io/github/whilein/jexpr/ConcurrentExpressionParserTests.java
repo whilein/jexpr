@@ -16,17 +16,23 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.token.TokenParser;
-import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeAll;
 
 /**
  * @author whilein
  */
-public interface ExpressionStreamParser extends TokenParser, AutoCloseable {
+final class ConcurrentExpressionParserTests extends ExpressionParserTests {
 
-    void close();
+    static ExpressionParser expressionParser;
+
+    @BeforeAll
+    static void setup() {
+        expressionParser = ConcurrentExpressionParser.createDefault();
+    }
 
     @Override
-    @NotNull Operand doFinal() throws SyntaxException;
+    protected ExpressionParser getExpressionParser() {
+        return expressionParser;
+    }
+
 }
