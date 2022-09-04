@@ -16,11 +16,10 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandDouble;
+import io.github.whilein.jexpr.keyword.KeywordRegistry;
+import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operator.OperatorException;
-import io.github.whilein.jexpr.token.SequenceTokenParser;
-import io.github.whilein.jexpr.token.TokenParser;
+import io.github.whilein.jexpr.operator.OperatorRegistry;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,55 +32,39 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author whilein
  */
-final class ExpressionParserTests {
-
-    ExpressionParser expressionParser;
-
-    TokenParser tokenParser;
+final class ExpressionStreamParserTests extends AbstractTokenParserTests {
 
     @BeforeEach
     void setup() {
-        expressionParser = DefaultExpressionParser.create();
-        tokenParser = SequenceTokenParser.createDefault(expressionParser);
+        tokenParser = DefaultExpressionStreamParser.createDefault(
+                OperatorRegistry.createDefault(),
+                KeywordRegistry.createDefault()
+        );
     }
 
-    protected int update(final String text) {
-        return tokenParser.submit(text);
-    }
 
     @Test
     void testStringNotEquals() {
-        assertEquals(0, update("'123' != '123'"));
-
-        val result = expressionParser.getResult();
-
         //noinspection EqualsWithItself
-        assertEquals(OperandBoolean.valueOf(!"123".equals("123")), result);
+        assertEquals(!"123".equals("123"), parse("'123' != '123'"));
     }
 
 
     @Test
     void testStringEquals() {
-        assertEquals(0, update("'123' == '123'"));
-
-        val result = expressionParser.getResult();
         //noinspection EqualsWithItself
-        assertEquals(OperandBoolean.valueOf("123".equals("123")), result);
+        assertEquals("123".equals("123"), parse("'123' == '123'"));
     }
 
     @Test
     void testLogicalDefinedExpression() {
-        assertEquals(0, update("(3 > 8) || (6 > 8) && !false"));
-
-        val result = expressionParser.getResult();
-
         //noinspection ConstantConditions,PointlessBooleanExpression
-        assertEquals(OperandBoolean.valueOf((3 > 8) || (6 > 8) && !false), result);
+        assertEquals((3 > 8) || (6 > 8) && !false, parse("(3 > 8) || (6 > 8) && !false"));
     }
 
     @Test
     void testInapplicableOperators() {
-        assertThrows(OperatorException.class, () -> update("1 - 'text'"));
+        assertThrows(OperatorException.class, () -> parse("1 - 'text'"));
     }
 
     @Test
@@ -95,9 +78,8 @@ final class ExpressionParserTests {
                 .put("y", y)
                 .put("z", z);
 
-        assertEquals(0, update("(x > y) || z != 1"));
+        val result = (Operand) parseAsToken("(x > y) || z != 1");
 
-        val result = expressionParser.getResult();
         val solvedResult = result.solve(map);
 
         //noinspection ConstantConditions
@@ -109,11 +91,11 @@ final class ExpressionParserTests {
 
     @Test
     void testDefinedEvaluation() {
-        assertEquals(0, update("(0xFaL ^ -~0b10) + 009_9.9_9d)"));
+        System.out.println(0xFaL);
+        System.out.println(-~0b10);
+        System.out.println(009_9.9_9d);
 
-        val result = expressionParser.getResult();
-        assertEquals(OperandDouble.valueOf((0xFaL ^ -~0b10) + 009_9.9_9d), result);
+        assertEquals((0xFaL ^ -~0b10) + 009_9.9_9d, parse("(0xFaL ^ -~0b10) + 009_9.9_9d"));
     }
-
 
 }

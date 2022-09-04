@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token;
+package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.operator.OperatorRegistry;
-import lombok.val;
+import io.github.whilein.jexpr.token.OperatorTokenParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,15 +30,11 @@ final class OperatorTokenParserTests extends AbstractTokenParserTests {
 
     @BeforeEach
     void setup() {
-        tokenParser = new OperatorTokenParser(tokenVisitor, OperatorRegistry.createDefault());
+        tokenParser = new OperatorTokenParser(OperatorRegistry.createDefault());
     }
 
     private void testOperator(final String operator, final String type) {
-        tokenParser.submit(operator);
-
-        val tokens = tokenVisitor.getTokens();
-        assertEquals(1, tokens.size());
-        assertEquals(type, tokens.get(0));
+        assertEquals(type, parse(operator));
     }
 
     @Test

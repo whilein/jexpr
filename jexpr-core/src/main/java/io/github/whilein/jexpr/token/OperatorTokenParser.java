@@ -17,12 +17,14 @@
 package io.github.whilein.jexpr.token;
 
 import io.github.whilein.jexpr.SyntaxException;
+import io.github.whilein.jexpr.operator.Operator;
 import io.github.whilein.jexpr.operator.OperatorMatcher;
 import io.github.whilein.jexpr.operator.OperatorRegistry;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -32,8 +34,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public final class OperatorTokenParser extends AbstractTokenParser {
-
-    TokenVisitor tokenVisitor;
 
     OperatorRegistry operatorRegistry;
 
@@ -65,8 +65,11 @@ public final class OperatorTokenParser extends AbstractTokenParser {
     }
 
     @Override
-    public void doFinal() throws SyntaxException {
-        tokenVisitor.visitOperator(operatorMatcher.getMatchedResult());
-        operatorMatcher = null;
+    public @NotNull Operator doFinal() throws SyntaxException {
+        try {
+            return operatorMatcher.getMatchedResult();
+        } finally {
+            operatorMatcher = null;
+        }
     }
 }

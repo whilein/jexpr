@@ -16,15 +16,11 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.token.TokenVisitor;
-import org.jetbrains.annotations.NotNull;
+import io.github.whilein.jexpr.token.TokenParser;
 
 /**
  * @author whilein
  */
-public interface ExpressionParser extends TokenVisitor {
-
-    @NotNull Operand getResult();
+public interface ExpressionStreamParser extends TokenParser {
 
 }

@@ -16,28 +16,8 @@
 
 package io.github.whilein.jexpr.token;
 
-import org.junit.jupiter.api.AfterEach;
-
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * @author whilein
  */
-abstract class AbstractTokenParserTests {
-
-    protected TokenParser tokenParser;
-
-    protected final StoringTokenVisitor tokenVisitor = new StoringTokenVisitor();
-
-    @AfterEach
-    void destroy() {
-        tokenVisitor.clear();
-    }
-
-    protected void assertTokens(final Object... tokens) {
-        assertEquals(Arrays.asList(tokens), tokenVisitor.getTokens());
-    }
-
+public interface Token {
 }

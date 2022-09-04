@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -36,8 +37,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public final class NumberTokenParser extends AbstractTokenParser {
-
-    TokenVisitor tokenVisitor;
 
     ByteArrayOutput buffer;
 
@@ -276,7 +275,7 @@ public final class NumberTokenParser extends AbstractTokenParser {
     }
 
     @Override
-    public void doFinal() {
+    public @NotNull Operand doFinal() {
         try {
             if (illegalOctalNumber) {
                 throw invalidSyntax("Invalid octal number (leading zero?)");
@@ -297,7 +296,7 @@ public final class NumberTokenParser extends AbstractTokenParser {
                 }
             }
 
-            tokenVisitor.visitOperand(number);
+            return number;
         } finally {
             type = TYPE_INT;
             radix = RADIX_UNKNOWN;

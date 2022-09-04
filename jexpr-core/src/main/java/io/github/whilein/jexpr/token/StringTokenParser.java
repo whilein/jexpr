@@ -18,12 +18,14 @@ package io.github.whilein.jexpr.token;
 
 import io.github.whilein.jexpr.SyntaxException;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
+import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandString;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -62,8 +64,6 @@ public final class StringTokenParser extends AbstractTokenParser {
 
     @NonFinal
     int unicodeRadix;
-
-    TokenVisitor tokenVisitor;
 
     ByteArrayOutput buffer;
 
@@ -263,10 +263,9 @@ public final class StringTokenParser extends AbstractTokenParser {
     }
 
     @Override
-    public void doFinal() throws SyntaxException {
+    public @NotNull Operand doFinal() throws SyntaxException {
         try {
-            val text = buffer.getString();
-            tokenVisitor.visitOperand(OperandString.valueOf(text));
+            return OperandString.valueOf(buffer.getString());
         } finally {
             buffer.reset();
             state = STATE_LEADING_QUOTE;

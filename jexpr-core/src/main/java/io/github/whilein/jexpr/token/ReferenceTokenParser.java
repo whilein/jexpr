@@ -18,11 +18,13 @@ package io.github.whilein.jexpr.token;
 
 import io.github.whilein.jexpr.io.ByteArrayOutput;
 import io.github.whilein.jexpr.keyword.KeywordRegistry;
+import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.undefined.OperandReference;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -32,8 +34,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public final class ReferenceTokenParser extends AbstractTokenParser {
-
-    TokenVisitor tokenVisitor;
 
     KeywordRegistry keywordRegistry;
 
@@ -60,14 +60,13 @@ public final class ReferenceTokenParser extends AbstractTokenParser {
     }
 
     @Override
-    public void doFinal() {
+    public @NotNull Operand doFinal() {
         try {
             val reference = buffer.getString();
 
-            tokenVisitor.visitOperand(keywordRegistry.hasKeyword(reference)
+            return keywordRegistry.hasKeyword(reference)
                     ? keywordRegistry.getKeyword(reference)
-                    : OperandReference.valueOf(reference));
-
+                    : OperandReference.valueOf(reference);
         } finally {
             buffer.reset();
         }

@@ -28,18 +28,8 @@ public interface TokenParser {
 
     boolean shouldActivate(int ch);
 
-    int submit(@NotNull String value);
-
-    /**
-     * Ввести какой-то символ в парсер
-     *
-     * @param ch Символ
-     */
     void update(int ch) throws SyntaxException;
 
-    /**
-     * Закончить ввод
-     */
-    void doFinal() throws SyntaxException;
+    @NotNull Token doFinal() throws SyntaxException;
 
 }
