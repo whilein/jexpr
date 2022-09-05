@@ -36,11 +36,11 @@ public final class SimpleLocalMap implements LocalMap {
 
     private final Map<String, Local> localMap;
 
-    public static @NotNull SimpleLocalMap create() {
+    public static @NotNull LocalMap create() {
         return new SimpleLocalMap(new HashMap<>());
     }
 
-    public @NotNull SimpleLocalMap add(final @NotNull String name, final int index, final @NotNull Type type) {
+    public @NotNull LocalMap add(final @NotNull String name, final int index, final @NotNull Type type) {
         localMap.put(name, new LocalImpl(index, type));
 
         return this;

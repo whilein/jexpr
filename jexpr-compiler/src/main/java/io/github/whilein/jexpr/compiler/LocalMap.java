@@ -17,11 +17,14 @@
 package io.github.whilein.jexpr.compiler;
 
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
 public interface LocalMap {
+
+    @NotNull LocalMap add(@NotNull String name, int index, @NotNull Type type);
 
     @NotNull Local get(@NotNull String name);
 

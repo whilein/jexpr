@@ -63,6 +63,10 @@ public final class DefaultAnalyzer implements Analyzer {
         return new DefaultAnalyzer(asmOperatorRegistry);
     }
 
+    public static @NotNull Analyzer createDefault() {
+        return new DefaultAnalyzer(AsmOperatorRegistry.createDefault());
+    }
+
     @Override
     public @NotNull TypedOperand analyze(final @NotNull Operand operand, final @NotNull LocalMap map) {
         if (operand.isDefined()) {

@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.compiler.operand.Analyzer;
+import io.github.whilein.jexpr.compiler.operand.DefaultAnalyzer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,10 +28,18 @@ import org.objectweb.asm.MethodVisitor;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DefaultExpressionCompilerFactory implements ExpressionCompilerFactory {
 
     Analyzer analyzer;
+
+    public static @NotNull ExpressionCompilerFactory create(final @NotNull Analyzer analyzer) {
+        return new DefaultExpressionCompilerFactory(analyzer);
+    }
+
+    public static @NotNull ExpressionCompilerFactory createDefault() {
+        return new DefaultExpressionCompilerFactory(DefaultAnalyzer.createDefault());
+    }
 
     @Override
     public @NotNull ExpressionCompiler create(

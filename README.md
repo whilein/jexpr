@@ -46,6 +46,41 @@ class Example {
 }
 ```
 
+## Компиляция в байткод
+
+С помощью модуля `jexpr-compiler` вы можете компилировать неопределённые выражения (содержащие переменные)
+напрямую в байткод. Реализованы все операторы из `jexpr-core`.
+
+```java
+class Example {
+    public void compile(MethodVisitor mv) {
+        ExpressionParser expressionParser = SimpleExpressionParser.createDefault();
+
+        // парсим выражение
+        Operand expression = expressionParser.parse("variable + 1");
+
+        // Указываем, что у нас находится в локальных переменных
+        // они будут использованы компилятором
+        LocalMap localMap = SimpleLocalMap.create()
+                // в параметре 1 у нас целое число с именем variable.
+                // при компиляции оно увидит неизвестное "variable" и 
+                // запросит его из локальных параметров
+                .add("variable", 1, Type.INT_TYPE);
+
+        ExpressionCompilerFactory expressionCompilerFactory = DefaultExpressionCompilerFactory.createDefault();
+
+        ExpressionCompiler compiler = expressionCompilerFactory.create(mv, localMap);
+        compiler.compile(expression);
+        
+        // Результат:
+        //
+        // ILOAD_1
+        // ICONST_1
+        // IADD
+    }
+}
+```
+
 ## Некоторые замечания
 
 ### Строки
@@ -88,11 +123,6 @@ class Example {
 - true
 - false
 - null
-
-### Компиляция в байткод
-
-С помощью модуля `jexpr-compiler` вы можете компилировать неопределённые выражения (содержащие переменные)
-напрямую в байткод. Реализованы все операторы из `jexpr-core`.
 
 ### Функции
 

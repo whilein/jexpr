@@ -18,8 +18,6 @@ package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.ExpressionParser;
 import io.github.whilein.jexpr.SimpleExpressionParser;
-import io.github.whilein.jexpr.compiler.operand.DefaultAnalyzer;
-import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
@@ -48,14 +46,12 @@ final class ExpressionCompilerTests {
     String testType;
 
     static ExpressionParser expressionParser;
-    static ExpressionCompilerFactory compilerFactory;
+    static ExpressionCompilerFactory expressionCompilerFactory;
 
     @BeforeAll
     static void setup() {
-        val asmOperatorRegistry = AsmOperatorRegistry.createDefault();
-
         expressionParser = SimpleExpressionParser.createDefault();
-        compilerFactory = new DefaultExpressionCompilerFactory(DefaultAnalyzer.create(asmOperatorRegistry));
+        expressionCompilerFactory = DefaultExpressionCompilerFactory.createDefault();
     }
 
     @BeforeEach
@@ -79,6 +75,12 @@ final class ExpressionCompilerTests {
         assertEquals("Hello world!", call(test, "Hello ", "world!"));
     }
 
+    @Test
+    void testConcatenation2() {
+        val test = createTest("a == (b + c)",
+                boolean.class, String.class, String.class, String.class);
+        assertEquals(true, call(test, "123321", "123", "321"));
+    }
 
     @Test
     void testDifficultArithmeticalExpression() {
@@ -368,7 +370,7 @@ final class ExpressionCompilerTests {
             local += paramType.getSize();
         }
 
-        val compiler = compilerFactory.create(mv, localMap);
+        val compiler = expressionCompilerFactory.create(mv, localMap);
         compiler.compile(result);
 
         mv.visitInsn(Type.getType(returnType).getOpcode(Opcodes.IRETURN));
