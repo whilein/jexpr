@@ -45,6 +45,25 @@ abstract class ExpressionParserTests {
         assertEquals(!"123".equals("123"), parse("'123' != '123'").getValue());
     }
 
+    @Test
+    void testNestedParenthesesOneLeftOperand() {
+        assertEquals(true, parse("('123') == '123'").getValue());
+    }
+
+    @Test
+    void testNestedParenthesesOneRightOperand() {
+        assertEquals(true, parse("'123' == ('123')").getValue());
+    }
+
+    @Test
+    void testNestedParenthesesBothOperands() {
+        assertEquals(true, parse("('123') == ('123')").getValue());
+    }
+
+    @Test
+    void testNestedParentheses() {
+        assertEquals(true, parse("('123' == '123')").getValue());
+    }
 
     @Test
     void testStringEquals() {
