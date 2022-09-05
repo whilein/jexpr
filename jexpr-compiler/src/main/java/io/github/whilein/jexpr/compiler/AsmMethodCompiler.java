@@ -20,14 +20,17 @@ import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
 import io.github.whilein.jexpr.operand.defined.OperandNumber;
+import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operand.defined.OperandString;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.val;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import static org.objectweb.asm.Opcodes.ACONST_NULL;
 import static org.objectweb.asm.Opcodes.BIPUSH;
 import static org.objectweb.asm.Opcodes.CHECKCAST;
 import static org.objectweb.asm.Opcodes.D2F;
@@ -42,6 +45,7 @@ import static org.objectweb.asm.Opcodes.I2D;
 import static org.objectweb.asm.Opcodes.I2F;
 import static org.objectweb.asm.Opcodes.I2L;
 import static org.objectweb.asm.Opcodes.I2S;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.L2D;
 import static org.objectweb.asm.Opcodes.L2F;
@@ -56,6 +60,39 @@ public final class AsmMethodCompiler extends MethodVisitor {
 
     AsmMethodCompiler(final MethodVisitor mv) {
         super(Opcodes.ASM9, mv);
+    }
+
+    @NonFinal
+    boolean concat;
+
+    public void beginConcat() {
+        if (!concat) {
+            concat = true;
+
+            visitTypeInsn(Opcodes.NEW, "java/lang/StringBuilder");
+
+            visitInsn(Opcodes.DUP);
+
+            visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>",
+                    "()V", false);
+        }
+    }
+
+    public void concat(final Type type) {
+        val descriptor = type == null || (!TypeUtils.isPrimitive(type) && !type.equals(TypeUtils.STRING_TYPE))
+                ? "(Ljava/lang/Object;)Ljava/lang/StringBuilder;"
+                : "(" + type.getDescriptor() + ")Ljava/lang/StringBuilder;";
+
+        visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "append", descriptor, false);
+    }
+
+    public void endConcat() {
+        if (concat) {
+            concat = false;
+
+            visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString",
+                    "()Ljava/lang/String;", false);
+        }
     }
 
     private String getWrapperToPrimitiveMethod(final Type type) {
@@ -272,6 +309,8 @@ public final class AsmMethodCompiler extends MethodVisitor {
             mv.visitInsn(operand.toBoolean() ? Opcodes.ICONST_1 : Opcodes.ICONST_0);
         } else if (operand instanceof OperandString) {
             mv.visitLdcInsn(operand.toString());
+        } else if (operand instanceof OperandObject) {
+            mv.visitInsn(ACONST_NULL);
         } else {
             throw new UnsupportedOperationException("Unable to compile unknown operand: "
                     + operand.getClass().getName() + " (not in standard library?)");

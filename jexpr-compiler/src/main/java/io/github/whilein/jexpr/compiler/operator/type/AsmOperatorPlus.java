@@ -22,6 +22,7 @@ import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
@@ -31,21 +32,27 @@ import org.objectweb.asm.Type;
 public final class AsmOperatorPlus extends AbstractAsmOperator {
 
     @Override
-    public @NotNull Type getOutputType(final @NotNull Type value) {
+    public @NotNull Type getOutputType(final @Nullable Type value) {
         return getNumberType(value);
     }
 
+    private static boolean isAnyString(final Type left, final Type right) {
+        return (left != null && left.equals(TypeUtils.STRING_TYPE))
+                || (right != null && right.equals(TypeUtils.STRING_TYPE));
+    }
+
     @Override
-    public @NotNull Type getOutputType(final @NotNull Type left, final @NotNull Type right) {
-        if (left.equals(TypeUtils.STRING_TYPE) || right.equals(TypeUtils.STRING_TYPE)) {
-            return TypeUtils.STRING_TYPE; // Concatenation
+    public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
+        if (isAnyString(left, right)) { // concat
+            return TypeUtils.STRING_TYPE;
         }
 
         return getNumberType(left, right);
     }
 
     @Override
-    public void compile(final @NotNull AsmMethodCompiler compiler, final @NotNull StackLazyOperand value) {
+    public void compile(final @NotNull AsmMethodCompiler compiler, final @Nullable StackLazyOperand origin,
+                        final @NotNull StackLazyOperand value) {
         value.load();
 
         compiler.unbox(value.getType());
@@ -54,17 +61,32 @@ public final class AsmOperatorPlus extends AbstractAsmOperator {
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
+            final @Nullable StackLazyOperand origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
         val leftType = left.getType();
         val rightType = right.getType();
 
-        if (leftType.equals(TypeUtils.STRING_TYPE) || rightType.equals(TypeUtils.STRING_TYPE)) {
+        if (isAnyString(leftType, rightType)) { // concat
+            compiler.beginConcat();
+
             left.load();
+
+            if (!left.isConcatenated()) {
+                compiler.concat(leftType);
+            }
+
             right.load();
 
-            // TODO CONCAT
+            if (!right.isConcatenated()) {
+                compiler.concat(rightType);
+            }
+
+            if (origin != null) {
+                origin.setConcatenated(true);
+            }
+
             return;
         }
 

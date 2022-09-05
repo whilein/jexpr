@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
 /**
@@ -39,6 +40,7 @@ public abstract class AbstractAsmOperator implements AsmOperator {
             final StackLazyOperand right
     ) {
         Type leftType = left.getType(), rightType = right.getType();
+        assert leftType != null && rightType != null;
 
         val type = TypeUtils.getPreferredNumber(leftType, rightType);
 
@@ -64,8 +66,8 @@ public abstract class AbstractAsmOperator implements AsmOperator {
         }
     }
 
-    protected static void ensureBooleanType(final Type type) {
-        if (type.getSort() == Type.BOOLEAN || type.getInternalName().equals("java/lang/Boolean")) {
+    protected static void ensureBooleanType(final @Nullable Type type) {
+        if (type != null && (type.getSort() == Type.BOOLEAN || type.getInternalName().equals("java/lang/Boolean"))) {
             return;
         }
 
@@ -83,7 +85,7 @@ public abstract class AbstractAsmOperator implements AsmOperator {
         }
     }
 
-    protected static Type getIntegralType(final Type left, final Type right) {
+    protected static Type getIntegralType(final @Nullable Type left, final @Nullable Type right) {
         try {
             val leftNumber = getIntegralType(left);
             val rightNumber = getIntegralType(right);
@@ -94,8 +96,8 @@ public abstract class AbstractAsmOperator implements AsmOperator {
         }
     }
 
-    protected static void ensureIntegralType(final Type type) {
-        if (TypeUtils.isPrimitiveIntegral(type) || TypeUtils.isIntegralWrapper(type)) {
+    protected static void ensureIntegralType(final @Nullable Type type) {
+        if (type != null && (TypeUtils.isPrimitiveIntegral(type) || TypeUtils.isIntegralWrapper(type))) {
             return;
         }
 
@@ -103,12 +105,14 @@ public abstract class AbstractAsmOperator implements AsmOperator {
     }
 
     protected static Type getIntegralType(final Type type) {
-        if (TypeUtils.isPrimitiveIntegral(type)) {
-            return type;
-        }
+        if (type != null) {
+            if (TypeUtils.isPrimitiveIntegral(type)) {
+                return type;
+            }
 
-        if (TypeUtils.isIntegralWrapper(type)) {
-            return TypeUtils.getPrimitive(type);
+            if (TypeUtils.isIntegralWrapper(type)) {
+                return TypeUtils.getPrimitive(type);
+            }
         }
 
         throw new UnsupportedOperationException("operator is not applicable to " + type);
@@ -123,30 +127,33 @@ public abstract class AbstractAsmOperator implements AsmOperator {
     }
 
     protected static Type getNumberType(final Type type) {
-        if (TypeUtils.isPrimitiveNumber(type)) {
-            return type;
-        }
+        if (type != null) {
+            if (TypeUtils.isPrimitiveNumber(type)) {
+                return type;
+            }
 
-        if (TypeUtils.isNumberWrapper(type)) {
-            return TypeUtils.getPrimitive(type);
+            if (TypeUtils.isNumberWrapper(type)) {
+                return TypeUtils.getPrimitive(type);
+            }
         }
 
         throw new UnsupportedOperationException("operator is not applicable to " + type);
     }
 
     @Override
-    public @NotNull Type getOutputType(final @NotNull Type value) {
+    public @NotNull Type getOutputType(final @Nullable Type value) {
         throw new UnsupportedOperationException(getClass().getName() + ": one operand is not applicable to " + value);
     }
 
     @Override
-    public @NotNull Type getOutputType(final @NotNull Type left, final @NotNull Type right) {
+    public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
         throw new UnsupportedOperationException(getClass().getName() + ": two operand is not applicable");
     }
 
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
+            final @Nullable StackLazyOperand origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
@@ -156,6 +163,7 @@ public abstract class AbstractAsmOperator implements AsmOperator {
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
+            final @Nullable StackLazyOperand origin,
             final @NotNull StackLazyOperand value
     ) {
         throw new UnsupportedOperationException(getClass().getName() + ": one operand is not applicable");

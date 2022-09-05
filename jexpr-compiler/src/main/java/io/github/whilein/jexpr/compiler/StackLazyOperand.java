@@ -18,6 +18,7 @@ package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.compiler.operand.TypedOperand;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
 /**
@@ -25,9 +26,13 @@ import org.objectweb.asm.Type;
  */
 public interface StackLazyOperand {
 
+    void setConcatenated(boolean b);
+
+    boolean isConcatenated();
+
     @NotNull TypedOperand getOperand();
 
-    @NotNull Type getType();
+    @Nullable Type getType();
 
     void load();
 

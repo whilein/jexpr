@@ -33,9 +33,12 @@ import sun.misc.Unsafe;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author whilein
@@ -62,12 +65,12 @@ final class ExpressionCompilerTests {
                 .getName();
     }
 
-//    @Test
-//    void testConcatenation() {
-//        val test = createTest("a + b",
-//                String.class, String.class, int.class);
-//        assertEquals("Text123", call(test, "Text", 123));
-//    }
+    @Test
+    void testConcatenation() {
+        val test = createTest("a + ';' + (5 == b) + ';' + c",
+                String.class, String.class, int.class, String.class);
+        assertEquals("Text;true;text", call(test, "Text", 5, "text"));
+    }
 
     @Test
     void testDifficultArithmeticalExpression() {
@@ -298,6 +301,19 @@ final class ExpressionCompilerTests {
     void testDefinedInteger() {
         val test = createTest("3", int.class);
         assertEquals(3, call(test));
+    }
+
+    @Test
+    void testDefinedNull() {
+        val test = createTest("null", Object.class);
+        assertNull(call(test));
+    }
+
+    @Test
+    void testUndefinedNullCheck() {
+        val test = createTest("a != null", boolean.class, List.class);
+        assertEquals(false, call(test, new ArrayList<>()));
+        assertEquals(true, call(test, (Object) null));
     }
 
     @SneakyThrows

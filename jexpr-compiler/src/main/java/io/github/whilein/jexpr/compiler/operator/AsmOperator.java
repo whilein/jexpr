@@ -19,6 +19,7 @@ package io.github.whilein.jexpr.compiler.operator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
 /**
@@ -26,18 +27,20 @@ import org.objectweb.asm.Type;
  */
 public interface AsmOperator {
 
-    @NotNull Type getOutputType(@NotNull Type value);
+    @Nullable Type getOutputType(@Nullable Type value);
 
-    @NotNull Type getOutputType(@NotNull Type left, @NotNull Type right);
+    @Nullable Type getOutputType(@Nullable Type left, @Nullable Type right);
 
     void compile(
             @NotNull AsmMethodCompiler compiler,
+            @Nullable StackLazyOperand origin,
             @NotNull StackLazyOperand left,
             @NotNull StackLazyOperand right
     );
 
     void compile(
             @NotNull AsmMethodCompiler compiler,
+            @Nullable StackLazyOperand origin,
             @NotNull StackLazyOperand operand
     );
 

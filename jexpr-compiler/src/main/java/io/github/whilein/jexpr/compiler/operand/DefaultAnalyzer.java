@@ -24,6 +24,7 @@ import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
 import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
+import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operand.undefined.OperandReference;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefinedMember;
@@ -65,6 +66,14 @@ public final class DefaultAnalyzer implements Analyzer {
     @Override
     public @NotNull TypedOperand analyze(final @NotNull Operand operand, final @NotNull LocalMap map) {
         if (operand.isDefined()) {
+            if (operand instanceof OperandObject) {
+                if (operand.getValue() != null) {
+                    throw new UnsupportedOperationException("Cannot compile object into bytecode");
+                }
+
+                return new TypedDefined(operand, null);
+            }
+
             return new TypedDefined(operand, TYPE_MAP.get(operand.getClass()));
         } else if (operand instanceof OperandReference) {
             return new TypedReference(map.get((String) operand.getValue()));
@@ -79,7 +88,8 @@ public final class DefaultAnalyzer implements Analyzer {
             return new TypedMember(
                     analyzedMember,
                     asmOperator,
-                    asmOperator.getOutputType(analyzedMember.getType()));
+                    asmOperator.getOutputType(analyzedMember.getType())
+            );
         } else if (operand instanceof OperandUndefinedSequence) {
             val sequence = (OperandUndefinedSequence) operand;
             val left = analyze(sequence.getLeft(), map);

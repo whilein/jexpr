@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -39,39 +40,71 @@ public final class AsmOperatorEquals extends AbstractAsmOperator {
     boolean negate;
 
     @Override
-    public @NotNull Type getOutputType(final @NotNull Type left, final @NotNull Type right) {
+    public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
+        boolean leftNull, leftPrimitive, rightNull, rightPrimitive;
+
+        leftPrimitive = !(leftNull = left == null) && TypeUtils.isPrimitive(left);
+        rightPrimitive = !(rightNull = right == null) && TypeUtils.isPrimitive(right);
+
+        if ((leftNull || rightNull) && (leftPrimitive || rightPrimitive)) {
+            throw new UnsupportedOperationException(getClass().getName() + ": unable to compare null and primitive");
+        }
+
         return Type.BOOLEAN_TYPE;
     }
 
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
+            final @Nullable StackLazyOperand origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
-        val primitive = TypeUtils.isPrimitive(left.getType()) || TypeUtils.isPrimitive(right.getType());
+        boolean leftNull, rightNull, leftPrimitive, rightPrimitive, leftNumber, rightNumber;
 
-        Type castType = primitive && (TypeUtils.isNumber(left.getType()) || TypeUtils.isNumber(right.getType()))
-                ? TypeUtils.getPreferredNumber(left.getType(), right.getType())
+        Type leftType = left.getType(), rightType = right.getType();
+
+        if (!(leftNull = leftType == null)) {
+            leftPrimitive = TypeUtils.isPrimitive(leftType);
+            leftNumber = TypeUtils.isNumber(leftType);
+        } else {
+            leftPrimitive = leftNumber = false;
+        }
+
+        if (!(rightNull = rightType == null)) {
+            rightPrimitive = TypeUtils.isPrimitive(rightType);
+            rightNumber = TypeUtils.isNumber(rightType);
+        } else {
+            rightNumber = rightPrimitive = false;
+        }
+
+        val castType = leftNumber && rightNumber
+                ? TypeUtils.getPreferredNumber(leftType, rightType)
                 : null;
 
-        left.load();
+        val primitive = leftPrimitive || rightPrimitive;
 
-        if (primitive) {
-            val leftType = compiler.unbox(left.getType());
+        if (!leftNull) {
+            left.load();
 
-            if (castType != null) {
-                compiler.cast(leftType, castType);
+            if (primitive) {
+                leftType = compiler.unbox(left.getType());
+
+                if (castType != null) {
+                    compiler.cast(leftType, castType);
+                }
             }
         }
 
-        right.load();
+        if (!rightNull) {
+            right.load();
 
-        if (primitive) {
-            val rightType = compiler.unbox(right.getType());
+            if (primitive) {
+                rightType = compiler.unbox(right.getType());
 
-            if (castType != null) {
-                compiler.cast(rightType, castType);
+                if (castType != null) {
+                    compiler.cast(rightType, castType);
+                }
             }
         }
 
@@ -103,7 +136,11 @@ public final class AsmOperatorEquals extends AbstractAsmOperator {
                     break;
             }
         } else {
-            compiler.visitJumpInsn(negate ? Opcodes.IF_ICMPEQ : Opcodes.IF_ACMPNE, falseLabel);
+            if (leftNull || rightNull) {
+                compiler.visitJumpInsn(negate ? Opcodes.IFNONNULL : Opcodes.IFNULL, falseLabel);
+            } else {
+                compiler.visitJumpInsn(negate ? Opcodes.IF_ICMPEQ : Opcodes.IF_ACMPNE, falseLabel);
+            }
         }
 
         compiler.visitInsn(Opcodes.ICONST_1);

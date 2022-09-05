@@ -20,6 +20,7 @@ import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
 /**
@@ -29,7 +30,7 @@ public abstract class AbstractAsmOperatorBitwiseShift extends AbstractAsmOperato
 
 
     @Override
-    public @NotNull Type getOutputType(final @NotNull Type left, final @NotNull Type right) {
+    public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
         val leftType = getIntegralType(left);
         ensureIntegralType(right);
 

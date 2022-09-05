@@ -26,9 +26,12 @@ import io.github.whilein.jexpr.operand.Operand;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
 import static org.objectweb.asm.Opcodes.ILOAD;
@@ -71,11 +74,11 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
 
     @Override
     public void compile(final @NotNull Operand operand) {
-        val analyzedOperand = analyzer.analyze(operand, localMap);
-        compile0(analyzedOperand);
+        compile0(null, analyzer.analyze(operand, localMap));
+        asmMethodCompiler.endConcat();
     }
 
-    private void compile0(final TypedOperand operand) {
+    private void compile0(final StackLazyOperand origin, final TypedOperand operand) {
         if (operand instanceof TypedDefined) {
             val defined = (TypedDefined) operand;
             asmMethodCompiler.writeDefinedOperand(defined.getValue());
@@ -91,7 +94,7 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
             val memberOperand = new StackLazyOperandImpl(member.getMember());
 
             val operator = member.getOperator();
-            operator.compile(asmMethodCompiler, memberOperand);
+            operator.compile(asmMethodCompiler, origin, memberOperand);
         } else if (operand instanceof TypedSequence) {
             val sequence = (TypedSequence) operand;
 
@@ -99,7 +102,7 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
             val right = new StackLazyOperandImpl(sequence.getRight());
 
             val operator = sequence.getOperator();
-            operator.compile(asmMethodCompiler, left, right);
+            operator.compile(asmMethodCompiler, origin, left, right);
         }
     }
 
@@ -108,16 +111,21 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
     private final class StackLazyOperandImpl implements StackLazyOperand {
 
         @Getter
+        @Setter
+        @NonFinal
+        boolean concatenated;
+
+        @Getter
         TypedOperand operand;
 
         @Override
-        public @NotNull Type getType() {
+        public @Nullable Type getType() {
             return operand.getType();
         }
 
         @Override
         public void load() {
-            compile0(operand);
+            compile0(this, operand);
         }
 
     }

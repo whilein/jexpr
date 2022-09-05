@@ -51,7 +51,7 @@ public interface Operand extends Token {
 
     @NotNull Operand applyToObject(Object value, @NotNull Operator operator);
 
-    @NotNull Object getValue();
+    Object getValue();
 
     boolean isNumber();
 

@@ -21,6 +21,7 @@ import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -31,13 +32,14 @@ import org.objectweb.asm.Type;
 public final class AsmOperatorAnd extends AbstractAsmOperator {
 
     @Override
-    public @NotNull Type getOutputType(final @NotNull Type left, final @NotNull Type right) {
+    public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
         return getBooleanType(left, right);
     }
 
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
+            final @Nullable StackLazyOperand origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
