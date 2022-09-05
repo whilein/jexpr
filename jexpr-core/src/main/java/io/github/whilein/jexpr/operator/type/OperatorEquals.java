@@ -21,18 +21,25 @@ import io.github.whilein.jexpr.operand.defined.OperandBoolean;
 import io.github.whilein.jexpr.operator.AbstractOperator;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * @author whilein
  */
 public final class OperatorEquals extends AbstractOperator {
 
     public OperatorEquals() {
-        super("==", 8, TWO_OPERAND);
+        super("==", OperatorPrecedenceConsts.EQUALITY, TWO_OPERAND);
     }
 
     @Override
     public String toString() {
         return "EQUALS";
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final Object right) {
+        return OperandBoolean.valueOf(Objects.equals(left, right));
     }
 
     @Override

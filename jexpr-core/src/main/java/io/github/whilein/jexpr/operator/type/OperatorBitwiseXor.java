@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorBitwiseXor extends AbstractOperator {
 
     public OperatorBitwiseXor() {
-        super("^", 6, TWO_OPERAND);
+        super("^", OperatorPrecedenceConsts.BITWISE_XOR, TWO_OPERAND);
     }
 
     @Override

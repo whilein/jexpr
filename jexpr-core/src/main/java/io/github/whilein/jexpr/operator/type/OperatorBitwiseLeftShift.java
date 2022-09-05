@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorBitwiseLeftShift extends AbstractOperator {
 
     public OperatorBitwiseLeftShift() {
-        super("<<", 10, TWO_OPERAND);
+        super("<<", OperatorPrecedenceConsts.BITWISE_SHIFT, TWO_OPERAND);
     }
 
     @Override

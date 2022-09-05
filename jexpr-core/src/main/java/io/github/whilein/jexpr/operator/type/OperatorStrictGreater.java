@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorStrictGreater extends AbstractOperator {
 
     public OperatorStrictGreater() {
-        super(">", 9, TWO_OPERAND);
+        super(">", OperatorPrecedenceConsts.COMPARE, TWO_OPERAND);
     }
 
     @Override

@@ -67,6 +67,11 @@ public abstract class AbstractOperator implements Operator {
     }
 
     @Override
+    public boolean isPredictable(final Object value) {
+        return false;
+    }
+
+    @Override
     public boolean isPredictable(final @NotNull String value) {
         return false;
     }
@@ -296,6 +301,76 @@ public abstract class AbstractOperator implements Operator {
     @Override
     public @NotNull Operand apply(final boolean left, final boolean right) {
         throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final int left, final Object right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final long left, final Object right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final float left, final Object right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final double left, final Object right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final boolean left, final Object right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final int right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final long right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final float right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final double right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final boolean right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final String left, final Object right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final String right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final Object right) {
+        throw error(left, right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object value) {
+        throw error(value);
     }
 
     @Override

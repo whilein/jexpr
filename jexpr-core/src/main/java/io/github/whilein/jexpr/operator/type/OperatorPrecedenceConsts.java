@@ -16,28 +16,24 @@
 
 package io.github.whilein.jexpr.operator.type;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operator.AbstractOperator;
-import org.jetbrains.annotations.NotNull;
+import lombok.experimental.UtilityClass;
 
 /**
  * @author whilein
  */
-public final class OperatorNegate extends AbstractOperator {
+@UtilityClass
+class OperatorPrecedenceConsts {
 
-    public OperatorNegate() {
-        super("!", OperatorPrecedenceConsts.UNARY, ONE_OPERAND);
-    }
-
-    @Override
-    public String toString() {
-        return "NEGATE";
-    }
-
-    @Override
-    public @NotNull Operand apply(final boolean value) {
-        return OperandBoolean.valueOf(!value);
-    }
+    public final int OR = 30;
+    public final int AND = 40;
+    public final int BITWISE_OR = 50;
+    public final int BITWISE_XOR = 60;
+    public final int BITWISE_AND = 70;
+    public final int EQUALITY = 80;
+    public final int COMPARE = 90;
+    public final int BITWISE_SHIFT = 100;
+    public final int ADDITIVE = 110;
+    public final int MULTIPLICATIVE = 120;
+    public final int UNARY = 140;
 
 }

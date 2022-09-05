@@ -53,9 +53,6 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
     @NonFinal
     DefaultExpressionStreamParser parent;
 
-    @NonFinal
-    DefaultExpressionStreamParser nestedExpressionParser;
-
     List<SelectableTokenParser> parsers;
 
     @NonFinal
@@ -88,21 +85,26 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
         map.put("state", state);
     }
 
-    private void onToken(final @NotNull Token token) {
-        if (nestedExpressionParser != null) {
-            nestedExpressionParser.onToken(token);
-            return;
-        }
-
+    private void onToken(final Token token) {
         if (token instanceof Operator) {
             operators.push((Operator) token);
         } else if (token instanceof Operand) {
             addOperand((Operand) token);
         }
+
+    }
+
+    private void onTokenTransitive(final Token token) {
+        if (activeParser instanceof DefaultExpressionStreamParser) {
+            ((DefaultExpressionStreamParser) activeParser).onTokenTransitive(token);
+            return;
+        }
+
+        onToken(token);
     }
 
     private void addOperand(final Operand operand) {
-        Operand processedNumber = operand;
+        Operand processedOperand = operand;
 
         val operators = this.operators;
 
@@ -125,7 +127,7 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
                     }
                 }
 
-                processedNumber = processedNumber.apply(operator);
+                processedOperand = processedOperand.apply(operator);
 
                 if (operators.isEmpty()) {
                     break;
@@ -133,7 +135,7 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
             }
         }
 
-        addMember(processedNumber);
+        addMember(processedOperand);
     }
 
     private void solve(final int minOperator) {
@@ -164,24 +166,10 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
         operandStack.push(operand);
     }
 
-    private void onParenthesesOpen() {
-        if (state == STATE_LEADING_BRACKET) {
-            state = STATE_CONTENT;
-            return;
-        }
-
-        if (nestedExpressionParser == null) {
-            nestedExpressionParser = new DefaultExpressionStreamParser(parsers);
-            nestedExpressionParser.parent = this;
-        }
-
-        nestedExpressionParser.onParenthesesOpen();
-    }
-
     @Override
     public void update(final int ch) throws SyntaxException {
         if (state == STATE_LEADING_BRACKET) {
-            onParenthesesOpen();
+            state = STATE_CONTENT;
 
             // ignoring leading bracket
             if (parent != null) {
@@ -192,12 +180,7 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
         SelectableTokenParser activeParser = this.activeParser;
 
         if (activeParser != null && !activeParser.shouldStayActive(ch)) {
-            if (activeParser == nestedExpressionParser) {
-                nestedExpressionParser = null;
-            }
-
             onToken(activeParser.doFinal());
-
             this.activeParser = activeParser = null;
         }
 
@@ -225,10 +208,8 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
         }
 
         if (ch == '(') {
-            if (nestedExpressionParser == null) {
-                nestedExpressionParser = new DefaultExpressionStreamParser(parsers);
-                nestedExpressionParser.parent = this;
-            }
+            val nestedExpressionParser = new DefaultExpressionStreamParser(parsers);
+            nestedExpressionParser.parent = this;
 
             return nestedExpressionParser;
         }
@@ -239,23 +220,16 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
     @Override
     public @NotNull Operand doFinal() {
         try {
-            val nestedExpressionParser = this.nestedExpressionParser;
-
-            if (nestedExpressionParser != null) {
-                this.nestedExpressionParser = null;
-
-                switch (nestedExpressionParser.state) {
-                    case STATE_FINAL_BRACKET:
-                        onToken(nestedExpressionParser.doFinal());
-                        break;
-                    case STATE_CONTENT:
-                        throw new SyntaxException("Unexpected end, nested parentheses isn't closed");
-                }
+            if (parent != null && state != STATE_FINAL_BRACKET) {
+                throw invalidSyntax("Unexpected EOF");
             }
+
+            val activeParser = this.activeParser;
 
             if (activeParser != null) {
                 onToken(activeParser.doFinal());
-                activeParser = null;
+
+                this.activeParser = null;
             }
 
             if (!operators.isEmpty()) {
@@ -265,7 +239,7 @@ public final class DefaultExpressionStreamParser extends AbstractTokenParser
             solve(-1);
 
             if (operandStack.size() != 1) {
-                throw invalidSyntax("Unexpected end of parser");
+                throw invalidSyntax("No operands on stack");
             }
 
             return operandStack.pop();

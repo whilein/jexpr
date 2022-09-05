@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorBitwiseUnsignedRightShift extends AbstractOperator {
 
     public OperatorBitwiseUnsignedRightShift() {
-        super(">>>", 10, TWO_OPERAND);
+        super(">>>", OperatorPrecedenceConsts.BITWISE_SHIFT, TWO_OPERAND);
     }
 
     @Override

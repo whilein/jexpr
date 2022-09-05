@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorMinus extends AbstractOperator {
 
     public OperatorMinus() {
-        super("-", 11, ONE_OPERAND | TWO_OPERAND);
+        super("-", OperatorPrecedenceConsts.ADDITIVE, ONE_OPERAND | TWO_OPERAND);
     }
 
     @Override

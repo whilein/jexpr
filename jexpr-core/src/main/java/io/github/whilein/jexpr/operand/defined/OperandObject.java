@@ -26,19 +26,20 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author whilein
  */
-public final class OperandString extends OperandDelegate<String> implements OperandDefined {
+public final class OperandObject extends OperandDelegate<Object> implements OperandDefined {
 
-    private OperandString(final String delegatedValue) {
+    private OperandObject(final Object delegatedValue) {
         super(delegatedValue);
     }
 
-    public static @NotNull Operand valueOf(final String value) {
-        return new OperandString(value);
+    private static final Operand NULL = new OperandObject(null);
+
+    public static @NotNull Operand nullValue() {
+        return NULL;
     }
 
-    @Override
-    public boolean isPredicable(final @NotNull Operator operator) {
-        return operator.isPredictable(delegatedValue);
+    public static @NotNull Operand valueOf(final Object value) {
+        return value == null ? NULL : new OperandObject(value);
     }
 
     @Override
@@ -47,13 +48,13 @@ public final class OperandString extends OperandDelegate<String> implements Oper
     }
 
     @Override
-    public boolean toBoolean() {
-        throw new UnsupportedOperationException();
+    public boolean isPredicable(final @NotNull Operator operator) {
+        return operator.isPredictable(delegatedValue);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
-        return operand.applyToString(delegatedValue, operator);
+        return operand.applyToObject(delegatedValue, operator);
     }
 
     @Override
@@ -86,13 +87,12 @@ public final class OperandString extends OperandDelegate<String> implements Oper
         return operator.apply(value, this.delegatedValue);
     }
 
-    @Override
     public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
         return OperandUndefinedSequence.valueOf(undefined, this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToObject(final @NotNull Object value, final @NotNull Operator operator) {
+    public @NotNull Operand applyToObject(final Object value, final @NotNull Operator operator) {
         return operator.apply(value, this.delegatedValue);
     }
 
@@ -103,7 +103,7 @@ public final class OperandString extends OperandDelegate<String> implements Oper
 
     @Override
     public boolean isString() {
-        return true;
+        return false;
     }
 
     @Override
@@ -111,10 +111,8 @@ public final class OperandString extends OperandDelegate<String> implements Oper
         return false;
     }
 
-
     @Override
     public @NotNull Operand apply(final @NotNull Operator operator) {
         return operator.apply(delegatedValue);
     }
-
 }

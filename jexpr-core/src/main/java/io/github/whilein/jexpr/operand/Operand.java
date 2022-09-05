@@ -49,7 +49,7 @@ public interface Operand extends Token {
 
     @NotNull Operand applyToUndefined(@NotNull OperandUndefined undefined, @NotNull Operator operator);
 
-    //@NotNull Operand applyToNull(@NotNull Operator operator);
+    @NotNull Operand applyToObject(Object value, @NotNull Operator operator);
 
     @NotNull Object getValue();
 

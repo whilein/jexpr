@@ -23,6 +23,7 @@ import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
 import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
+import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operator.Operator;
 import lombok.AccessLevel;
@@ -101,6 +102,11 @@ public final class OperandUndefinedMember implements OperandUndefined {
     @Override
     public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
         return OperandUndefinedSequence.valueOf(undefined, this, operator);
+    }
+
+    @Override
+    public @NotNull Operand applyToObject(final Object value, final @NotNull Operator operator) {
+        return OperandUndefinedSequence.valueOf(OperandObject.valueOf(value), this, operator);
     }
 
     @Override

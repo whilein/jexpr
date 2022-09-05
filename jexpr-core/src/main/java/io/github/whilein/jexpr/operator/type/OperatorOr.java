@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorOr extends AbstractOperator {
 
     public OperatorOr() {
-        super("||", 3, TWO_OPERAND);
+        super("||", OperatorPrecedenceConsts.OR, TWO_OPERAND);
     }
 
     @Override
