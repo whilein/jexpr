@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.compiler.operator;
 
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
+import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public final class AsmOperatorCompare extends AbstractAsmOperator {
     int floatOpcode;
 
     @Override
-    public @NotNull Type getOutputType(final @NotNull Type left, final @NotNull Type right) {
+    public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
         ensureNumberType(left);
         ensureNumberType(right);
 
@@ -51,7 +52,7 @@ public final class AsmOperatorCompare extends AbstractAsmOperator {
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
-            final @Nullable StackLazyOperand origin,
+            final @NotNull OperandOrigin origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {

@@ -66,11 +66,19 @@ final class ExpressionCompilerTests {
     }
 
     @Test
-    void testConcatenation() {
-        val test = createTest("a + ';' + (5 == b) + ';' + c",
-                String.class, String.class, int.class, String.class);
-        assertEquals("Text;true;text", call(test, "Text", 5, "text"));
+    void testConcatenation1() {
+        val test = createTest("(a + ';' + (5 == b) + ';' + c) == (a + ';' + (b == 5) + ';' + c)",
+                boolean.class, String.class, int.class, String.class);
+        assertEquals(true, call(test, "Text", 5, "text"));
     }
+
+    @Test
+    void testConcatenation0() {
+        val test = createTest("a + b",
+                String.class, String.class, String.class);
+        assertEquals("Hello world!", call(test, "Hello ", "world!"));
+    }
+
 
     @Test
     void testDifficultArithmeticalExpression() {
@@ -307,6 +315,13 @@ final class ExpressionCompilerTests {
     void testDefinedNull() {
         val test = createTest("null", Object.class);
         assertNull(call(test));
+    }
+
+    @Test
+    void testUndefinedCheck() {
+        val test = createTest("a == b", boolean.class, Object.class, Object.class);
+        assertEquals(true, call(test, 1, 1));
+        assertEquals(false, call(test, 1, 2));
     }
 
     @Test

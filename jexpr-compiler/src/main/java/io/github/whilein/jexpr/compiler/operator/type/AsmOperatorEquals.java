@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.compiler.operator.type;
 
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
+import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
@@ -53,10 +54,32 @@ public final class AsmOperatorEquals extends AbstractAsmOperator {
         return Type.BOOLEAN_TYPE;
     }
 
+    private static Type prepare(AsmMethodCompiler compiler, StackLazyOperand operand, boolean primitive, Type castType) {
+        Type type = operand.getType();
+
+        if (type != null) {
+            operand.load();
+
+            if (operand.isConcatenated()) {
+                compiler.endConcat();
+            }
+
+            if (primitive) {
+                type = compiler.unbox(type);
+
+                if (castType != null) {
+                    compiler.cast(type, castType);
+                }
+            }
+        }
+
+        return type;
+    }
+
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
-            final @Nullable StackLazyOperand origin,
+            final @NotNull OperandOrigin origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
@@ -78,35 +101,14 @@ public final class AsmOperatorEquals extends AbstractAsmOperator {
             rightNumber = rightPrimitive = false;
         }
 
-        val castType = leftNumber && rightNumber
+        final Type castType = leftNumber && rightNumber
                 ? TypeUtils.getPreferredNumber(leftType, rightType)
                 : null;
 
         val primitive = leftPrimitive || rightPrimitive;
 
-        if (!leftNull) {
-            left.load();
-
-            if (primitive) {
-                leftType = compiler.unbox(left.getType());
-
-                if (castType != null) {
-                    compiler.cast(leftType, castType);
-                }
-            }
-        }
-
-        if (!rightNull) {
-            right.load();
-
-            if (primitive) {
-                rightType = compiler.unbox(right.getType());
-
-                if (castType != null) {
-                    compiler.cast(rightType, castType);
-                }
-            }
-        }
+        prepare(compiler, left, primitive, castType);
+        prepare(compiler, right, primitive, castType);
 
         val endLabel = new Label();
         val falseLabel = new Label();
@@ -139,7 +141,10 @@ public final class AsmOperatorEquals extends AbstractAsmOperator {
             if (leftNull || rightNull) {
                 compiler.visitJumpInsn(negate ? Opcodes.IFNONNULL : Opcodes.IFNULL, falseLabel);
             } else {
-                compiler.visitJumpInsn(negate ? Opcodes.IF_ICMPEQ : Opcodes.IF_ACMPNE, falseLabel);
+                compiler.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals",
+                        "(Ljava/lang/Object;)Z", false);
+
+                compiler.visitJumpInsn(negate ? Opcodes.IFNE : Opcodes.IFEQ, falseLabel);
             }
         }
 

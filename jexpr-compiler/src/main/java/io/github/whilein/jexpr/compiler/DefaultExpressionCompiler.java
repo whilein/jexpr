@@ -74,11 +74,12 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
 
     @Override
     public void compile(final @NotNull Operand operand) {
-        compile0(null, analyzer.analyze(operand, localMap));
+        compile0(new RootOperandOrigin(), analyzer.analyze(operand, localMap));
+
         asmMethodCompiler.endConcat();
     }
 
-    private void compile0(final StackLazyOperand origin, final TypedOperand operand) {
+    private void compile0(final OperandOrigin origin, final TypedOperand operand) {
         if (operand instanceof TypedDefined) {
             val defined = (TypedDefined) operand;
             asmMethodCompiler.writeDefinedOperand(defined.getValue());
@@ -104,6 +105,12 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
             val operator = sequence.getOperator();
             operator.compile(asmMethodCompiler, origin, left, right);
         }
+    }
+
+    private static final class RootOperandOrigin implements OperandOrigin {
+        @Getter
+        @Setter
+        boolean concatenated;
     }
 
     @FieldDefaults(makeFinal = true)

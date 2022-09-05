@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.compiler.operator;
 
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
+import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import lombok.AccessLevel;
@@ -153,7 +154,7 @@ public abstract class AbstractAsmOperator implements AsmOperator {
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
-            final @Nullable StackLazyOperand origin,
+            final @NotNull OperandOrigin origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
@@ -163,7 +164,7 @@ public abstract class AbstractAsmOperator implements AsmOperator {
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
-            final @Nullable StackLazyOperand origin,
+            final @NotNull OperandOrigin origin,
             final @NotNull StackLazyOperand value
     ) {
         throw new UnsupportedOperationException(getClass().getName() + ": one operand is not applicable");

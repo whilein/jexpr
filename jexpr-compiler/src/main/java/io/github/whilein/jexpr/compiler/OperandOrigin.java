@@ -16,20 +16,13 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.compiler.operand.TypedOperand;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Type;
-
 /**
  * @author whilein
  */
-public interface StackLazyOperand extends OperandOrigin {
+public interface OperandOrigin {
 
-    @NotNull TypedOperand getOperand();
+    void setConcatenated(boolean b);
 
-    @Nullable Type getType();
-
-    void load();
+    boolean isConcatenated();
 
 }

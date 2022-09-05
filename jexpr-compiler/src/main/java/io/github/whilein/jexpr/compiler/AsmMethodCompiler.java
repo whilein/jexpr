@@ -79,6 +79,10 @@ public final class AsmMethodCompiler extends MethodVisitor {
     }
 
     public void concat(final Type type) {
+        if (!concat) {
+            throw new IllegalStateException("Cannot add " + type + " to concatenation, because concat = false");
+        }
+
         val descriptor = type == null || (!TypeUtils.isPrimitive(type) && !type.equals(TypeUtils.STRING_TYPE))
                 ? "(Ljava/lang/Object;)Ljava/lang/StringBuilder;"
                 : "(" + type.getDescriptor() + ")Ljava/lang/StringBuilder;";

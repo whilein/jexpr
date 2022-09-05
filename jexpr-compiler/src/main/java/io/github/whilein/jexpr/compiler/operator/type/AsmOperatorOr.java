@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.compiler.operator.type;
 
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
+import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
 import lombok.val;
@@ -39,7 +40,7 @@ public final class AsmOperatorOr extends AbstractAsmOperator {
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
-            final @Nullable StackLazyOperand origin,
+            final @NotNull OperandOrigin origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {

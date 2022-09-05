@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.compiler.operator;
 
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
+import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,14 +34,14 @@ public interface AsmOperator {
 
     void compile(
             @NotNull AsmMethodCompiler compiler,
-            @Nullable StackLazyOperand origin,
+            @NotNull OperandOrigin origin,
             @NotNull StackLazyOperand left,
             @NotNull StackLazyOperand right
     );
 
     void compile(
             @NotNull AsmMethodCompiler compiler,
-            @Nullable StackLazyOperand origin,
+            @NotNull OperandOrigin origin,
             @NotNull StackLazyOperand operand
     );
 

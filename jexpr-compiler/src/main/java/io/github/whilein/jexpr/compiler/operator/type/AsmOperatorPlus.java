@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.compiler.operator.type;
 
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
+import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
@@ -51,7 +52,7 @@ public final class AsmOperatorPlus extends AbstractAsmOperator {
     }
 
     @Override
-    public void compile(final @NotNull AsmMethodCompiler compiler, final @Nullable StackLazyOperand origin,
+    public void compile(final @NotNull AsmMethodCompiler compiler, final @NotNull OperandOrigin origin,
                         final @NotNull StackLazyOperand value) {
         value.load();
 
@@ -61,7 +62,7 @@ public final class AsmOperatorPlus extends AbstractAsmOperator {
     @Override
     public void compile(
             final @NotNull AsmMethodCompiler compiler,
-            final @Nullable StackLazyOperand origin,
+            final @NotNull OperandOrigin origin,
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
@@ -83,9 +84,7 @@ public final class AsmOperatorPlus extends AbstractAsmOperator {
                 compiler.concat(rightType);
             }
 
-            if (origin != null) {
-                origin.setConcatenated(true);
-            }
+            origin.setConcatenated(true);
 
             return;
         }
