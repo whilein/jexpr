@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorAnd extends AbstractOperator {
 
     public OperatorAnd() {
-        super("&&", 4, TWO_OPERAND);
+        super("&&", OperatorPrecedenceConsts.AND, TWO_OPERAND);
     }
 
     @Override

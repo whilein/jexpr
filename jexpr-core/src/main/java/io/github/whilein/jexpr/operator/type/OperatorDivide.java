@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorDivide extends AbstractOperator {
 
     public OperatorDivide() {
-        super("/", 12, TWO_OPERAND);
+        super("/", OperatorPrecedenceConsts.MULTIPLICATIVE, TWO_OPERAND);
     }
 
     @Override

@@ -29,7 +29,7 @@ import java.util.Objects;
 public final class OperatorNotEquals extends AbstractOperator {
 
     public OperatorNotEquals() {
-        super("!=", 8, TWO_OPERAND);
+        super("!=", OperatorPrecedenceConsts.EQUALITY, TWO_OPERAND);
     }
 
     @Override

@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorLess extends AbstractOperator {
 
     public OperatorLess() {
-        super("<=", 9, TWO_OPERAND);
+        super("<=", OperatorPrecedenceConsts.COMPARE, TWO_OPERAND);
     }
 
     @Override

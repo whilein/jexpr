@@ -29,7 +29,7 @@ import java.util.Objects;
 public final class OperatorEquals extends AbstractOperator {
 
     public OperatorEquals() {
-        super("==", 8, TWO_OPERAND);
+        super("==", OperatorPrecedenceConsts.EQUALITY, TWO_OPERAND);
     }
 
     @Override

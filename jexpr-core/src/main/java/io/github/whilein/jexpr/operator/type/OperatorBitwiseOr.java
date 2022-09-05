@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorBitwiseOr extends AbstractOperator {
 
     public OperatorBitwiseOr() {
-        super("|", 5, TWO_OPERAND);
+        super("|", OperatorPrecedenceConsts.BITWISE_OR, TWO_OPERAND);
     }
 
     @Override

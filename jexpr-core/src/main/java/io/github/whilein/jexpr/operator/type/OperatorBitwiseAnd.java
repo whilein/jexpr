@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorBitwiseAnd extends AbstractOperator {
 
     public OperatorBitwiseAnd() {
-        super("&", 7, TWO_OPERAND);
+        super("&", OperatorPrecedenceConsts.BITWISE_AND, TWO_OPERAND);
     }
 
     @Override

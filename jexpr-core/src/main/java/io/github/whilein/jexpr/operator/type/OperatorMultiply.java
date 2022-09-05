@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorMultiply extends AbstractOperator {
 
     public OperatorMultiply() {
-        super("*", 12, TWO_OPERAND);
+        super("*", OperatorPrecedenceConsts.MULTIPLICATIVE, TWO_OPERAND);
     }
 
     @Override

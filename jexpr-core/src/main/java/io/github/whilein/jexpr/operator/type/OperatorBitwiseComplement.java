@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public final class OperatorBitwiseComplement extends AbstractOperator {
 
     public OperatorBitwiseComplement() {
-        super("~", 13, ONE_OPERAND);
+        super("~", OperatorPrecedenceConsts.UNARY, ONE_OPERAND);
     }
 
     @Override
