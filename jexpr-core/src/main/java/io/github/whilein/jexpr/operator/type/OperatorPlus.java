@@ -85,6 +85,16 @@ public final class OperatorPlus extends AbstractOperator {
     }
 
     @Override
+    public @NotNull Operand apply(final String left, final Object right) {
+        return OperandString.valueOf(left + right);
+    }
+
+    @Override
+    public @NotNull Operand apply(final Object left, final String right) {
+        return OperandString.valueOf(left + right);
+    }
+
+    @Override
     public @NotNull Operand apply(final int left, final int right) {
         return OperandInteger.valueOf(left + right);
     }
