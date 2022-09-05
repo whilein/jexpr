@@ -62,12 +62,12 @@ final class ExpressionCompilerTests {
                 .getName();
     }
 
-    @Test
-    void testConcatenation() {
-        val test = createTest("a + b",
-                String.class, String.class, int.class);
-        assertEquals("Text123", call(test, "Text", 123));
-    }
+//    @Test
+//    void testConcatenation() {
+//        val test = createTest("a + b",
+//                String.class, String.class, int.class);
+//        assertEquals("Text123", call(test, "Text", 123));
+//    }
 
     @Test
     void testDifficultArithmeticalExpression() {

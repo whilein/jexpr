@@ -48,6 +48,11 @@ public final class OperandObject extends OperandDelegate<Object> implements Oper
     }
 
     @Override
+    public boolean toBoolean() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean isPredicable(final @NotNull Operator operator) {
         return operator.isPredictable(delegatedValue);
     }
