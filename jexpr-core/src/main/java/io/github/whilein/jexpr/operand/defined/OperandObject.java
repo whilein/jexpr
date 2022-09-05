@@ -32,11 +32,7 @@ public final class OperandObject extends OperandDelegate<Object> implements Oper
         super(delegatedValue);
     }
 
-    private static final Operand NULL = new OperandObject(null);
-
-    public static @NotNull Operand nullValue() {
-        return NULL;
-    }
+    public static final Operand NULL = new OperandObject(null);
 
     public static @NotNull Operand valueOf(final Object value) {
         return value == null ? NULL : new OperandObject(value);
