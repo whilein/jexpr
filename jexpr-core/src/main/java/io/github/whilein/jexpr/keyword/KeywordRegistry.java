@@ -18,6 +18,7 @@ package io.github.whilein.jexpr.keyword;
 
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
+import io.github.whilein.jexpr.operand.defined.OperandObject;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public final class KeywordRegistry {
                 {
                     put("true", OperandBoolean.TRUE);
                     put("false", OperandBoolean.FALSE);
+                    put("null", OperandObject.valueOf(null));
                 }
             }
     );

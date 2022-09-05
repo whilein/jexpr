@@ -87,6 +87,11 @@ public final class OperandString extends OperandDelegate<String> implements Oper
     }
 
     @Override
+    public @NotNull Operand applyToObject(final @NotNull Object value, final @NotNull Operator operator) {
+        return operator.apply(value, this.delegatedValue);
+    }
+
+    @Override
     public boolean isNumber() {
         return false;
     }

@@ -97,6 +97,11 @@ public final class OperandInteger extends OperandNumber {
     }
 
     @Override
+    public @NotNull Operand applyToObject(final @NotNull Object value, final @NotNull Operator operator) {
+        return operator.apply(value, this.value);
+    }
+
+    @Override
     public @NotNull Operand apply(final @NotNull Operator operator) {
         return operator.apply(value);
     }

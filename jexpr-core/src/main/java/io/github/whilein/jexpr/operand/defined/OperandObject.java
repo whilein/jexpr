@@ -14,47 +14,32 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.undefined;
+package io.github.whilein.jexpr.operand.defined;
 
-import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandDouble;
-import io.github.whilein.jexpr.operand.defined.OperandFloat;
-import io.github.whilein.jexpr.operand.defined.OperandInteger;
-import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operand.defined.OperandObject;
-import io.github.whilein.jexpr.operand.defined.OperandString;
+import io.github.whilein.jexpr.operand.OperandDelegate;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedSequence;
 import io.github.whilein.jexpr.operator.Operator;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandUndefinedMember implements OperandUndefined {
+public final class OperandObject extends OperandDelegate<Object> implements OperandDefined {
 
-    Operand value;
-    Operator operator;
-
-    @Override
-    public String toString() {
-        return operator.getValue() + value;
+    private OperandObject(final Object delegatedValue) {
+        super(delegatedValue);
     }
 
-    public static @NotNull Operand valueOf(
-            final @NotNull Operand value,
-            final @NotNull Operator operator
-    ) {
-        if (value.isDefined()) {
-            throw new IllegalStateException("Cannot create undefined expression from defined operand");
-        }
+    private static final Operand NULL = new OperandObject(null);
 
-        return new OperandUndefinedMember(value, operator);
+    public static @NotNull Operand nullValue() {
+        return NULL;
+    }
+
+    public static @NotNull Operand valueOf(final Object value) {
+        return value == null ? NULL : new OperandObject(value);
     }
 
     @Override
@@ -64,57 +49,51 @@ public final class OperandUndefinedMember implements OperandUndefined {
 
     @Override
     public boolean isPredicable(final @NotNull Operator operator) {
-        return false;
+        return operator.isPredictable(delegatedValue);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
-        return operand.applyToUndefined(this, operator);
+        return operand.applyToObject(delegatedValue, operator);
     }
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandInteger.valueOf(number), this, operator);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandLong.valueOf(number), this, operator);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandDouble.valueOf(number), this, operator);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandFloat.valueOf(number), this, operator);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandString.valueOf(value), this, operator);
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandBoolean.valueOf(value), this, operator);
+        return operator.apply(value, this.delegatedValue);
     }
 
-    @Override
     public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
         return OperandUndefinedSequence.valueOf(undefined, this, operator);
     }
 
     @Override
     public @NotNull Operand applyToObject(final Object value, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandObject.valueOf(value), this, operator);
-    }
-
-    @Override
-    public @NotNull Object getValue() {
-        throw new UnsupportedOperationException();
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
@@ -134,11 +113,6 @@ public final class OperandUndefinedMember implements OperandUndefined {
 
     @Override
     public @NotNull Operand apply(final @NotNull Operator operator) {
-        return OperandUndefinedMember.valueOf(this, operator);
-    }
-
-    @Override
-    public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
-        return value.solve(resolver).apply(operator);
+        return operator.apply(delegatedValue);
     }
 }

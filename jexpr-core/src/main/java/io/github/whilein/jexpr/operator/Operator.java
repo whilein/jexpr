@@ -35,6 +35,8 @@ public interface Operator extends Token {
 
     boolean isPredictable(float value);
 
+    boolean isPredictable(Object value);
+
     boolean isPredictable(@NotNull String value);
 
     boolean isTwoOperand();
@@ -124,6 +126,34 @@ public interface Operator extends Token {
     @NotNull Operand apply(boolean left, String right);
 
     @NotNull Operand apply(boolean left, boolean right);
+
+    @NotNull Operand apply(int left, Object right);
+
+    @NotNull Operand apply(long left, Object right);
+
+    @NotNull Operand apply(float left, Object right);
+
+    @NotNull Operand apply(double left, Object right);
+
+    @NotNull Operand apply(boolean left, Object right);
+
+    @NotNull Operand apply(Object left, int right);
+
+    @NotNull Operand apply(Object left, long right);
+
+    @NotNull Operand apply(Object left, float right);
+
+    @NotNull Operand apply(Object left, double right);
+
+    @NotNull Operand apply(Object left, boolean right);
+
+    @NotNull Operand apply(String left, Object right);
+
+    @NotNull Operand apply(Object left, String right);
+
+    @NotNull Operand apply(Object left, Object right);
+
+    @NotNull Operand apply(Object value);
 
     @NotNull Operand apply(String value);
 

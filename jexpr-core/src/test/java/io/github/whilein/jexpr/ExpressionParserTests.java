@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operator.OperatorException;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -63,6 +64,14 @@ abstract class ExpressionParserTests {
     @Test
     void testNestedParentheses() {
         assertEquals(true, parse("('123' == '123')").getValue());
+    }
+
+    @Test
+    void testNull() {
+        val operand = parse("x != null");
+        val result = operand.solve(k -> OperandObject.valueOf(null));
+
+        assertEquals(false, result.getValue());
     }
 
     @Test
