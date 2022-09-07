@@ -11,6 +11,7 @@
     <modules>
         <module>jexpr-core</module>
         <module>jexpr-compiler</module>
+        <module>jexpr-tools</module>
     </modules>
 
     <properties>
