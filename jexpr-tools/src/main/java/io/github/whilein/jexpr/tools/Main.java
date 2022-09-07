@@ -17,15 +17,19 @@
 package io.github.whilein.jexpr.tools;
 
 import io.github.whilein.jexpr.SimpleExpressionParser;
+import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.undefined.OperandReference;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefinedMember;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefinedSequence;
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * @author whilein
@@ -44,13 +48,44 @@ public class Main {
 
     public void main(final String[] args) throws IOException {
         val expressionParser = SimpleExpressionParser.createDefault();
-        val expression = expressionParser.parse(args[0]);
+        Operand expression = expressionParser.parse(args[0]);
 
-        val graph = Graph.create();
+        val solvedMap = new HashMap<String, Operand>();
+        val in = new Scanner(System.in);
 
-        addOperand(graph, expression, 0, 0);
+        int index = 0;
 
-        graph.save(Paths.get("graph.xgml"));
+        while (!expression.isDefined()) {
+            val graph = Graph.create();
+
+            addOperand(graph, expression, 0, 0);
+
+            graph.save(Paths.get("graph_" + index++ + ".xgml"));
+
+            expression = expression.solve(new UndefinedResolver() {
+
+                boolean solved;
+
+                public Operand input(final String reference) {
+                    try {
+                        System.out.print(reference + ": ");
+
+                        return expressionParser.parse(in.nextLine());
+                    } finally {
+                        solved = true;
+                    }
+                }
+
+                @Override
+                public @NotNull Operand resolve(final @NotNull String reference) {
+                    if (solved) {
+                        return solvedMap.getOrDefault(reference, OperandReference.valueOf(reference));
+                    }
+
+                    return solvedMap.computeIfAbsent(reference, this::input);
+                }
+            });
+        }
     }
 
     private static double getWidth(final Operand operand) {
