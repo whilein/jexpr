@@ -1,4 +1,6 @@
 ## jexpr
+![](https://img.shields.io/github/issues/whilein/jexpr)
+![](https://img.shields.io/github/issues-pr/whilein/jexpr)
 
 Библиотека позволяет вам обрабатывать и исполнять выражения. Синтаксис практически
 идентичен синтаксису Java.
