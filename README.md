@@ -57,6 +57,7 @@ class Example {
 class Example {
     public void compile(MethodVisitor mv) {
         ExpressionParser expressionParser = SimpleExpressionParser.createDefault();
+        TypedOperandResolver typedOperandResolver = SimpleTypedOperandResolver.getDefault();
 
         // парсим выражение
         Operand expression = expressionParser.parse("variable + 1");
@@ -66,19 +67,37 @@ class Example {
         LocalMap localMap = SimpleLocalMap.create()
                 // в параметре 1 у нас целое число с именем variable.
                 // при компиляции оно увидит неизвестное "variable" и 
-                // запросит его из локальных параметров
+                // запросит его на стек из локальных параметров
                 .add("variable", 1, Type.INT_TYPE);
 
-        ExpressionCompilerFactory expressionCompilerFactory = DefaultExpressionCompilerFactory.createDefault();
+        TypedOperand typedExpression = typedOperandResolver.resolve(expression, localMap);
 
-        ExpressionCompiler compiler = expressionCompilerFactory.create(mv, localMap);
-        compiler.compile(expression);
-        
+        ExpressionCompiler compiler = new DefaultExpressionCompiler(mv);
+        compiler.compile(typedExpression);
+
         // Результат:
         //
         // ILOAD_1
         // ICONST_1
         // IADD
+    }
+}
+```
+
+Также есть упрощенный функционал, который может создать нужную реализацию функционального интерфейса.
+
+```java
+import java.util.function.IntBinaryOperator;
+
+class Example {
+    public IntBinaryOperator sum() {
+        ExpressionParser parser = SimpleExpressionParser.createDefault();
+        Operand expression = parser.parse("a + b");
+
+        return ExpressionImplementationCompiler.create(expression, IntBinaryOperator.class)
+                .name(0, "a")
+                .name(1, "b")
+                .compile();
     }
 }
 ```
