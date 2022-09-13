@@ -76,6 +76,7 @@ public final class AsmOperatorRegistry {
     Map<Class<? extends Operator>, AsmOperator> operatorMap;
 
     private static final Map<Class<? extends Operator>, AsmOperator> DEFAULT_OPERATOR_MAP;
+    private static final AsmOperatorRegistry DEFAULT;
 
     static {
         val defaultOperatorMap = new HashMap<Class<? extends Operator>, AsmOperator>();
@@ -112,14 +113,15 @@ public final class AsmOperatorRegistry {
         defaultOperatorMap.put(OperatorNegate.class, new AsmOperatorNegate());
 
         DEFAULT_OPERATOR_MAP = Collections.unmodifiableMap(defaultOperatorMap);
+        DEFAULT = new AsmOperatorRegistry(DEFAULT_OPERATOR_MAP);
     }
 
     public static @Unmodifiable @NotNull Map<Class<? extends Operator>, AsmOperator> getDefaultOperatorMap() {
         return DEFAULT_OPERATOR_MAP;
     }
 
-    public static @NotNull AsmOperatorRegistry createDefault() {
-        return new AsmOperatorRegistry(DEFAULT_OPERATOR_MAP);
+    public static @NotNull AsmOperatorRegistry getDefault() {
+        return DEFAULT;
     }
 
     public static @NotNull AsmOperatorRegistry create(

@@ -16,7 +16,7 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.compiler.operand.TypedOperand;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,6 +24,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ExpressionCompiler {
 
-    void compile(@NotNull Operand operand);
+    void compile(@NotNull TypedOperand operand);
 
 }

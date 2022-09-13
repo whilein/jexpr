@@ -16,13 +16,11 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.compiler.operand.Analyzer;
 import io.github.whilein.jexpr.compiler.operand.TypedDefined;
 import io.github.whilein.jexpr.compiler.operand.TypedMember;
 import io.github.whilein.jexpr.compiler.operand.TypedOperand;
 import io.github.whilein.jexpr.compiler.operand.TypedReference;
 import io.github.whilein.jexpr.compiler.operand.TypedSequence;
-import io.github.whilein.jexpr.operand.Operand;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +30,7 @@ import lombok.experimental.NonFinal;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
 import static org.objectweb.asm.Opcodes.ILOAD;
@@ -40,41 +39,22 @@ import static org.objectweb.asm.Opcodes.ILOAD;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
 public final class DefaultExpressionCompiler implements ExpressionCompiler {
 
     AsmMethodCompiler asmMethodCompiler;
 
-    LocalMap localMap;
-
-    Analyzer analyzer;
-
-    private String getWrapperToPrimitiveMethod(final Type type) {
-        switch (type.getInternalName()) {
-            case "java/lang/Byte":
-                return "byteValue";
-            case "java/lang/Short":
-                return "shortValue";
-            case "java/lang/Float":
-                return "floatValue";
-            case "java/lang/Double":
-                return "doubleValue";
-            case "java/lang/Integer":
-                return "intValue";
-            case "java/lang/Long":
-                return "longValue";
-            case "java/lang/Character":
-                return "charValue";
-            case "java/lang/Boolean":
-                return "booleanValue";
-            default:
-                throw new IllegalArgumentException("Unknown wrapper type: " + type);
-        }
+    public DefaultExpressionCompiler(final AsmMethodCompiler asmMethodCompiler) {
+        this.asmMethodCompiler = asmMethodCompiler;
     }
 
+    public DefaultExpressionCompiler(final MethodVisitor mv) {
+        this(new AsmMethodCompiler(mv));
+    }
+
+
     @Override
-    public void compile(final @NotNull Operand operand) {
-        compile0(new RootOperandOrigin(), analyzer.analyze(operand, localMap));
+    public void compile(final @NotNull TypedOperand operand) {
+        compile0(new RootOperandOrigin(), operand);
 
         asmMethodCompiler.endConcat();
     }
