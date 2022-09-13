@@ -19,9 +19,12 @@ package io.github.whilein.jexpr.operand.defined;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.OperandDelegate;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedSequence;
-import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedBinary;
+import io.github.whilein.jexpr.operator.BinaryLazyOperator;
+import io.github.whilein.jexpr.operator.BinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
@@ -37,8 +40,12 @@ public final class OperandString extends OperandDelegate<String> implements Oper
     }
 
     @Override
-    public boolean isPredicable(final @NotNull Operator operator) {
+    public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
         return operator.isPredictable(delegatedValue);
+    }
+    @Override
+    public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
+        return operator.getPredictedResult(delegatedValue);
     }
 
     @Override
@@ -52,47 +59,47 @@ public final class OperandString extends OperandDelegate<String> implements Oper
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
+    public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
         return operand.applyToString(delegatedValue, operator);
     }
 
     @Override
-    public @NotNull Operand applyToInt(final int number, final @NotNull Operator operator) {
+    public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
         return operator.apply(number, delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToLong(final long number, final @NotNull Operator operator) {
+    public @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
         return operator.apply(number, delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToDouble(final double number, final @NotNull Operator operator) {
+    public @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
         return operator.apply(number, delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToFloat(final float number, final @NotNull Operator operator) {
+    public @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
         return operator.apply(number, delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToString(final @NotNull String value, final @NotNull Operator operator) {
+    public @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
         return operator.apply(value, this.delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToBoolean(final boolean value, final @NotNull Operator operator) {
+    public @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
         return operator.apply(value, this.delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(undefined, this, operator);
+    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(undefined, this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToObject(final @NotNull Object value, final @NotNull Operator operator) {
+    public @NotNull Operand applyToObject(final @Nullable Object value, final @NotNull BinaryOperator operator) {
         return operator.apply(value, this.delegatedValue);
     }
 
@@ -113,7 +120,7 @@ public final class OperandString extends OperandDelegate<String> implements Oper
 
 
     @Override
-    public @NotNull Operand apply(final @NotNull Operator operator) {
+    public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
         return operator.apply(delegatedValue);
     }
 

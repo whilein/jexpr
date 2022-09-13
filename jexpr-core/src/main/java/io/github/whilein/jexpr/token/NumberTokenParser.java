@@ -36,7 +36,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class NumberTokenParser extends AbstractTokenParser implements SelectableTokenParser {
+public final class NumberTokenParser extends AbstractSelectableTokenParser {
 
     ByteArrayOutput buffer;
 
@@ -78,7 +78,7 @@ public final class NumberTokenParser extends AbstractTokenParser implements Sele
     }
 
     @Override
-    public boolean shouldStayActive(final int ch) {
+    public boolean shouldStaySelected(final int ch) {
         return !completed && (ch == '.' || ch == '_'
                 || (ch >= '0' && ch <= '9')
                 || (ch >= 'a' && ch <= 'z')
@@ -87,7 +87,7 @@ public final class NumberTokenParser extends AbstractTokenParser implements Sele
     }
 
     @Override
-    public boolean shouldActivate(final int ch) {
+    protected boolean shouldSelect(final int ch) {
         return ch == '.' || (ch >= '0' && ch <= '9');
     }
 
@@ -275,7 +275,7 @@ public final class NumberTokenParser extends AbstractTokenParser implements Sele
     }
 
     @Override
-    public @NotNull Operand doFinal() {
+    public void doFinal(final @NotNull TokenVisitor tokenVisitor) {
         try {
             if (illegalOctalNumber) {
                 throw invalidSyntax("Invalid octal number (leading zero?)");
@@ -296,7 +296,7 @@ public final class NumberTokenParser extends AbstractTokenParser implements Sele
                 }
             }
 
-            return number;
+            tokenVisitor.visitOperand(number);
         } finally {
             type = TYPE_INT;
             radix = RADIX_UNKNOWN;

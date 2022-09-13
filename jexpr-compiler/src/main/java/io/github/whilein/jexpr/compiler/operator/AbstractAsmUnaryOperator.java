@@ -14,10 +14,11 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token;
+package io.github.whilein.jexpr.compiler.operator;
 
 /**
  * @author whilein
  */
-public interface Token {
+public abstract class AbstractAsmUnaryOperator extends AbstractAsmOperator implements AsmUnaryOperator {
+
 }

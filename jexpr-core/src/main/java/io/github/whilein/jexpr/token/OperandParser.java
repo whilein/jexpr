@@ -14,20 +14,22 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operand;
+package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.compiler.operator.AsmOperator;
-import lombok.Value;
-import org.objectweb.asm.Type;
+import io.github.whilein.jexpr.SyntaxException;
+import io.github.whilein.jexpr.operand.Operand;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-@Value
-public class TypedSequence implements TypedOperand {
+public interface OperandParser extends TokenParser {
 
-    TypedOperand left, right;
-    AsmOperator operator;
-    Type type;
+    @NotNull Operand doFinal();
+
+    @Override
+    default void doFinal(final @NotNull TokenVisitor tokenVisitor) throws SyntaxException {
+        tokenVisitor.visitOperand(doFinal());
+    }
 
 }

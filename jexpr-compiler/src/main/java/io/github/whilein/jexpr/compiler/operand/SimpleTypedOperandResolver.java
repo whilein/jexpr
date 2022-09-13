@@ -26,9 +26,9 @@ import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
 import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operand.defined.OperandString;
-import io.github.whilein.jexpr.operand.undefined.OperandReference;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedMember;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedSequence;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedBinary;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedReference;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedUnary;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -82,30 +82,30 @@ public final class SimpleTypedOperandResolver implements TypedOperandResolver {
             }
 
             return new TypedDefined(operand, TYPE_MAP.get(operand.getClass()));
-        } else if (operand instanceof OperandReference) {
+        } else if (operand instanceof OperandUndefinedReference) {
             return new TypedReference(map.get((String) operand.getValue()));
-        } else if (operand instanceof OperandUndefinedMember) {
-            val member = (OperandUndefinedMember) operand;
+        } else if (operand instanceof OperandUndefinedUnary) {
+            val member = (OperandUndefinedUnary) operand;
 
             val operator = member.getOperator();
-            val asmOperator = asmOperatorRegistry.getOperator(operator.getClass());
+            val asmOperator = asmOperatorRegistry.getUnaryOperator(operator.getClass());
 
             val analyzedMember = resolve(member.getMember(), map);
 
-            return new TypedMember(
+            return new TypedUnary(
                     analyzedMember,
                     asmOperator,
                     asmOperator.getOutputType(analyzedMember.getType())
             );
-        } else if (operand instanceof OperandUndefinedSequence) {
-            val sequence = (OperandUndefinedSequence) operand;
+        } else if (operand instanceof OperandUndefinedBinary) {
+            val sequence = (OperandUndefinedBinary) operand;
             val left = resolve(sequence.getLeft(), map);
             val right = resolve(sequence.getRight(), map);
 
             val operator = sequence.getOperator();
-            val asmOperator = asmOperatorRegistry.getOperator(operator.getClass());
+            val asmOperator = asmOperatorRegistry.getBinaryOperator(operator.getClass());
 
-            return new TypedSequence(
+            return new TypedBinary(
                     left,
                     right,
                     asmOperator,

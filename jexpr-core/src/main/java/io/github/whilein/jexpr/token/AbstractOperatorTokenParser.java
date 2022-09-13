@@ -18,27 +18,31 @@ package io.github.whilein.jexpr.token;
 
 import io.github.whilein.jexpr.SyntaxException;
 import io.github.whilein.jexpr.operator.Operator;
-import io.github.whilein.jexpr.operator.OperatorMatcher;
-import io.github.whilein.jexpr.operator.OperatorRegistry;
+import io.github.whilein.jexpr.operator.matcher.OperatorMatcher;
+import io.github.whilein.jexpr.operator.registry.OperatorRegistry;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author whilein
  */
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
-public final class OperatorTokenParser extends AbstractTokenParser implements SelectableTokenParser {
+@FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+public abstract class AbstractOperatorTokenParser<T extends Operator>
+        extends AbstractTokenParser
+        implements SelectableTokenParser {
 
-    OperatorRegistry operatorRegistry;
+    OperatorRegistry<T> operatorRegistry;
 
     @NonFinal
-    OperatorMatcher operatorMatcher;
+    OperatorMatcher<T> operatorMatcher;
 
     @Override
     protected void writeSyntaxReport(final Map<String, Object> map) {
@@ -46,13 +50,8 @@ public final class OperatorTokenParser extends AbstractTokenParser implements Se
     }
 
     @Override
-    public boolean shouldStayActive(final int ch) {
+    public boolean shouldStaySelected(final int ch) {
         return operatorMatcher == null || operatorMatcher.hasNext(ch);
-    }
-
-    @Override
-    public boolean shouldActivate(final int ch) {
-        return operatorRegistry.hasMatcher(ch);
     }
 
     @Override
@@ -64,10 +63,21 @@ public final class OperatorTokenParser extends AbstractTokenParser implements Se
         operatorMatcher.next(ch);
     }
 
+    protected abstract void doVisit(TokenVisitor visitor, T operator);
+
+
     @Override
-    public @NotNull Operator doFinal() throws SyntaxException {
+    public void doFinal(final @NotNull TokenVisitor tokenVisitor) throws SyntaxException {
         try {
-            return operatorMatcher.getMatchedResult();
+            val result = operatorMatcher.getMatchedResult();
+
+            if (result == null) {
+                throw invalidSyntax("Unknown operator got, do you mean: " + operatorMatcher.getProbablyResults().stream()
+                        .map(Operator::getValue)
+                        .collect(Collectors.joining("', '", "'", "'")) + "?");
+            }
+
+            doVisit(tokenVisitor, result);
         } finally {
             operatorMatcher = null;
         }

@@ -19,9 +19,9 @@ package io.github.whilein.jexpr.tools;
 import io.github.whilein.jexpr.SimpleExpressionParser;
 import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.undefined.OperandReference;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedMember;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedSequence;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedBinary;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedReference;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedUnary;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -79,7 +79,7 @@ public class Main {
                 @Override
                 public @NotNull Operand resolve(final @NotNull String reference) {
                     if (solved) {
-                        return solvedMap.getOrDefault(reference, OperandReference.valueOf(reference));
+                        return solvedMap.getOrDefault(reference, OperandUndefinedReference.valueOf(reference));
                     }
 
                     return solvedMap.computeIfAbsent(reference, this::input);
@@ -89,15 +89,15 @@ public class Main {
     }
 
     private static double getWidth(final Operand operand) {
-        if (operand instanceof OperandUndefinedSequence) {
-            val sequence = (OperandUndefinedSequence) operand;
+        if (operand instanceof OperandUndefinedBinary) {
+            val sequence = (OperandUndefinedBinary) operand;
 
             val left = getWidth(sequence.getLeft());
             val right = getWidth(sequence.getRight());
 
             return left + right + BRANCH_GAP;
-        } else if (operand instanceof OperandUndefinedMember) {
-            val member = (OperandUndefinedMember) operand;
+        } else if (operand instanceof OperandUndefinedUnary) {
+            val member = (OperandUndefinedUnary) operand;
 
             return getWidth(member.getMember());
         }
@@ -106,10 +106,10 @@ public class Main {
     }
 
     private static int addOperand(final Graph graph, final Operand operand, final double x, final double y) {
-        if (operand.isDefined() || operand instanceof OperandReference) {
+        if (operand.isDefined() || operand instanceof OperandUndefinedReference) {
             return graph.addNode(x, y, OPERAND_WIDTH, 20, String.valueOf(operand.getValue()), OPERAND_COLOR);
-        } else if (operand instanceof OperandUndefinedSequence) {
-            val sequence = (OperandUndefinedSequence) operand;
+        } else if (operand instanceof OperandUndefinedBinary) {
+            val sequence = (OperandUndefinedBinary) operand;
 
             val node = graph.addNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(sequence.getOperator()), OPERATOR_COLOR);
 
@@ -124,8 +124,8 @@ public class Main {
             graph.addEdge(node, right);
 
             return node;
-        } else if (operand instanceof OperandUndefinedMember) {
-            val member = (OperandUndefinedMember) operand;
+        } else if (operand instanceof OperandUndefinedUnary) {
+            val member = (OperandUndefinedUnary) operand;
 
             val node = graph.addNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(member.getOperator()), OPERATOR_COLOR);
 

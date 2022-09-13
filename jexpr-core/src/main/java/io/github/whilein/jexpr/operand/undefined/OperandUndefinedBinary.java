@@ -25,7 +25,9 @@ import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
 import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operand.defined.OperandString;
-import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.operator.BinaryLazyOperator;
+import io.github.whilein.jexpr.operator.BinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +41,10 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandUndefinedSequence implements OperandUndefined {
+public final class OperandUndefinedBinary implements OperandUndefined {
 
     Operand left, right;
-    Operator operator;
+    BinaryOperator operator;
 
     @Override
     public String toString() {
@@ -52,63 +54,68 @@ public final class OperandUndefinedSequence implements OperandUndefined {
     public static @NotNull Operand valueOf(
             final @NotNull Operand left,
             final @NotNull Operand right,
-            final @NotNull Operator operator
+            final @NotNull BinaryOperator operator
     ) {
         if (left.isDefined() && right.isDefined()) {
             throw new IllegalStateException("Cannot create undefined expression from defined operands");
         }
 
-        return new OperandUndefinedSequence(left, right, operator);
+        return new OperandUndefinedBinary(left, right, operator);
     }
 
     @Override
-    public boolean isPredicable(final @NotNull Operator operator) {
+    public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
         return false;
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull Operator operator) {
+    public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
         return operand.applyToUndefined(this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToInt(final int number, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandInteger.valueOf(number), this, operator);
+    public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(OperandInteger.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToLong(final long number, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandLong.valueOf(number), this, operator);
+    public @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(OperandLong.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToDouble(final double number, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandDouble.valueOf(number), this, operator);
+    public @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(OperandDouble.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToFloat(final float number, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandFloat.valueOf(number), this, operator);
+    public @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(OperandFloat.valueOf(number), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToString(final @NotNull String value, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandString.valueOf(value), this, operator);
+    public @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(OperandString.valueOf(value), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToBoolean(final boolean value, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandBoolean.valueOf(value), this, operator);
+    public @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(OperandBoolean.valueOf(value), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(undefined, this, operator);
+    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(undefined, this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToObject(final Object value, final @NotNull Operator operator) {
-        return OperandUndefinedSequence.valueOf(OperandObject.valueOf(value), this, operator);
+    public @NotNull Operand applyToObject(final Object value, final @NotNull BinaryOperator operator) {
+        return OperandUndefinedBinary.valueOf(OperandObject.valueOf(value), this, operator);
     }
 
     @Override
@@ -132,17 +139,23 @@ public final class OperandUndefinedSequence implements OperandUndefined {
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull Operator operator) {
-        return OperandUndefinedMember.valueOf(this, operator);
+    public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
+        return OperandUndefinedUnary.valueOf(this, operator);
     }
 
     @Override
     public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
         val solvedLeft = left.solve(resolver);
 
-        return !solvedLeft.isPredicable(operator)
-                ? solvedLeft.apply(right.solve(resolver), operator)
-                : solvedLeft.apply(operator);
+        if (operator instanceof BinaryLazyOperator) {
+            val lazyOperator = (BinaryLazyOperator) operator;
+
+            if (solvedLeft.isPredicable(lazyOperator)) {
+                return solvedLeft.getPredictedResult(lazyOperator);
+            }
+        }
+
+        return solvedLeft.apply(right.solve(resolver), operator);
     }
 
 }

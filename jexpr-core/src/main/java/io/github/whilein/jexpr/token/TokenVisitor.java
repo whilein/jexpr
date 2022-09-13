@@ -14,19 +14,22 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operator;
+package io.github.whilein.jexpr.token;
 
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operator.BinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface OperatorMatcher {
+public interface TokenVisitor {
 
-    void next(int ch);
+    void visitOperand(@NotNull Operand operand);
 
-    boolean hasNext(int ch);
+    void visitUnaryOperator(@NotNull UnaryOperator unaryOperator);
 
-    @NotNull Operator getMatchedResult();
+    void visitBinaryOperator(@NotNull BinaryOperator binaryOperator);
 
 }

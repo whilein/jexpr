@@ -26,7 +26,7 @@ public interface TokenParser {
 
     /**
      * Обработать символ токена. Из этих символов парсер составляет целый "токен",
-     * окончательный результат можно получить используя {@link #doFinal()}.
+     * окончательный результат можно получить используя {@link #doFinal(TokenVisitor)} ()}.
      *
      * @param ch символа
      * @throws SyntaxException при неожиданных входных данных
@@ -36,9 +36,9 @@ public interface TokenParser {
     /**
      * Завершить обработку токена.
      *
-     * @return окончательный результат
+     * @param tokenVisitor реципиент окончательного результата
      * @throws SyntaxException при неожиданном завершении
      */
-    @NotNull Token doFinal() throws SyntaxException;
+    void doFinal(@NotNull TokenVisitor tokenVisitor) throws SyntaxException;
 
 }

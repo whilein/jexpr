@@ -19,16 +19,16 @@ package io.github.whilein.jexpr.operator.type;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operator.AbstractOperator;
+import io.github.whilein.jexpr.operator.AbstractUnaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperatorBitwiseComplement extends AbstractOperator {
+public final class OperatorBitwiseComplement extends AbstractUnaryOperator {
 
     public OperatorBitwiseComplement() {
-        super("~", OperatorPrecedenceConsts.UNARY, ONE_OPERAND);
+        super("~", OperatorPrecedenceConsts.UNARY);
     }
 
     @Override

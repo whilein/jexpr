@@ -16,33 +16,8 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
-import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
-import io.github.whilein.jexpr.compiler.OperandOrigin;
-import io.github.whilein.jexpr.compiler.StackLazyOperand;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Type;
-
 /**
  * @author whilein
  */
 public interface AsmOperator {
-
-    @Nullable Type getOutputType(@Nullable Type value);
-
-    @Nullable Type getOutputType(@Nullable Type left, @Nullable Type right);
-
-    void compile(
-            @NotNull AsmMethodCompiler compiler,
-            @NotNull OperandOrigin origin,
-            @NotNull StackLazyOperand left,
-            @NotNull StackLazyOperand right
-    );
-
-    void compile(
-            @NotNull AsmMethodCompiler compiler,
-            @NotNull OperandOrigin origin,
-            @NotNull StackLazyOperand operand
-    );
-
 }

@@ -14,38 +14,49 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operator;
+package io.github.whilein.jexpr.operator.matcher;
 
+import io.github.whilein.jexpr.operator.Operator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.TreeMap;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.NavigableMap;
+import java.util.Set;
 
 /**
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
-final class OperatorMatcherImpl implements OperatorMatcher {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public final class NavigableMapOperatorMatcher<T extends Operator> implements OperatorMatcher<T> {
 
-    TreeMap<String, Operator> operatorValues;
+    NavigableMap<String, T> operatorMap;
 
     @NonFinal
     int position;
 
+    public static <T extends Operator> @NotNull OperatorMatcher<T> create(
+            final @NotNull NavigableMap<@NotNull String, T> operatorMap
+    ) {
+        return new NavigableMapOperatorMatcher<>(operatorMap);
+    }
+
     @Override
     public void next(final int ch) {
-        operatorValues.keySet().removeIf(operator -> operator.length() <= position || operator.charAt(position) != ch);
+        operatorMap.keySet().removeIf(operator -> operator.length() <= position || operator.charAt(position) != ch);
         position++;
     }
 
     @Override
     public boolean hasNext(final int ch) {
-        for (val operator : operatorValues.keySet()) {
+        for (val operator : operatorMap.keySet()) {
             if (position < operator.length() && operator.charAt(position) == ch) {
                 return true;
             }
@@ -55,8 +66,15 @@ final class OperatorMatcherImpl implements OperatorMatcher {
     }
 
     @Override
-    public @NotNull Operator getMatchedResult() {
-        return operatorValues.firstEntry().getValue();
+    public @NotNull Set<@NotNull T> getProbablyResults() {
+        return Collections.unmodifiableSet(new HashSet<>(operatorMap.values()));
+    }
+
+    @Override
+    public @Nullable T getMatchedResult() {
+        val operator = operatorMap.firstEntry().getValue();
+
+        return operator.getValue().length() != position ? null : operator;
     }
 
 }

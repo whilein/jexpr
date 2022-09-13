@@ -21,16 +21,16 @@ import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
 import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operator.AbstractOperator;
+import io.github.whilein.jexpr.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperatorDivide extends AbstractOperator {
+public final class OperatorDivide extends AbstractBinaryOperator {
 
     public OperatorDivide() {
-        super("/", OperatorPrecedenceConsts.MULTIPLICATIVE, TWO_OPERAND);
+        super("/", OperatorPrecedenceConsts.MULTIPLICATIVE);
     }
 
     @Override
@@ -115,11 +115,6 @@ public final class OperatorDivide extends AbstractOperator {
     @Override
     public @NotNull Operand apply(final double left, final double right) {
         return OperandDouble.valueOf(left / right);
-    }
-
-    @Override
-    public @NotNull Operand apply(final double value) {
-        return OperandDouble.valueOf(value);
     }
 
 }

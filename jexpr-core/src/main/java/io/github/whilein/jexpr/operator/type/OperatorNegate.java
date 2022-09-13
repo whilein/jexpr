@@ -18,16 +18,16 @@ package io.github.whilein.jexpr.operator.type;
 
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operator.AbstractOperator;
+import io.github.whilein.jexpr.operator.AbstractUnaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperatorNegate extends AbstractOperator {
+public final class OperatorNegate extends AbstractUnaryOperator {
 
     public OperatorNegate() {
-        super("!", OperatorPrecedenceConsts.UNARY, ONE_OPERAND);
+        super("!", OperatorPrecedenceConsts.UNARY);
     }
 
     @Override

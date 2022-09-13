@@ -16,11 +16,13 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.token.SelectableTokenParser;
-import io.github.whilein.jexpr.token.Token;
+import io.github.whilein.jexpr.token.TokenVisitor;
+import io.github.whilein.jexpr.token.TokenVisitors;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author whilein
@@ -29,30 +31,40 @@ abstract class AbstractTokenParserTests {
 
     protected SelectableTokenParser tokenParser;
 
-    public final Token parseAsToken(final @NotNull String value) throws SyntaxException {
-        if (!tokenParser.shouldActivate(value.charAt(0))) {
-            throw new IllegalStateException(this + " cannot be activated at " + value.charAt(0));
+    protected boolean ignoreCannotBeSelected;
+
+    public final void parse(final @NotNull String value, final @NotNull TokenVisitor tokenVisitor) throws SyntaxException {
+        if (!ignoreCannotBeSelected && !tokenParser.shouldSelect(value.charAt(0), null, null)) {
+            throw new IllegalStateException(this + " cannot be selected at " + value.charAt(0));
         }
 
         for (int i = 0, j = value.length(); i < j; i++) {
             val ch = value.charAt(i);
 
-            if (!tokenParser.shouldStayActive(ch)) {
+            if (!tokenParser.shouldStaySelected(ch)) {
                 throw new IllegalStateException("Unexpected end");
             }
 
             tokenParser.update(ch);
         }
 
-        return tokenParser.doFinal();
+        tokenParser.doFinal(tokenVisitor);
+    }
+
+    public final String parseOperator(final @NotNull String value) throws SyntaxException {
+        val result = new AtomicReference<String>();
+
+        parse(value, TokenVisitors.interceptOperator(operator -> result.set(operator.toString())));
+
+        return result.get();
     }
 
     public final Object parse(final @NotNull String value) throws SyntaxException {
-        val token = parseAsToken(value);
+        val result = new AtomicReference<>();
 
-        return token instanceof Operand
-                ? ((Operand) token).getValue()
-                : token.toString();
+        parse(value, TokenVisitors.interceptOperand(operand -> result.set(operand.getValue())));
+
+        return result.get();
     }
 
 
