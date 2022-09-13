@@ -44,7 +44,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class DefaultAnalyzer implements Analyzer {
+public final class DefaultTypedOperandResolver implements TypedOperandResolver {
 
     private static final Map<Class<? extends Operand>, Type> TYPE_MAP = new HashMap<Class<? extends Operand>, Type>() {
         {
@@ -57,18 +57,21 @@ public final class DefaultAnalyzer implements Analyzer {
         }
     };
 
+    private static final TypedOperandResolver DEFAULT
+            = new DefaultTypedOperandResolver(AsmOperatorRegistry.getDefault());
+
     AsmOperatorRegistry asmOperatorRegistry;
 
-    public static @NotNull Analyzer create(final @NotNull AsmOperatorRegistry asmOperatorRegistry) {
-        return new DefaultAnalyzer(asmOperatorRegistry);
+    public static @NotNull TypedOperandResolver create(final @NotNull AsmOperatorRegistry asmOperatorRegistry) {
+        return new DefaultTypedOperandResolver(asmOperatorRegistry);
     }
 
-    public static @NotNull Analyzer createDefault() {
-        return new DefaultAnalyzer(AsmOperatorRegistry.createDefault());
+    public static @NotNull TypedOperandResolver getDefault() {
+        return DEFAULT;
     }
 
     @Override
-    public @NotNull TypedOperand analyze(final @NotNull Operand operand, final @NotNull LocalMap map) {
+    public @NotNull TypedOperand resolve(final @NotNull Operand operand, final @NotNull LocalMap map) {
         if (operand.isDefined()) {
             if (operand instanceof OperandObject) {
                 if (operand.getValue() != null) {
@@ -87,7 +90,7 @@ public final class DefaultAnalyzer implements Analyzer {
             val operator = member.getOperator();
             val asmOperator = asmOperatorRegistry.getOperator(operator.getClass());
 
-            val analyzedMember = analyze(member.getMember(), map);
+            val analyzedMember = resolve(member.getMember(), map);
 
             return new TypedMember(
                     analyzedMember,
@@ -96,8 +99,8 @@ public final class DefaultAnalyzer implements Analyzer {
             );
         } else if (operand instanceof OperandUndefinedSequence) {
             val sequence = (OperandUndefinedSequence) operand;
-            val left = analyze(sequence.getLeft(), map);
-            val right = analyze(sequence.getRight(), map);
+            val left = resolve(sequence.getLeft(), map);
+            val right = resolve(sequence.getRight(), map);
 
             val operator = sequence.getOperator();
             val asmOperator = asmOperatorRegistry.getOperator(operator.getClass());

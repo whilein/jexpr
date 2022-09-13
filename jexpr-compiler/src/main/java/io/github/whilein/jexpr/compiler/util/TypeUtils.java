@@ -124,19 +124,25 @@ public class TypeUtils {
 
         switch (leftSort) {
             case Type.DOUBLE:
-                return left;
+                return normLeft;
             case Type.FLOAT:
-                return rightSort == Type.DOUBLE ? right : left;
+                return rightSort == Type.DOUBLE
+                        ? normRight
+                        : normLeft;
             case Type.LONG:
-                return rightSort == Type.DOUBLE || rightSort == Type.FLOAT ? right : left;
+                return rightSort == Type.DOUBLE || rightSort == Type.FLOAT
+                        ? normRight
+                        : normLeft;
             case Type.INT:
-                return rightSort == Type.DOUBLE || rightSort == Type.FLOAT || rightSort == Type.LONG ? right : left;
+                return rightSort == Type.DOUBLE || rightSort == Type.FLOAT || rightSort == Type.LONG
+                        ? normRight
+                        : normLeft;
             case Type.CHAR:
             case Type.SHORT:
             case Type.BYTE:
                 return Type.INT_TYPE;
             default:
-                throw new IllegalArgumentException(left + " " + right);
+                throw new IllegalArgumentException(normLeft + " " + normRight);
         }
     }
 

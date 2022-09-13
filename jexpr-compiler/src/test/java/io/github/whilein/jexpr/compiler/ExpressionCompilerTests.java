@@ -18,6 +18,8 @@ package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.ExpressionParser;
 import io.github.whilein.jexpr.SimpleExpressionParser;
+import io.github.whilein.jexpr.compiler.operand.DefaultTypedOperandResolver;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandResolver;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,12 +48,12 @@ final class ExpressionCompilerTests {
     String testType;
 
     static ExpressionParser expressionParser;
-    static ExpressionCompilerFactory expressionCompilerFactory;
+    static TypedOperandResolver typedOperandResolver;
 
     @BeforeAll
     static void setup() {
         expressionParser = SimpleExpressionParser.createDefault();
-        expressionCompilerFactory = DefaultExpressionCompilerFactory.createDefault();
+        typedOperandResolver = DefaultTypedOperandResolver.getDefault();
     }
 
     @BeforeEach
@@ -370,8 +372,8 @@ final class ExpressionCompilerTests {
             local += paramType.getSize();
         }
 
-        val compiler = expressionCompilerFactory.create(mv, localMap);
-        compiler.compile(result);
+        val compiler = new DefaultExpressionCompiler(mv);
+        compiler.compile(typedOperandResolver.resolve(result, localMap));
 
         mv.visitInsn(Type.getType(returnType).getOpcode(Opcodes.IRETURN));
         mv.visitMaxs(0, 0);

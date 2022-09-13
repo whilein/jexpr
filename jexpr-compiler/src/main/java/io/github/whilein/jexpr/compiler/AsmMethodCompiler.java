@@ -46,6 +46,7 @@ import static org.objectweb.asm.Opcodes.I2F;
 import static org.objectweb.asm.Opcodes.I2L;
 import static org.objectweb.asm.Opcodes.I2S;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.L2D;
 import static org.objectweb.asm.Opcodes.L2F;
@@ -122,6 +123,26 @@ public final class AsmMethodCompiler extends MethodVisitor {
         }
     }
 
+    public Type box(final Type type) {
+        if (TypeUtils.isWrapper(type)) {
+            return type;
+        }
+
+        if (!TypeUtils.isPrimitive(type)) {
+            throw new IllegalStateException("Unable to unbox not primitive type");
+        }
+
+        val wrapper = TypeUtils.getWrapper(type);
+
+        mv.visitMethodInsn(
+                INVOKESTATIC, wrapper.getInternalName(), "valueOf",
+                Type.getMethodDescriptor(wrapper, type),
+                false
+        );
+
+        return wrapper;
+    }
+
     public Type unbox(final Type type) {
         if (TypeUtils.isPrimitive(type)) {
             return type;
@@ -140,7 +161,31 @@ public final class AsmMethodCompiler extends MethodVisitor {
         return unboxType;
     }
 
+    public void migrateType(final ClassLoader cl, Type from, final Type to) {
+        if (from.equals(to)) {
+            return;
+        }
+
+        if (TypeUtils.isPrimitive(to) && !TypeUtils.isPrimitive(from)) {
+            from = unbox(from);
+        } else if (TypeUtils.isPrimitive(from) && !TypeUtils.isPrimitive(to)) {
+            from = box(from);
+        }
+
+        if (!from.equals(to)) {
+            cast(cl, from, to);
+        }
+    }
+
+    public void migrateType(final Type from, final Type to) {
+        migrateType(AsmMethodCompiler.class.getClassLoader(), from, to);
+    }
+
     public void cast(final Type from, final Type to) {
+        cast(AsmMethodCompiler.class.getClassLoader(), from, to);
+    }
+
+    public void cast(final ClassLoader cl, final Type from, final Type to) {
         if (from.equals(to)) {
             return;
         }
@@ -244,6 +289,16 @@ public final class AsmMethodCompiler extends MethodVisitor {
                     break;
             }
         } else if (!TypeUtils.isPrimitive(from) && !TypeUtils.isPrimitive(to)) {
+            try {
+                val fromClass = cl.loadClass(from.getClassName());
+                val toClass = cl.loadClass(to.getClassName());
+
+                if (toClass.isAssignableFrom(fromClass)) {
+                    return;
+                }
+            } catch (final ClassNotFoundException ignored) {
+            }
+
             mv.visitTypeInsn(CHECKCAST, to.getSort() == Type.ARRAY ? to.getDescriptor() : to.getInternalName());
         } else {
             throw new IllegalStateException("Cannot cast " + from + " to " + to);

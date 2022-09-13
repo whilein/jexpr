@@ -23,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author whilein
  */
-public interface Analyzer {
+public interface TypedOperandResolver {
 
-    @NotNull TypedOperand analyze(@NotNull Operand operand, @NotNull LocalMap localMap);
+    @NotNull TypedOperand resolve(@NotNull Operand operand, @NotNull LocalMap localMap);
 
 }
