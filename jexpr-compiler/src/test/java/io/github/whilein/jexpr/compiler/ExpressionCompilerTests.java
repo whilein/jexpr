@@ -18,7 +18,7 @@ package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.ExpressionParser;
 import io.github.whilein.jexpr.SimpleExpressionParser;
-import io.github.whilein.jexpr.compiler.operand.DefaultTypedOperandResolver;
+import io.github.whilein.jexpr.compiler.operand.SimpleTypedOperandResolver;
 import io.github.whilein.jexpr.compiler.operand.TypedOperandResolver;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -53,7 +53,7 @@ final class ExpressionCompilerTests {
     @BeforeAll
     static void setup() {
         expressionParser = SimpleExpressionParser.createDefault();
-        typedOperandResolver = DefaultTypedOperandResolver.getDefault();
+        typedOperandResolver = SimpleTypedOperandResolver.getDefault();
     }
 
     @BeforeEach

@@ -16,7 +16,7 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.compiler.operand.DefaultTypedOperandResolver;
+import io.github.whilein.jexpr.compiler.operand.SimpleTypedOperandResolver;
 import io.github.whilein.jexpr.compiler.operand.TypedOperandResolver;
 import io.github.whilein.jexpr.operand.Operand;
 import lombok.AccessLevel;
@@ -83,7 +83,7 @@ public final class ExpressionImplementationCompiler<T> {
             final @NotNull Operand operand,
             final @NotNull Class<T> type
     ) {
-        return create(operand, type, DefaultTypedOperandResolver.getDefault());
+        return create(operand, type, SimpleTypedOperandResolver.getDefault());
     }
 
     private static Method getAbstractMethod(final Class<?> type) {

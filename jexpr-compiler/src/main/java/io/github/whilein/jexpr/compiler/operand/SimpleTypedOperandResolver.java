@@ -44,7 +44,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class DefaultTypedOperandResolver implements TypedOperandResolver {
+public final class SimpleTypedOperandResolver implements TypedOperandResolver {
 
     private static final Map<Class<? extends Operand>, Type> TYPE_MAP = new HashMap<Class<? extends Operand>, Type>() {
         {
@@ -58,12 +58,12 @@ public final class DefaultTypedOperandResolver implements TypedOperandResolver {
     };
 
     private static final TypedOperandResolver DEFAULT
-            = new DefaultTypedOperandResolver(AsmOperatorRegistry.getDefault());
+            = new SimpleTypedOperandResolver(AsmOperatorRegistry.getDefault());
 
     AsmOperatorRegistry asmOperatorRegistry;
 
     public static @NotNull TypedOperandResolver create(final @NotNull AsmOperatorRegistry asmOperatorRegistry) {
-        return new DefaultTypedOperandResolver(asmOperatorRegistry);
+        return new SimpleTypedOperandResolver(asmOperatorRegistry);
     }
 
     public static @NotNull TypedOperandResolver getDefault() {
