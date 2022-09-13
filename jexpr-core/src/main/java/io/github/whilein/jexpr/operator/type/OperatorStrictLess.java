@@ -18,16 +18,16 @@ package io.github.whilein.jexpr.operator.type;
 
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operator.AbstractOperator;
+import io.github.whilein.jexpr.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperatorStrictLess extends AbstractOperator {
+public final class OperatorStrictLess extends AbstractBinaryOperator {
 
     public OperatorStrictLess() {
-        super("<", OperatorPrecedenceConsts.COMPARE, TWO_OPERAND);
+        super("<", OperatorPrecedenceConsts.COMPARE);
     }
 
     @Override

@@ -16,8 +16,8 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.operator.OperatorRegistry;
-import io.github.whilein.jexpr.token.OperatorTokenParser;
+import io.github.whilein.jexpr.operator.registry.BinaryOperatorRegistry;
+import io.github.whilein.jexpr.token.BinaryOperatorTokenParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,21 +26,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author whilein
  */
-final class OperatorTokenParserTests extends AbstractTokenParserTests {
+final class BinaryOperatorTokenParserTests extends AbstractTokenParserTests {
 
     @BeforeEach
     void setup() {
-        tokenParser = new OperatorTokenParser(OperatorRegistry.createDefault());
+        tokenParser = new BinaryOperatorTokenParser(BinaryOperatorRegistry.getDefault());
+        ignoreCannotBeSelected = true;
     }
 
     private void testOperator(final String operator, final String type) {
-        assertEquals(type, parse(operator));
+        assertEquals(type, parseOperator(operator));
     }
 
-    @Test
-    void testBitwiseComplement() {
-        testOperator("~", "BITWISE_COMPLEMENT");
-    }
+//    @Test
+//    void testBitwiseComplement() {
+//        testOperator("~", "BITWISE_COMPLEMENT");
+//    }
 
     @Test
     void testAnd() {
@@ -52,10 +53,10 @@ final class OperatorTokenParserTests extends AbstractTokenParserTests {
         testOperator("||", "OR");
     }
 
-    @Test
-    void testNegate() {
-        testOperator("!", "NEGATE");
-    }
+//    @Test
+//    void testNegate() {
+//        testOperator("!", "NEGATE");
+//    }
 
     @Test
     void testLess() {
@@ -101,7 +102,6 @@ final class OperatorTokenParserTests extends AbstractTokenParserTests {
     void testMinus() {
         testOperator("-", "MINUS");
     }
-
     @Test
     void testDivide() {
         testOperator("/", "DIVIDE");

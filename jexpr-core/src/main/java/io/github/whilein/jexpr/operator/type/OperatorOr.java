@@ -18,16 +18,16 @@ package io.github.whilein.jexpr.operator.type;
 
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operator.AbstractOperator;
+import io.github.whilein.jexpr.operator.AbstractBinaryLazyOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperatorOr extends AbstractOperator {
+public final class OperatorOr extends AbstractBinaryLazyOperator {
 
     public OperatorOr() {
-        super("||", OperatorPrecedenceConsts.OR, TWO_OPERAND);
+        super("||", OperatorPrecedenceConsts.OR);
     }
 
     @Override
@@ -36,8 +36,8 @@ public final class OperatorOr extends AbstractOperator {
     }
 
     @Override
-    public @NotNull Operand apply(final boolean value) {
-        return !value ? super.apply(false) : OperandBoolean.TRUE;
+    public @NotNull Operand getPredictedResult(final boolean value) {
+        return !value ? super.getPredictedResult(false) : OperandBoolean.TRUE;
     }
 
     @Override

@@ -18,8 +18,7 @@ package io.github.whilein.jexpr.token;
 
 import io.github.whilein.jexpr.io.ByteArrayOutput;
 import io.github.whilein.jexpr.keyword.KeywordRegistry;
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.undefined.OperandReference;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefinedReference;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,7 +32,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class ReferenceTokenParser extends AbstractTokenParser implements SelectableTokenParser {
+public final class ReferenceTokenParser extends AbstractSelectableTokenParser {
 
     KeywordRegistry keywordRegistry;
 
@@ -45,12 +44,12 @@ public final class ReferenceTokenParser extends AbstractTokenParser implements S
     }
 
     @Override
-    public boolean shouldStayActive(final int ch) {
+    public boolean shouldStaySelected(final int ch) {
         return isValidReferenceNameCharacter(ch);
     }
 
     @Override
-    public boolean shouldActivate(final int ch) {
+    protected boolean shouldSelect(final int ch) {
         return isValidReferenceNameCharacter(ch);
     }
 
@@ -60,13 +59,13 @@ public final class ReferenceTokenParser extends AbstractTokenParser implements S
     }
 
     @Override
-    public @NotNull Operand doFinal() {
+    public void doFinal(final @NotNull TokenVisitor tokenVisitor) {
         try {
             val reference = buffer.getString();
 
-            return keywordRegistry.hasKeyword(reference)
+            tokenVisitor.visitOperand(keywordRegistry.hasKeyword(reference)
                     ? keywordRegistry.getKeyword(reference)
-                    : OperandReference.valueOf(reference);
+                    : OperandUndefinedReference.valueOf(reference));
         } finally {
             buffer.reset();
         }

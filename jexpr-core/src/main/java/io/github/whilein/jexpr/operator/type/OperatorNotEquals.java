@@ -18,7 +18,7 @@ package io.github.whilein.jexpr.operator.type;
 
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operator.AbstractOperator;
+import io.github.whilein.jexpr.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -26,10 +26,10 @@ import java.util.Objects;
 /**
  * @author whilein
  */
-public final class OperatorNotEquals extends AbstractOperator {
+public final class OperatorNotEquals extends AbstractBinaryOperator {
 
     public OperatorNotEquals() {
-        super("!=", OperatorPrecedenceConsts.EQUALITY, TWO_OPERAND);
+        super("!=", OperatorPrecedenceConsts.EQUALITY);
     }
 
     @Override

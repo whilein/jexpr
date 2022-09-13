@@ -19,7 +19,7 @@ package io.github.whilein.jexpr.compiler.operator.type;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
-import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
+import io.github.whilein.jexpr.compiler.operator.AbstractAsmBinaryOperator;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +30,7 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public final class AsmOperatorOr extends AbstractAsmOperator {
+public final class AsmOperatorOr extends AbstractAsmBinaryOperator {
 
     @Override
     public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {

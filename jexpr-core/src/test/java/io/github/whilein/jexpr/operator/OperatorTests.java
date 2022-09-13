@@ -34,6 +34,7 @@ import io.github.whilein.jexpr.operator.type.OperatorNegate;
 import io.github.whilein.jexpr.operator.type.OperatorNotEquals;
 import io.github.whilein.jexpr.operator.type.OperatorPlus;
 import io.github.whilein.jexpr.operator.type.OperatorRemainder;
+import io.github.whilein.jexpr.operator.type.OperatorUnaryMinus;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -68,11 +69,11 @@ final class OperatorTests {
         return OBJECT_TO_OPERAND_MAP.get(o.getClass()).apply(o);
     }
 
-    void testOperator(final Operator operator, final Object expect, final Object left, final Object right) {
+    void testOperator(final BinaryOperator operator, final Object expect, final Object left, final Object right) {
         assertEquals(map(expect), map(left).apply(map(right), operator));
     }
 
-    void testOperator(final Operator operator, final Object expect, final Object value) {
+    void testOperator(final UnaryOperator operator, final Object expect, final Object value) {
         assertEquals(map(expect), map(value).apply(operator));
     }
 
@@ -100,6 +101,11 @@ final class OperatorTests {
         testOperator(operator, 1L, 2L, 1);
         testOperator(operator, 1.5, 2.5, 1);
         testOperator(operator, 1.5F, 2.5F, 1);
+    }
+
+    @Test
+    void testUnaryMinus() {
+        val operator = new OperatorUnaryMinus();
         testOperator(operator, -1.5F, 1.5F);
         testOperator(operator, 1.5, -1.5);
     }

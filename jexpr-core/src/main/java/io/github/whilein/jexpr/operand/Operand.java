@@ -18,38 +18,42 @@ package io.github.whilein.jexpr.operand;
 
 import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
-import io.github.whilein.jexpr.operator.Operator;
-import io.github.whilein.jexpr.token.Token;
+import io.github.whilein.jexpr.operator.BinaryLazyOperator;
+import io.github.whilein.jexpr.operator.BinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
-public interface Operand extends Token {
+public interface Operand {
 
     @NotNull Number toNumber();
 
     boolean toBoolean();
 
-    boolean isPredicable(@NotNull Operator operator);
+    boolean isPredicable(@NotNull BinaryLazyOperator operator);
 
-    @NotNull Operand apply(@NotNull Operand operand, @NotNull Operator operator);
+    @NotNull Operand getPredictedResult(@NotNull BinaryLazyOperator operator);
 
-    @NotNull Operand applyToInt(int number, @NotNull Operator operator);
+    @NotNull Operand apply(@NotNull Operand operand, @NotNull BinaryOperator operator);
 
-    @NotNull Operand applyToLong(long number, @NotNull Operator operator);
+    @NotNull Operand applyToInt(int number, @NotNull BinaryOperator operator);
 
-    @NotNull Operand applyToDouble(double number, @NotNull Operator operator);
+    @NotNull Operand applyToLong(long number, @NotNull BinaryOperator operator);
 
-    @NotNull Operand applyToFloat(float number, @NotNull Operator operator);
+    @NotNull Operand applyToDouble(double number, @NotNull BinaryOperator operator);
 
-    @NotNull Operand applyToString(@NotNull String value, @NotNull Operator operator);
+    @NotNull Operand applyToFloat(float number, @NotNull BinaryOperator operator);
 
-    @NotNull Operand applyToBoolean(boolean value, @NotNull Operator operator);
+    @NotNull Operand applyToString(@NotNull String value, @NotNull BinaryOperator operator);
 
-    @NotNull Operand applyToUndefined(@NotNull OperandUndefined undefined, @NotNull Operator operator);
+    @NotNull Operand applyToBoolean(boolean value, @NotNull BinaryOperator operator);
 
-    @NotNull Operand applyToObject(Object value, @NotNull Operator operator);
+    @NotNull Operand applyToUndefined(@NotNull OperandUndefined undefined, @NotNull BinaryOperator operator);
+
+    @NotNull Operand applyToObject(@Nullable Object value, @NotNull BinaryOperator operator);
 
     Object getValue();
 
@@ -61,7 +65,7 @@ public interface Operand extends Token {
 
     boolean isDefined();
 
-    @NotNull Operand apply(@NotNull Operator operator);
+    @NotNull Operand apply(@NotNull UnaryOperator operator);
 
     @NotNull Operand solve(@NotNull UndefinedResolver resolver);
 

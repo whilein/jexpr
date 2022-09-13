@@ -16,15 +16,11 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
-import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
-import io.github.whilein.jexpr.compiler.OperandOrigin;
-import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
@@ -34,27 +30,6 @@ import org.objectweb.asm.Type;
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractAsmOperator implements AsmOperator {
-
-    protected static Type compileNumber(
-            final AsmMethodCompiler compiler,
-            final StackLazyOperand left,
-            final StackLazyOperand right
-    ) {
-        Type leftType = left.getType(), rightType = right.getType();
-        assert leftType != null && rightType != null;
-
-        val type = TypeUtils.getPreferredNumber(leftType, rightType);
-
-        left.load();
-        leftType = compiler.unbox(left.getType());
-        compiler.cast(leftType, type);
-
-        right.load();
-        rightType = compiler.unbox(right.getType());
-        compiler.cast(rightType, type);
-
-        return type;
-    }
 
     protected static Type getNumberType(final Type left, final Type right) {
         try {
@@ -139,35 +114,6 @@ public abstract class AbstractAsmOperator implements AsmOperator {
         }
 
         throw new UnsupportedOperationException("operator is not applicable to " + type);
-    }
-
-    @Override
-    public @NotNull Type getOutputType(final @Nullable Type value) {
-        throw new UnsupportedOperationException(getClass().getName() + ": one operand is not applicable to " + value);
-    }
-
-    @Override
-    public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
-        throw new UnsupportedOperationException(getClass().getName() + ": two operand is not applicable");
-    }
-
-    @Override
-    public void compile(
-            final @NotNull AsmMethodCompiler compiler,
-            final @NotNull OperandOrigin origin,
-            final @NotNull StackLazyOperand left,
-            final @NotNull StackLazyOperand right
-    ) {
-        throw new UnsupportedOperationException(getClass().getName() + ": two operand is not applicable");
-    }
-
-    @Override
-    public void compile(
-            final @NotNull AsmMethodCompiler compiler,
-            final @NotNull OperandOrigin origin,
-            final @NotNull StackLazyOperand value
-    ) {
-        throw new UnsupportedOperationException(getClass().getName() + ": one operand is not applicable");
     }
 
 }

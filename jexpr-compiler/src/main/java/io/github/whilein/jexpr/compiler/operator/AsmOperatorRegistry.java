@@ -32,7 +32,10 @@ import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorNegate;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorOr;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorPlus;
 import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorRemainder;
-import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorUnaryMinus;
+import io.github.whilein.jexpr.compiler.operator.type.AsmOperatorUnaryPlus;
+import io.github.whilein.jexpr.operator.BinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
 import io.github.whilein.jexpr.operator.type.OperatorAnd;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseAnd;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseComplement;
@@ -54,6 +57,8 @@ import io.github.whilein.jexpr.operator.type.OperatorPlus;
 import io.github.whilein.jexpr.operator.type.OperatorRemainder;
 import io.github.whilein.jexpr.operator.type.OperatorStrictGreater;
 import io.github.whilein.jexpr.operator.type.OperatorStrictLess;
+import io.github.whilein.jexpr.operator.type.OperatorUnaryMinus;
+import io.github.whilein.jexpr.operator.type.OperatorUnaryPlus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -73,51 +78,63 @@ import java.util.Map;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AsmOperatorRegistry {
 
-    Map<Class<? extends Operator>, AsmOperator> operatorMap;
+    Map<Class<? extends UnaryOperator>, AsmUnaryOperator> unaryOperatorMap;
+    Map<Class<? extends BinaryOperator>, AsmBinaryOperator> binaryOperatorMap;
 
-    private static final Map<Class<? extends Operator>, AsmOperator> DEFAULT_OPERATOR_MAP;
+    private static final Map<Class<? extends UnaryOperator>, AsmUnaryOperator> DEFAULT_UNARY_OPERATOR_MAP;
+    private static final Map<Class<? extends BinaryOperator>, AsmBinaryOperator> DEFAULT_BINARY_OPERATOR_MAP;
+
     private static final AsmOperatorRegistry DEFAULT;
 
     static {
-        val defaultOperatorMap = new HashMap<Class<? extends Operator>, AsmOperator>();
-        defaultOperatorMap.put(OperatorMinus.class, new AsmOperatorMinus());
-        defaultOperatorMap.put(OperatorRemainder.class, new AsmOperatorRemainder());
-        defaultOperatorMap.put(OperatorMultiply.class, new AsmOperatorMultiply());
-        defaultOperatorMap.put(OperatorDivide.class, new AsmOperatorDivide());
-        defaultOperatorMap.put(OperatorPlus.class, new AsmOperatorPlus());
-        defaultOperatorMap.put(OperatorBitwiseAnd.class, new AsmOperatorBitwiseAnd());
-        defaultOperatorMap.put(OperatorBitwiseOr.class, new AsmOperatorBitwiseOr());
-        defaultOperatorMap.put(OperatorBitwiseXor.class, new AsmOperatorBitwiseXor());
-        defaultOperatorMap.put(OperatorBitwiseLeftShift.class, new AsmOperatorBitwiseLeftShift());
-        defaultOperatorMap.put(OperatorBitwiseRightShift.class, new AsmOperatorBitwiseRightShift());
-        defaultOperatorMap.put(OperatorBitwiseUnsignedRightShift.class, new AsmOperatorBitwiseUnsignedRightShift());
-        defaultOperatorMap.put(OperatorBitwiseComplement.class, new AsmOperatorBitwiseComplement());
+        val defaultUnaryOperatorMap = new HashMap<Class<? extends UnaryOperator>, AsmUnaryOperator>();
+        defaultUnaryOperatorMap.put(OperatorUnaryMinus.class, new AsmOperatorUnaryMinus());
+        defaultUnaryOperatorMap.put(OperatorUnaryPlus.class, new AsmOperatorUnaryPlus());
+        defaultUnaryOperatorMap.put(OperatorBitwiseComplement.class, new AsmOperatorBitwiseComplement());
+        defaultUnaryOperatorMap.put(OperatorNegate.class, new AsmOperatorNegate());
 
-        defaultOperatorMap.put(OperatorGreater.class,
+        val defaultBinaryOperatorMap = new HashMap<Class<? extends BinaryOperator>, AsmBinaryOperator>();
+        defaultBinaryOperatorMap.put(OperatorMinus.class, new AsmOperatorMinus());
+        defaultBinaryOperatorMap.put(OperatorRemainder.class, new AsmOperatorRemainder());
+        defaultBinaryOperatorMap.put(OperatorMultiply.class, new AsmOperatorMultiply());
+        defaultBinaryOperatorMap.put(OperatorDivide.class, new AsmOperatorDivide());
+        defaultBinaryOperatorMap.put(OperatorPlus.class, new AsmOperatorPlus());
+        defaultBinaryOperatorMap.put(OperatorBitwiseAnd.class, new AsmOperatorBitwiseAnd());
+        defaultBinaryOperatorMap.put(OperatorBitwiseOr.class, new AsmOperatorBitwiseOr());
+        defaultBinaryOperatorMap.put(OperatorBitwiseXor.class, new AsmOperatorBitwiseXor());
+        defaultBinaryOperatorMap.put(OperatorBitwiseLeftShift.class, new AsmOperatorBitwiseLeftShift());
+        defaultBinaryOperatorMap.put(OperatorBitwiseRightShift.class, new AsmOperatorBitwiseRightShift());
+        defaultBinaryOperatorMap.put(OperatorBitwiseUnsignedRightShift.class, new AsmOperatorBitwiseUnsignedRightShift());
+
+        defaultBinaryOperatorMap.put(OperatorGreater.class,
                 new AsmOperatorCompare(Opcodes.IF_ICMPLT, Opcodes.IFLT, Opcodes.DCMPL, Opcodes.FCMPL));
 
-        defaultOperatorMap.put(OperatorStrictGreater.class,
+        defaultBinaryOperatorMap.put(OperatorStrictGreater.class,
                 new AsmOperatorCompare(Opcodes.IF_ICMPLE, Opcodes.IFLE, Opcodes.DCMPL, Opcodes.FCMPL));
 
-        defaultOperatorMap.put(OperatorLess.class,
+        defaultBinaryOperatorMap.put(OperatorLess.class,
                 new AsmOperatorCompare(Opcodes.IF_ICMPGT, Opcodes.IFGT, Opcodes.DCMPG, Opcodes.FCMPG));
 
-        defaultOperatorMap.put(OperatorStrictLess.class,
+        defaultBinaryOperatorMap.put(OperatorStrictLess.class,
                 new AsmOperatorCompare(Opcodes.IF_ICMPGE, Opcodes.IFGE, Opcodes.DCMPG, Opcodes.FCMPG));
 
-        defaultOperatorMap.put(OperatorAnd.class, new AsmOperatorAnd());
-        defaultOperatorMap.put(OperatorOr.class, new AsmOperatorOr());
+        defaultBinaryOperatorMap.put(OperatorAnd.class, new AsmOperatorAnd());
+        defaultBinaryOperatorMap.put(OperatorOr.class, new AsmOperatorOr());
 
-        defaultOperatorMap.put(OperatorEquals.class, new AsmOperatorEquals(false));
-        defaultOperatorMap.put(OperatorNotEquals.class, new AsmOperatorEquals(true));
-        defaultOperatorMap.put(OperatorNegate.class, new AsmOperatorNegate());
+        defaultBinaryOperatorMap.put(OperatorEquals.class, new AsmOperatorEquals(false));
+        defaultBinaryOperatorMap.put(OperatorNotEquals.class, new AsmOperatorEquals(true));
 
-        DEFAULT_OPERATOR_MAP = Collections.unmodifiableMap(defaultOperatorMap);
-        DEFAULT = new AsmOperatorRegistry(DEFAULT_OPERATOR_MAP);
+        DEFAULT_UNARY_OPERATOR_MAP = Collections.unmodifiableMap(defaultUnaryOperatorMap);
+        DEFAULT_BINARY_OPERATOR_MAP = Collections.unmodifiableMap(defaultBinaryOperatorMap);
+        DEFAULT = new AsmOperatorRegistry(DEFAULT_UNARY_OPERATOR_MAP, DEFAULT_BINARY_OPERATOR_MAP);
     }
 
-    public static @Unmodifiable @NotNull Map<Class<? extends Operator>, AsmOperator> getDefaultOperatorMap() {
-        return DEFAULT_OPERATOR_MAP;
+    public static @Unmodifiable @NotNull Map<Class<? extends BinaryOperator>, AsmBinaryOperator> getDefaultBinaryOperatorMap() {
+        return DEFAULT_BINARY_OPERATOR_MAP;
+    }
+
+    public static @Unmodifiable @NotNull Map<Class<? extends UnaryOperator>, AsmUnaryOperator> getDefaultUnaryOperatorMap() {
+        return DEFAULT_UNARY_OPERATOR_MAP;
     }
 
     public static @NotNull AsmOperatorRegistry getDefault() {
@@ -125,16 +142,30 @@ public final class AsmOperatorRegistry {
     }
 
     public static @NotNull AsmOperatorRegistry create(
-            final @NotNull Map<Class<? extends Operator>, AsmOperator> operatorCompilerMap
+            final @NotNull Map<Class<? extends UnaryOperator>, AsmUnaryOperator> unaryOperatorMap,
+            final @NotNull Map<Class<? extends BinaryOperator>, AsmBinaryOperator> binaryOperatorMap
     ) {
-        return new AsmOperatorRegistry(Collections.unmodifiableMap(new HashMap<>(operatorCompilerMap)));
+        return new AsmOperatorRegistry(
+                Collections.unmodifiableMap(new HashMap<>(unaryOperatorMap)),
+                Collections.unmodifiableMap(new HashMap<>(binaryOperatorMap))
+        );
     }
 
-    public @NotNull AsmOperator getOperator(final @NotNull Class<? extends Operator> type) {
-        val operator = operatorMap.get(type);
+    public @NotNull AsmUnaryOperator getUnaryOperator(final @NotNull Class<? extends UnaryOperator> type) {
+        val operator = unaryOperatorMap.get(type);
 
         if (operator == null) {
-            throw new IllegalArgumentException("No such operator compiler for operator " + type.getName());
+            throw new IllegalArgumentException("No such unary operator for " + type.getName());
+        }
+
+        return operator;
+    }
+
+    public @NotNull AsmBinaryOperator getBinaryOperator(final @NotNull Class<? extends BinaryOperator> type) {
+        val operator = binaryOperatorMap.get(type);
+
+        if (operator == null) {
+            throw new IllegalArgumentException("No such binary operator for " + type.getName());
         }
 
         return operator;

@@ -17,17 +17,22 @@
 package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.keyword.KeywordRegistry;
-import io.github.whilein.jexpr.operator.OperatorRegistry;
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operator.BinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
+import io.github.whilein.jexpr.operator.registry.BinaryOperatorRegistry;
+import io.github.whilein.jexpr.operator.registry.OperatorRegistry;
+import io.github.whilein.jexpr.operator.registry.UnaryOperatorRegistry;
+import io.github.whilein.jexpr.token.BinaryOperatorTokenParserFactory;
 import io.github.whilein.jexpr.token.FactoryContext;
 import io.github.whilein.jexpr.token.NumberTokenParserFactory;
-import io.github.whilein.jexpr.token.OperatorTokenParserFactory;
 import io.github.whilein.jexpr.token.ReferenceTokenParserFactory;
 import io.github.whilein.jexpr.token.SelectableTokenParserFactory;
 import io.github.whilein.jexpr.token.StringTokenParserFactory;
+import io.github.whilein.jexpr.token.UnaryOperatorTokenParserFactory;
 import io.github.whilein.jexpr.util.Pool;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -47,19 +52,25 @@ public final class ConcurrentExpressionParser extends AbstractExpressionParser {
     Pool<ExpressionStreamParser> streamPool;
 
     public static @NotNull ExpressionParser createDefault(
-            final @NotNull OperatorRegistry operatorRegistry,
+            final @NotNull OperatorRegistry<UnaryOperator> unaryOperatorRegistry,
+            final @NotNull OperatorRegistry<BinaryOperator> binaryOperatorRegistry,
             final @NotNull KeywordRegistry keywordRegistry
     ) {
         return new ConcurrentExpressionParser(new ExpressionStreamParserPool(Arrays.asList(
                 new NumberTokenParserFactory(),
                 new StringTokenParserFactory(),
-                new OperatorTokenParserFactory(operatorRegistry),
+                new UnaryOperatorTokenParserFactory(unaryOperatorRegistry),
+                new BinaryOperatorTokenParserFactory(binaryOperatorRegistry),
                 new ReferenceTokenParserFactory(keywordRegistry)
         )));
     }
 
     public static @NotNull ExpressionParser createDefault() {
-        return createDefault(OperatorRegistry.createDefault(), KeywordRegistry.createDefault());
+        return createDefault(
+                UnaryOperatorRegistry.getDefault(),
+                BinaryOperatorRegistry.getDefault(),
+                KeywordRegistry.createDefault()
+        );
     }
 
     public static @NotNull ExpressionParser from(
@@ -73,12 +84,22 @@ public final class ConcurrentExpressionParser extends AbstractExpressionParser {
         return streamPool.borrowObject();
     }
 
+    @FieldDefaults(makeFinal = true)
     @RequiredArgsConstructor
     private static final class PooledExpressionStreamParser implements ExpressionStreamParser {
-        final Pool<ExpressionStreamParser> pool;
+        Pool<ExpressionStreamParser> pool;
 
-        @Delegate(types = ExpressionStreamParser.class, excludes = AutoCloseable.class)
-        final ExpressionStreamParser delegate;
+        ExpressionStreamParser delegate;
+
+        @Override
+        public @NotNull Operand doFinal() {
+            return delegate.doFinal();
+        }
+
+        @Override
+        public void update(final int ch) throws SyntaxException {
+            delegate.update(ch);
+        }
 
         @Override
         public void close() {

@@ -34,7 +34,7 @@ import org.objectweb.asm.Type;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class AsmOperatorCompare extends AbstractAsmOperator {
+public final class AsmOperatorCompare extends AbstractAsmBinaryOperator {
 
     int opcode;
     int compareOpcode;

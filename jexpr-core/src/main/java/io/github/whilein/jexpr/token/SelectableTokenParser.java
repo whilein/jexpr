@@ -16,6 +16,10 @@
 
 package io.github.whilein.jexpr.token;
 
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operator.Operator;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * @author whilein
  */
@@ -25,15 +29,15 @@ public interface SelectableTokenParser extends TokenParser {
      * между разными реализациями парсеров.
      * <p>
      * Данный метод определяет, следует ли парсеру продолжать обрабатывать входящий поток данных. Если метод вернёт
-     * {@code false}, то вслед за этим должен вызваться завершающий метод {@link #doFinal()}.
+     * {@code false}, то вслед за этим должен вызваться завершающий метод {@link #doFinal(TokenVisitor)}.
      * <p>
-     * Также, этот метод вызывается сразу же после {@link #shouldActivate(int)}, поэтому следует, чтобы
-     * этот метод не противоречил {@link #shouldActivate(int)} и также вернул {@code true}.
+     * Также, этот метод вызывается сразу же после {@link #shouldSelect(int, Operand, Operator)}, поэтому следует, чтобы
+     * этот метод не противоречил {@link #shouldSelect(int, Operand, Operator)} и также вернул {@code true}.
      *
      * @param ch символ
      * @return {@code true}, следует ли продолжать обработку
      */
-    boolean shouldStayActive(int ch);
+    boolean shouldStaySelected(int ch);
 
     /**
      * Требуется для обработки целых выражений, во время парсинга которых нужно переключаться
@@ -41,8 +45,11 @@ public interface SelectableTokenParser extends TokenParser {
      * <p>
      * Парсер выражений определяет соответствующий парсер по символу используя этот метод.
      *
-     * @param ch символ
+     * @param ch           символ
+     * @param prevOperand  предыдущий операнд
+     * @param prevOperator предыдущий оператор
      * @return {@code true}, если следует использовать этот парсер
      */
-    boolean shouldActivate(int ch);
+    boolean shouldSelect(int ch, @Nullable Operand prevOperand, @Nullable Operator prevOperator);
+
 }

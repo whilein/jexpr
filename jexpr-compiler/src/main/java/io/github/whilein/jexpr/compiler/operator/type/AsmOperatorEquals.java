@@ -19,7 +19,7 @@ package io.github.whilein.jexpr.compiler.operator.type;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
-import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
+import io.github.whilein.jexpr.compiler.operator.AbstractAsmBinaryOperator;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ import org.objectweb.asm.Type;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class AsmOperatorEquals extends AbstractAsmOperator {
+public final class AsmOperatorEquals extends AbstractAsmBinaryOperator {
 
     boolean negate;
 
@@ -54,7 +54,12 @@ public final class AsmOperatorEquals extends AbstractAsmOperator {
         return Type.BOOLEAN_TYPE;
     }
 
-    private static Type prepare(AsmMethodCompiler compiler, StackLazyOperand operand, boolean primitive, Type castType) {
+    private static void prepare(
+            final AsmMethodCompiler compiler,
+            final StackLazyOperand operand,
+            final boolean primitive,
+            final Type castType
+    ) {
         Type type = operand.getType();
 
         if (type != null) {
@@ -72,8 +77,6 @@ public final class AsmOperatorEquals extends AbstractAsmOperator {
                 }
             }
         }
-
-        return type;
     }
 
     @Override

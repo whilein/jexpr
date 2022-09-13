@@ -18,7 +18,6 @@ package io.github.whilein.jexpr.token;
 
 import io.github.whilein.jexpr.SyntaxException;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
-import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.defined.OperandString;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class StringTokenParser extends AbstractTokenParser implements SelectableTokenParser {
+public final class StringTokenParser extends AbstractSelectableTokenParser {
 
     @NonFinal
     int quoteCharacter = 0;
@@ -82,12 +81,12 @@ public final class StringTokenParser extends AbstractTokenParser implements Sele
     }
 
     @Override
-    public boolean shouldStayActive(final int ch) {
+    public boolean shouldStaySelected(final int ch) {
         return state != STATE_FINISH_QUOTE;
     }
 
     @Override
-    public boolean shouldActivate(final int ch) {
+    public boolean shouldSelect(final int ch) {
         return ch == '\'' || ch == '\"';
     }
 
@@ -263,9 +262,9 @@ public final class StringTokenParser extends AbstractTokenParser implements Sele
     }
 
     @Override
-    public @NotNull Operand doFinal() throws SyntaxException {
+    public void doFinal(final @NotNull TokenVisitor tokenVisitor) throws SyntaxException {
         try {
-            return OperandString.valueOf(buffer.getString());
+            tokenVisitor.visitOperand(OperandString.valueOf(buffer.getString()));
         } finally {
             buffer.reset();
             state = STATE_LEADING_QUOTE;

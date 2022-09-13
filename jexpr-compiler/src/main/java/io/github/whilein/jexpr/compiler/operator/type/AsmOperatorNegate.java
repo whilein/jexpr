@@ -19,7 +19,7 @@ package io.github.whilein.jexpr.compiler.operator.type;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
-import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
+import io.github.whilein.jexpr.compiler.operator.AbstractAsmUnaryOperator;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +30,7 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public final class AsmOperatorNegate extends AbstractAsmOperator {
+public final class AsmOperatorNegate extends AbstractAsmUnaryOperator {
 
     @Override
     public @NotNull Type getOutputType(final @Nullable Type value) {
@@ -38,26 +38,6 @@ public final class AsmOperatorNegate extends AbstractAsmOperator {
 
         return Type.BOOLEAN_TYPE;
     }
-
-    //   // access flags 0x9
-    //  public static g(Z)Z
-    //   L0
-    //    LINENUMBER 121 L0
-    //    ILOAD 0
-    //    IFNE L1
-    //    ICONST_1
-    //    GOTO L2
-    //   L1
-    //   FRAME SAME
-    //    ICONST_0
-    //   L2
-    //   FRAME SAME1 I
-    //    IRETURN
-    //   L3
-    //    LOCALVARIABLE b Z L0 L3 0
-    //    MAXSTACK = 1
-    //    MAXLOCALS = 1
-    //}
 
     @Override
     public void compile(final @NotNull AsmMethodCompiler compiler, final @NotNull OperandOrigin origin,

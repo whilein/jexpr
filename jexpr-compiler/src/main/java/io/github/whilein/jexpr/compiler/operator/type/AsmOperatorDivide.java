@@ -19,7 +19,7 @@ package io.github.whilein.jexpr.compiler.operator.type;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
-import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperator;
+import io.github.whilein.jexpr.compiler.operator.AbstractAsmBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
@@ -28,7 +28,7 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public final class AsmOperatorDivide extends AbstractAsmOperator {
+public final class AsmOperatorDivide extends AbstractAsmBinaryOperator {
 
     @Override
     public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
@@ -36,7 +36,12 @@ public final class AsmOperatorDivide extends AbstractAsmOperator {
     }
 
     @Override
-    public void compile(final @NotNull AsmMethodCompiler compiler, final @NotNull OperandOrigin origin, final @NotNull StackLazyOperand left, final @NotNull StackLazyOperand right) {
+    public void compile(
+            final @NotNull AsmMethodCompiler compiler,
+            final @NotNull OperandOrigin origin,
+            final @NotNull StackLazyOperand left,
+            final @NotNull StackLazyOperand right
+    ) {
         compiler.visitInsn(compileNumber(compiler, left, right).getOpcode(Opcodes.IDIV));
     }
 

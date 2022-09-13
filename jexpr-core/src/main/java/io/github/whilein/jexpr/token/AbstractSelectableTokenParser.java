@@ -16,21 +16,20 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operator.OperatorRegistry;
-import lombok.Value;
-import org.jetbrains.annotations.NotNull;
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operator.Operator;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
-@Value
-public class OperatorTokenParserFactory implements SelectableTokenParserFactory {
-
-    OperatorRegistry operatorRegistry;
-
+public abstract class AbstractSelectableTokenParser extends AbstractTokenParser implements SelectableTokenParser {
     @Override
-    public @NotNull SelectableTokenParser create(final @NotNull FactoryContext ctx) {
-        return new OperatorTokenParser(operatorRegistry);
+    public final boolean shouldSelect(final int ch,
+                                final @Nullable Operand prevOperand,
+                                final @Nullable Operator prevOperator) {
+        return shouldSelect(ch);
     }
 
+    protected abstract boolean shouldSelect(final int ch);
 }

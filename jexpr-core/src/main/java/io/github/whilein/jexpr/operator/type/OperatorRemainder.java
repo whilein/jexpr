@@ -21,16 +21,16 @@ import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
 import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operator.AbstractOperator;
+import io.github.whilein.jexpr.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperatorRemainder extends AbstractOperator {
+public final class OperatorRemainder extends AbstractBinaryOperator {
 
     public OperatorRemainder() {
-        super("%", OperatorPrecedenceConsts.MULTIPLICATIVE, TWO_OPERAND);
+        super("%", OperatorPrecedenceConsts.MULTIPLICATIVE);
     }
 
     @Override

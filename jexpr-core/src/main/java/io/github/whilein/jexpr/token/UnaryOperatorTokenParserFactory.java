@@ -14,20 +14,24 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operand;
+package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.compiler.operator.AsmOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
+import io.github.whilein.jexpr.operator.registry.OperatorRegistry;
 import lombok.Value;
-import org.objectweb.asm.Type;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
 @Value
-public class TypedMember implements TypedOperand {
+public class UnaryOperatorTokenParserFactory implements SelectableTokenParserFactory {
 
-    TypedOperand member;
-    AsmOperator operator;
-    Type type;
+    OperatorRegistry<UnaryOperator> operatorRegistry;
+
+    @Override
+    public @NotNull SelectableTokenParser create(final @NotNull FactoryContext ctx) {
+        return new UnaryOperatorTokenParser(operatorRegistry);
+    }
 
 }

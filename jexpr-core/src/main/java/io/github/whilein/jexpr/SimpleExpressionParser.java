@@ -18,14 +18,19 @@ package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.io.ByteArrayOutput;
 import io.github.whilein.jexpr.keyword.KeywordRegistry;
-import io.github.whilein.jexpr.operator.OperatorRegistry;
+import io.github.whilein.jexpr.operator.BinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
+import io.github.whilein.jexpr.operator.registry.BinaryOperatorRegistry;
+import io.github.whilein.jexpr.operator.registry.OperatorRegistry;
+import io.github.whilein.jexpr.operator.registry.UnaryOperatorRegistry;
+import io.github.whilein.jexpr.token.BinaryOperatorTokenParser;
 import io.github.whilein.jexpr.token.FactoryContext;
 import io.github.whilein.jexpr.token.NumberTokenParser;
-import io.github.whilein.jexpr.token.OperatorTokenParser;
 import io.github.whilein.jexpr.token.ReferenceTokenParser;
 import io.github.whilein.jexpr.token.SelectableTokenParser;
 import io.github.whilein.jexpr.token.SelectableTokenParserFactory;
 import io.github.whilein.jexpr.token.StringTokenParser;
+import io.github.whilein.jexpr.token.UnaryOperatorTokenParser;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +53,8 @@ public final class SimpleExpressionParser extends AbstractExpressionParser {
     ExpressionStreamParser stream;
 
     public static @NotNull ExpressionParser createDefault(
-            final @NotNull OperatorRegistry operatorRegistry,
+            final @NotNull OperatorRegistry<UnaryOperator> unaryOperatorRegistry,
+            final @NotNull OperatorRegistry<BinaryOperator> binaryOperatorRegistry,
             final @NotNull KeywordRegistry keywordRegistry
     ) {
         val buffer = new ByteArrayOutput();
@@ -56,13 +62,15 @@ public final class SimpleExpressionParser extends AbstractExpressionParser {
         return create(Arrays.asList(
                 new NumberTokenParser(buffer),
                 new StringTokenParser(buffer),
-                new OperatorTokenParser(operatorRegistry),
+                new UnaryOperatorTokenParser(unaryOperatorRegistry),
+                new BinaryOperatorTokenParser(binaryOperatorRegistry),
                 new ReferenceTokenParser(keywordRegistry, buffer)
         ));
     }
 
     public static @NotNull ExpressionParser createDefault() {
-        return createDefault(OperatorRegistry.createDefault(), KeywordRegistry.createDefault());
+        return createDefault(UnaryOperatorRegistry.getDefault(), BinaryOperatorRegistry.getDefault(),
+                KeywordRegistry.createDefault());
     }
 
     public static @NotNull ExpressionParser from(

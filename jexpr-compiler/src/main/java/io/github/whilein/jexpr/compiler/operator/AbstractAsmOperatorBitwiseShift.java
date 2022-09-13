@@ -26,8 +26,7 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public abstract class AbstractAsmOperatorBitwiseShift extends AbstractAsmOperator {
-
+public abstract class AbstractAsmOperatorBitwiseShift extends AbstractAsmBinaryOperator {
 
     @Override
     public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {

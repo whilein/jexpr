@@ -21,16 +21,16 @@ import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
 import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operator.AbstractOperator;
+import io.github.whilein.jexpr.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperatorMinus extends AbstractOperator {
+public final class OperatorMinus extends AbstractBinaryOperator {
 
     public OperatorMinus() {
-        super("-", OperatorPrecedenceConsts.ADDITIVE, ONE_OPERAND | TWO_OPERAND);
+        super("-", OperatorPrecedenceConsts.ADDITIVE);
     }
 
     @Override
@@ -59,11 +59,6 @@ public final class OperatorMinus extends AbstractOperator {
     }
 
     @Override
-    public @NotNull Operand apply(final int value) {
-        return OperandInteger.valueOf(-value);
-    }
-
-    @Override
     public @NotNull Operand apply(final long left, final int right) {
         return OperandLong.valueOf(left - right);
     }
@@ -81,11 +76,6 @@ public final class OperatorMinus extends AbstractOperator {
     @Override
     public @NotNull Operand apply(final long left, final double right) {
         return OperandDouble.valueOf(left - right);
-    }
-
-    @Override
-    public @NotNull Operand apply(final long value) {
-        return OperandLong.valueOf(-value);
     }
 
     @Override
@@ -109,11 +99,6 @@ public final class OperatorMinus extends AbstractOperator {
     }
 
     @Override
-    public @NotNull Operand apply(final float value) {
-        return OperandFloat.valueOf(-value);
-    }
-
-    @Override
     public @NotNull Operand apply(final double left, final int right) {
         return OperandDouble.valueOf(left - right);
     }
@@ -131,11 +116,6 @@ public final class OperatorMinus extends AbstractOperator {
     @Override
     public @NotNull Operand apply(final double left, final double right) {
         return OperandDouble.valueOf(left - right);
-    }
-
-    @Override
-    public @NotNull Operand apply(final double value) {
-        return OperandDouble.valueOf(-value);
     }
 
 }

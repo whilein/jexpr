@@ -16,11 +16,11 @@
 
 package io.github.whilein.jexpr.compiler;
 
+import io.github.whilein.jexpr.compiler.operand.TypedBinary;
 import io.github.whilein.jexpr.compiler.operand.TypedDefined;
-import io.github.whilein.jexpr.compiler.operand.TypedMember;
 import io.github.whilein.jexpr.compiler.operand.TypedOperand;
 import io.github.whilein.jexpr.compiler.operand.TypedReference;
-import io.github.whilein.jexpr.compiler.operand.TypedSequence;
+import io.github.whilein.jexpr.compiler.operand.TypedUnary;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -70,19 +70,19 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
             val localType = local.getType();
 
             asmMethodCompiler.visitVarInsn(localType.getOpcode(ILOAD), local.getIndex());
-        } else if (operand instanceof TypedMember) {
-            val member = (TypedMember) operand;
-            val memberOperand = new StackLazyOperandImpl(member.getMember());
+        } else if (operand instanceof TypedUnary) {
+            val unary = (TypedUnary) operand;
+            val unaryOperand = new StackLazyOperandImpl(unary.getOperand());
 
-            val operator = member.getOperator();
-            operator.compile(asmMethodCompiler, origin, memberOperand);
-        } else if (operand instanceof TypedSequence) {
-            val sequence = (TypedSequence) operand;
+            val operator = unary.getOperator();
+            operator.compile(asmMethodCompiler, origin, unaryOperand);
+        } else if (operand instanceof TypedBinary) {
+            val binary = (TypedBinary) operand;
 
-            val left = new StackLazyOperandImpl(sequence.getLeft());
-            val right = new StackLazyOperandImpl(sequence.getRight());
+            val left = new StackLazyOperandImpl(binary.getLeft());
+            val right = new StackLazyOperandImpl(binary.getRight());
 
-            val operator = sequence.getOperator();
+            val operator = binary.getOperator();
             operator.compile(asmMethodCompiler, origin, left, right);
         }
     }
