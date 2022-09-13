@@ -53,14 +53,14 @@ public class Main {
         val solvedMap = new HashMap<String, Operand>();
         val in = new Scanner(System.in);
 
-        int index = 0;
+        val graph = Graph.create();
+
+        double y = 0;
 
         while (!expression.isDefined()) {
-            val graph = Graph.create();
+            val tree = toTree(expression, 0, y);
 
-            addOperand(graph, expression, 0, 0);
-
-            graph.save(Paths.get("graph_" + index++ + ".xgml"));
+            addNode(graph, tree);
 
             expression = expression.solve(new UndefinedResolver() {
 
@@ -85,57 +85,76 @@ public class Main {
                     return solvedMap.computeIfAbsent(reference, this::input);
                 }
             });
-        }
-    }
 
-    private static double getWidth(final Operand operand) {
-        if (operand instanceof OperandUndefinedBinary) {
-            val sequence = (OperandUndefinedBinary) operand;
-
-            val left = getWidth(sequence.getLeft());
-            val right = getWidth(sequence.getRight());
-
-            return left + right + BRANCH_GAP;
-        } else if (operand instanceof OperandUndefinedUnary) {
-            val member = (OperandUndefinedUnary) operand;
-
-            return getWidth(member.getMember());
+            y += tree.getHeight() + 100;
         }
 
-        return OPERAND_WIDTH;
+        graph.save(Paths.get("graph.xgml"));
     }
 
-    private static int addOperand(final Graph graph, final Operand operand, final double x, final double y) {
-        if (operand.isDefined() || operand instanceof OperandUndefinedReference) {
-            return graph.addNode(x, y, OPERAND_WIDTH, 20, String.valueOf(operand.getValue()), OPERAND_COLOR);
-        } else if (operand instanceof OperandUndefinedBinary) {
-            val sequence = (OperandUndefinedBinary) operand;
+    private static int addNode(final Graph graph, final Node node) {
+        if (node instanceof ValueNode) {
+            val value = (ValueNode) node;
 
-            val node = graph.addNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(sequence.getOperator()), OPERATOR_COLOR);
+            return graph.addNode(node.getX(), node.getY(), node.getSurfaceWidth(), node.getSurfaceHeight(),
+                    value.getLabel(), value.getColor());
+        } else if (node instanceof BinaryNode) {
+            val binary = (BinaryNode) node;
 
-            val left = addOperand(graph, sequence.getLeft(),
-                    x - (BRANCH_GAP + getWidth(sequence.getLeft()) / 2),
-                    y + 50);
-            val right = addOperand(graph, sequence.getRight(),
-                    x + (BRANCH_GAP + getWidth(sequence.getRight()) / 2),
-                    y + 50);
+            val operator = binary.getOperator();
 
-            graph.addEdge(node, left);
-            graph.addEdge(node, right);
+            val operatorNode = graph.addNode(operator.getX(), operator.getY(), operator.getWidth(), operator.getHeight(),
+                    operator.getLabel(), operator.getColor());
 
-            return node;
-        } else if (operand instanceof OperandUndefinedUnary) {
-            val member = (OperandUndefinedUnary) operand;
+            val leftNode = addNode(graph, binary.getLeft());
+            val rightNode = addNode(graph, binary.getRight());
 
-            val node = graph.addNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(member.getOperator()), OPERATOR_COLOR);
+            graph.addEdge(operatorNode, leftNode);
+            graph.addEdge(operatorNode, rightNode);
 
-            val value = addOperand(graph, member.getMember(), x, y + 50);
+            return operatorNode;
+        } else if (node instanceof UnaryNode) {
+            val unary = (UnaryNode) node;
+            val operator = unary.getOperator();
 
-            graph.addEdge(node, value);
+            val operatorNode = graph.addNode(operator.getX(), operator.getY(), operator.getWidth(), operator.getHeight(),
+                    operator.getLabel(), operator.getColor());
 
-            return node;
+            val unaryNode = addNode(graph, unary.getNode());
+
+            graph.addEdge(operatorNode, unaryNode);
+
+            return operatorNode;
         } else {
-            return -1;
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private static Node toTree(final Operand operand, final double x, final double y) {
+        if (operand.isDefined() || operand instanceof OperandUndefinedReference) {
+            return new ValueNode(x, y, OPERAND_WIDTH, 20, String.valueOf(operand.getValue()), OPERAND_COLOR);
+        } else if (operand instanceof OperandUndefinedBinary) {
+            val binary = (OperandUndefinedBinary) operand;
+
+            val operator = new ValueNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(binary.getOperator()), OPERATOR_COLOR);
+
+            val left = toTree(binary.getLeft(), x - BRANCH_GAP, y + 50);
+            left.moveX(-left.getWidth() / 2);
+
+            val right = toTree(binary.getRight(), x + BRANCH_GAP, y + 50);
+            right.moveX(right.getWidth() / 2);
+
+            return new BinaryNode(operator, left, right, BRANCH_GAP);
+        } else if (operand instanceof OperandUndefinedUnary) {
+            val unary = (OperandUndefinedUnary) operand;
+
+            val node = new ValueNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(unary.getOperator()), OPERATOR_COLOR);
+
+            val value = toTree(unary.getMember(), x, y + 50);
+
+            return new UnaryNode(node, value);
+        } else {
+            throw new IllegalStateException();
         }
     }
 
