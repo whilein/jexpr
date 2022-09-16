@@ -46,13 +46,20 @@ public final class OperandFloat extends OperandNumber {
     }
 
     @Override
+    public void toString(final @NotNull StringBuilder out) {
+        out.append(value);
+    }
+
+    @Override
     public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
         return operator.isPredictable(value);
     }
+
     @Override
     public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
         return operator.getPredictedResult(value);
     }
+
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
         return operand.applyToFloat(value, operator);

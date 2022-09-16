@@ -23,6 +23,7 @@ import io.github.whilein.jexpr.operand.undefined.OperandUndefinedBinary;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
+import io.github.whilein.jexpr.util.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,9 +44,19 @@ public final class OperandString extends OperandDelegate<String> implements Oper
     public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
         return operator.isPredictable(delegatedValue);
     }
+
     @Override
     public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
         return operator.getPredictedResult(delegatedValue);
+    }
+
+    @Override
+    public void toString(final @NotNull StringBuilder out) {
+        out.append('"');
+
+        StringEscapeUtils.escape(delegatedValue, out, '"');
+
+        out.append('"');
     }
 
     @Override

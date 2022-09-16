@@ -37,6 +37,11 @@ public final class OperandObject extends OperandDelegate<Object> implements Oper
 
     public static final Operand NULL = new OperandObject(null);
 
+    @Override
+    public void toString(final @NotNull StringBuilder out) {
+        out.append(delegatedValue);
+    }
+
     public static @NotNull Operand valueOf(final Object value) {
         return value == null ? NULL : new OperandObject(value);
     }
