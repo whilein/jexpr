@@ -29,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface Operand {
 
+    void toString(@NotNull StringBuilder out);
+
     @NotNull Number toNumber();
 
     boolean toBoolean();

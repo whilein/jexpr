@@ -18,6 +18,7 @@ package io.github.whilein.jexpr.operand.undefined;
 
 import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.OperandBase;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
 import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
@@ -40,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandUndefinedUnary implements OperandUndefined {
+public final class OperandUndefinedUnary extends OperandBase implements OperandUndefined {
 
     Operand member;
     UnaryOperator operator;
@@ -59,6 +60,19 @@ public final class OperandUndefinedUnary implements OperandUndefined {
         }
 
         return new OperandUndefinedUnary(value, operator);
+    }
+
+    @Override
+    public void toString(final @NotNull StringBuilder out) {
+        out.append(operator.getValue());
+
+        if (member instanceof OperandUndefinedBinary) {
+            out.append('(');
+            member.toString(out);
+            out.append(')');
+        } else {
+            member.toString(out);
+        }
     }
 
     @Override

@@ -27,18 +27,13 @@ import org.jetbrains.annotations.Nullable;
  */
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class OperandDelegate<T> implements Operand {
+public abstract class OperandDelegate<T> extends OperandBase {
 
     T delegatedValue;
 
     @Override
     public @Nullable T getValue() {
         return delegatedValue;
-    }
-
-    @Override
-    public String toString() {
-        return delegatedValue.toString();
     }
 
     @Override

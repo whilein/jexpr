@@ -18,6 +18,7 @@ package io.github.whilein.jexpr.operand.undefined;
 
 import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.OperandBase;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
 import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
@@ -41,14 +42,34 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandUndefinedBinary implements OperandUndefined {
+public final class OperandUndefinedBinary extends OperandBase implements OperandUndefined {
 
     Operand left, right;
     BinaryOperator operator;
 
     @Override
-    public String toString() {
-        return left + " " + operator.getValue() + " " + right;
+    public void toString(final @NotNull StringBuilder out) {
+        val presence = operator.getPresence();
+
+        if (left instanceof OperandUndefinedBinary
+                && ((OperandUndefinedBinary) left).getOperator().getPresence() <= presence) {
+            out.append('(');
+            left.toString(out);
+            out.append(')');
+        } else {
+            left.toString(out);
+        }
+
+        out.append(' ').append(operator.getValue()).append(' ');
+
+        if (right instanceof OperandUndefinedBinary
+                && ((OperandUndefinedBinary) right).getOperator().getPresence() <= presence) {
+            out.append('(');
+            right.toString(out);
+            out.append(')');
+        } else {
+            right.toString(out);
+        }
     }
 
     public static @NotNull Operand valueOf(

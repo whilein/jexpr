@@ -46,6 +46,11 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
     }
 
     @Override
+    public void toString(final @NotNull StringBuilder out) {
+        out.append(value);
+    }
+
+    @Override
     public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
         return operator.isPredictable(value);
     }

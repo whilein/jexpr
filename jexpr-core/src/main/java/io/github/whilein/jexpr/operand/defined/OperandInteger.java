@@ -43,6 +43,11 @@ public final class OperandInteger extends OperandNumber {
 
     private static final OperandInteger[] CACHE = new OperandInteger[256];
 
+    @Override
+    public void toString(final @NotNull StringBuilder out) {
+        out.append(value);
+    }
+
     static {
         for (int i = -128; i <= 127; i++) {
             CACHE[i + 128] = new OperandInteger(i);

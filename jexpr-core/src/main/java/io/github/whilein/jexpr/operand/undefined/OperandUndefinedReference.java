@@ -45,12 +45,17 @@ public final class OperandUndefinedReference extends OperandDelegate<String> imp
     }
 
     @Override
+    public void toString(final @NotNull StringBuilder out) {
+        out.append(delegatedValue);
+    }
+
+    @Override
     public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
         return false;
     }
 
     @Override
-    public @NotNull Operand getPredictedResult(@NotNull BinaryLazyOperator operator) {
+    public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
         throw new UnsupportedOperationException();
     }
 
