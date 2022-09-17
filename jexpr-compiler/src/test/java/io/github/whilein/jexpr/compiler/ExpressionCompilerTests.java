@@ -29,7 +29,6 @@ import org.junit.jupiter.api.TestInfo;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import sun.misc.Unsafe;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -348,7 +347,7 @@ final class ExpressionCompilerTests {
 
     @SneakyThrows
     private Class<?> createTest(final String expression, final Class<?> returnType, final Class<?>... parameters) {
-        val cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        val cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 
         cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, testType, null,
                 "java/lang/Object", null);
@@ -398,11 +397,18 @@ final class ExpressionCompilerTests {
         }
 
 
-        val unsafe = Unsafe.class.getDeclaredField("theUnsafe");
-        unsafe.setAccessible(true);
+        val classLoader = new TestClassLoader(ExpressionCompilerTests.class.getClassLoader());
+        return classLoader.defineClass(testType.replace('/', '.'), bytes);
+    }
 
-        return ((Unsafe) unsafe.get(null))
-                .defineClass(testType, bytes, 0, bytes.length, null, null);
+    private static final class TestClassLoader extends ClassLoader {
+        public TestClassLoader(final ClassLoader parent) {
+            super(parent);
+        }
+
+        public Class<?> defineClass(final String name, final byte[] data) {
+            return defineClass(name, data, 0, data.length, null);
+        }
     }
 
 }

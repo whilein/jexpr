@@ -367,7 +367,7 @@ public final class AsmMethodCompiler extends MethodVisitor {
         } else if (operand instanceof OperandBoolean) {
             mv.visitInsn(operand.toBoolean() ? Opcodes.ICONST_1 : Opcodes.ICONST_0);
         } else if (operand instanceof OperandString) {
-            mv.visitLdcInsn(operand.toString());
+            mv.visitLdcInsn(operand.getValue());
         } else if (operand instanceof OperandObject) {
             mv.visitInsn(ACONST_NULL);
         } else {
