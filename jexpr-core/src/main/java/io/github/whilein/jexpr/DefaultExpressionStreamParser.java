@@ -29,8 +29,6 @@ public class DefaultExpressionStreamParser extends AbstractExpressionStreamParse
 
     private DefaultExpressionStreamParser(final List<SelectableTokenParser> parsers) {
         super(parsers);
-
-        state = STATE_CONTENT;
     }
 
     @Override

@@ -31,10 +31,26 @@ public final class NestedExpressionStreamParser
         extends AbstractExpressionStreamParser
         implements SelectableTokenParser {
 
+    private static final int STATE_LEADING_BRACKET = 0, STATE_CONTENT = 1, STATE_FINAL_BRACKET = 2;
+
+    private int state;
+
     public NestedExpressionStreamParser(final List<SelectableTokenParser> parsers) {
         super(parsers);
+    }
 
-        this.state = STATE_LEADING_BRACKET;
+    @Override
+    protected boolean shouldIgnore(final int ch) {
+        final boolean shouldIgnore;
+
+        if (!(shouldIgnore = super.shouldIgnore(ch))) {
+            if (ch == ')') {
+                state = STATE_FINAL_BRACKET;
+                return true;
+            }
+        }
+
+        return shouldIgnore;
     }
 
     @Override
@@ -67,6 +83,10 @@ public final class NestedExpressionStreamParser
             throw invalidSyntax("Unexpected EOF");
         }
 
-        return super.doFinal();
+        try {
+            return super.doFinal();
+        } finally {
+            state = 0;
+        }
     }
 }

@@ -43,8 +43,6 @@ import java.util.Map;
 public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
         implements ExpressionStreamParser, TokenVisitor {
 
-    protected static final int STATE_LEADING_BRACKET = 0, STATE_CONTENT = 1, STATE_FINAL_BRACKET = 2;
-
     @NonFinal
     BinaryOperator binaryOperator;
 
@@ -154,13 +152,7 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
         }
 
         if (activeParser == null) {
-            if (isControl(ch)) {
-                return;
-            }
-
-            // fixme move to nested parser
-            if (ch == ')') {
-                state = STATE_FINAL_BRACKET;
+            if (shouldIgnore(ch)) {
                 return;
             }
 
@@ -168,6 +160,10 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
         }
 
         activeParser.update(ch);
+    }
+
+    protected boolean shouldIgnore(final int ch) {
+        return isControl(ch);
     }
 
     private SelectableTokenParser initActiveParser(final int ch) {
@@ -219,7 +215,6 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
             binaryOperator = null;
             previousOperator = null;
             previousOperand = null;
-            state = STATE_LEADING_BRACKET;
         }
     }
 
