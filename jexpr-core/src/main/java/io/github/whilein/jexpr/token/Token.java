@@ -14,18 +14,11 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operator;
-
-import io.github.whilein.jexpr.token.Token;
-import org.jetbrains.annotations.NotNull;
+package io.github.whilein.jexpr.token;
 
 /**
  * @author whilein
  */
-public interface Operator extends Token {
-
-    @NotNull String getValue();
-
-    int getPresence();
+public interface Token {
 
 }

@@ -26,6 +26,7 @@ import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
 import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operand.defined.OperandString;
+import io.github.whilein.jexpr.operand.flat.FlatStream;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
@@ -46,6 +47,13 @@ public final class OperandUndefinedBinary extends OperandBase implements Operand
 
     Operand left, right;
     BinaryOperator operator;
+
+    @Override
+    public void flat(final @NotNull FlatStream flatStream) {
+        right.flat(flatStream);
+        left.flat(flatStream);
+        flatStream.put(operator);
+    }
 
     @Override
     public void toString(final @NotNull StringBuilder out) {
