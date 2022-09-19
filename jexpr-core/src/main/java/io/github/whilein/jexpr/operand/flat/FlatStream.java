@@ -14,35 +14,20 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand;
+package io.github.whilein.jexpr.operand.flat;
 
-import io.github.whilein.jexpr.operand.flat.FlatStream;
-import io.github.whilein.jexpr.operand.flat.StackFlatStream;
-import lombok.val;
+import io.github.whilein.jexpr.UndefinedResolver;
+import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.token.Token;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public abstract class OperandBase implements Operand {
+public interface FlatStream {
 
-    @Override
-    public @NotNull FlatStream flat() {
-        val flatStream = StackFlatStream.create();
-        flat(flatStream);
-        return flatStream;
-    }
+    @NotNull Operand solve(@NotNull UndefinedResolver resolver);
 
-    @Override
-    public void flat(final @NotNull FlatStream flatStream) {
-        flatStream.put(this);
-    }
-
-    @Override
-    public String toString() {
-        val result = new StringBuilder();
-        toString(result);
-        return result.toString();
-    }
+    void put(@NotNull Token token);
 
 }
