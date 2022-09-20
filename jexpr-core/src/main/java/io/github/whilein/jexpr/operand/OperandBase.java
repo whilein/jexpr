@@ -16,27 +16,12 @@
 
 package io.github.whilein.jexpr.operand;
 
-import io.github.whilein.jexpr.operand.flat.FlatStream;
-import io.github.whilein.jexpr.operand.flat.StackFlatStream;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
 public abstract class OperandBase implements Operand {
-
-    @Override
-    public @NotNull FlatStream flat() {
-        val flatStream = StackFlatStream.create();
-        flat(flatStream);
-        return flatStream;
-    }
-
-    @Override
-    public void flat(final @NotNull FlatStream flatStream) {
-        flatStream.put(this);
-    }
 
     @Override
     public String toString() {

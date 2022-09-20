@@ -17,7 +17,6 @@
 package io.github.whilein.jexpr.operand;
 
 import io.github.whilein.jexpr.UndefinedResolver;
-import io.github.whilein.jexpr.operand.flat.FlatStream;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
@@ -30,10 +29,6 @@ import org.jetbrains.annotations.Nullable;
  * @author whilein
  */
 public interface Operand extends Token {
-
-    @NotNull FlatStream flat();
-
-    void flat(@NotNull FlatStream flatStream);
 
     void toString(@NotNull StringBuilder out);
 
