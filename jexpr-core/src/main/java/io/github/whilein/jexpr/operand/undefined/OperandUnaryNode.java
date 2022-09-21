@@ -18,7 +18,7 @@ package io.github.whilein.jexpr.operand.undefined;
 
 import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.OperandDelegate;
+import io.github.whilein.jexpr.operand.OperandBase;
 import io.github.whilein.jexpr.operand.defined.OperandBoolean;
 import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
@@ -29,24 +29,50 @@ import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperandUndefinedReference extends OperandDelegate<String> implements OperandUndefined {
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+public final class OperandUnaryNode extends OperandBase implements OperandUndefined {
 
-    private OperandUndefinedReference(final String value) {
-        super(value);
+    Operand member;
+    UnaryOperator operator;
+
+    @Override
+    public String toString() {
+        return operator.getValue() + member;
     }
 
-    public static @NotNull Operand valueOf(final @NotNull String reference) {
-        return new OperandUndefinedReference(reference);
+    public static @NotNull Operand valueOf(
+            final @NotNull Operand value,
+            final @NotNull UnaryOperator operator
+    ) {
+        if (value.isDefined()) {
+            throw new IllegalStateException("Cannot create undefined expression from defined operand");
+        }
+
+        return new OperandUnaryNode(value, operator);
     }
 
     @Override
     public void toString(final @NotNull StringBuilder out) {
-        out.append(delegatedValue);
+        out.append(operator.getValue());
+
+        if (member instanceof OperandBinaryNode) {
+            out.append('(');
+            member.toString(out);
+            out.append(')');
+        } else {
+            member.toString(out);
+        }
     }
 
     @Override
@@ -66,42 +92,47 @@ public final class OperandUndefinedReference extends OperandDelegate<String> imp
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandInteger.valueOf(number), this, operator);
+        return OperandBinaryNode.valueOf(OperandInteger.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandLong.valueOf(number), this, operator);
+        return OperandBinaryNode.valueOf(OperandLong.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandDouble.valueOf(number), this, operator);
+        return OperandBinaryNode.valueOf(OperandDouble.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandFloat.valueOf(number), this, operator);
+        return OperandBinaryNode.valueOf(OperandFloat.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandString.valueOf(value), this, operator);
+        return OperandBinaryNode.valueOf(OperandString.valueOf(value), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandBoolean.valueOf(value), this, operator);
+        return OperandBinaryNode.valueOf(OperandBoolean.valueOf(value), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(undefined, this, operator);
+        return OperandBinaryNode.valueOf(undefined, this, operator);
     }
 
     @Override
     public @NotNull Operand applyToObject(final Object value, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandObject.valueOf(value), this, operator);
+        return OperandBinaryNode.valueOf(OperandObject.valueOf(value), this, operator);
+    }
+
+    @Override
+    public @NotNull Object getValue() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -121,12 +152,11 @@ public final class OperandUndefinedReference extends OperandDelegate<String> imp
 
     @Override
     public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
-        return OperandUndefinedUnary.valueOf(this, operator);
+        return OperandUnaryNode.valueOf(this, operator);
     }
 
     @Override
     public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
-        return resolver.resolve(delegatedValue);
+        return member.solve(resolver).apply(operator);
     }
-
 }

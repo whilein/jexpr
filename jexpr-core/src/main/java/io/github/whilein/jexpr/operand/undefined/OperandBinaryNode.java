@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandUndefinedBinary extends OperandBase implements OperandUndefined {
+public final class OperandBinaryNode extends OperandBase implements OperandUndefined {
 
     Operand left, right;
     BinaryOperator operator;
@@ -51,8 +51,8 @@ public final class OperandUndefinedBinary extends OperandBase implements Operand
     public void toString(final @NotNull StringBuilder out) {
         val presence = operator.getPresence();
 
-        if (left instanceof OperandUndefinedBinary
-                && ((OperandUndefinedBinary) left).getOperator().getPresence() <= presence) {
+        if (left instanceof OperandBinaryNode
+                && ((OperandBinaryNode) left).getOperator().getPresence() <= presence) {
             out.append('(');
             left.toString(out);
             out.append(')');
@@ -62,8 +62,8 @@ public final class OperandUndefinedBinary extends OperandBase implements Operand
 
         out.append(' ').append(operator.getValue()).append(' ');
 
-        if (right instanceof OperandUndefinedBinary
-                && ((OperandUndefinedBinary) right).getOperator().getPresence() <= presence) {
+        if (right instanceof OperandBinaryNode
+                && ((OperandBinaryNode) right).getOperator().getPresence() <= presence) {
             out.append('(');
             right.toString(out);
             out.append(')');
@@ -81,7 +81,7 @@ public final class OperandUndefinedBinary extends OperandBase implements Operand
             throw new IllegalStateException("Cannot create undefined expression from defined operands");
         }
 
-        return new OperandUndefinedBinary(left, right, operator);
+        return new OperandBinaryNode(left, right, operator);
     }
 
     @Override
@@ -101,42 +101,42 @@ public final class OperandUndefinedBinary extends OperandBase implements Operand
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandInteger.valueOf(number), this, operator);
+        return OperandBinaryNode.valueOf(OperandInteger.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandLong.valueOf(number), this, operator);
+        return OperandBinaryNode.valueOf(OperandLong.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandDouble.valueOf(number), this, operator);
+        return OperandBinaryNode.valueOf(OperandDouble.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandFloat.valueOf(number), this, operator);
+        return OperandBinaryNode.valueOf(OperandFloat.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandString.valueOf(value), this, operator);
+        return OperandBinaryNode.valueOf(OperandString.valueOf(value), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandBoolean.valueOf(value), this, operator);
+        return OperandBinaryNode.valueOf(OperandBoolean.valueOf(value), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(undefined, this, operator);
+        return OperandBinaryNode.valueOf(undefined, this, operator);
     }
 
     @Override
     public @NotNull Operand applyToObject(final Object value, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(OperandObject.valueOf(value), this, operator);
+        return OperandBinaryNode.valueOf(OperandObject.valueOf(value), this, operator);
     }
 
     @Override
@@ -161,7 +161,7 @@ public final class OperandUndefinedBinary extends OperandBase implements Operand
 
     @Override
     public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
-        return OperandUndefinedUnary.valueOf(this, operator);
+        return OperandUnaryNode.valueOf(this, operator);
     }
 
     @Override

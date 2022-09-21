@@ -26,9 +26,9 @@ import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
 import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operand.defined.OperandString;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedBinary;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedReference;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedUnary;
+import io.github.whilein.jexpr.operand.undefined.OperandBinaryNode;
+import io.github.whilein.jexpr.operand.undefined.OperandReference;
+import io.github.whilein.jexpr.operand.undefined.OperandUnaryNode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -82,10 +82,10 @@ public final class SimpleTypedOperandResolver implements TypedOperandResolver {
             }
 
             return new TypedDefined(operand, TYPE_MAP.get(operand.getClass()));
-        } else if (operand instanceof OperandUndefinedReference) {
+        } else if (operand instanceof OperandReference) {
             return new TypedReference(map.get((String) operand.getValue()));
-        } else if (operand instanceof OperandUndefinedUnary) {
-            val member = (OperandUndefinedUnary) operand;
+        } else if (operand instanceof OperandUnaryNode) {
+            val member = (OperandUnaryNode) operand;
 
             val operator = member.getOperator();
             val asmOperator = asmOperatorRegistry.getUnaryOperator(operator.getClass());
@@ -97,8 +97,8 @@ public final class SimpleTypedOperandResolver implements TypedOperandResolver {
                     asmOperator,
                     asmOperator.getOutputType(analyzedMember.getType())
             );
-        } else if (operand instanceof OperandUndefinedBinary) {
-            val sequence = (OperandUndefinedBinary) operand;
+        } else if (operand instanceof OperandBinaryNode) {
+            val sequence = (OperandBinaryNode) operand;
             val left = resolve(sequence.getLeft(), map);
             val right = resolve(sequence.getRight(), map);
 

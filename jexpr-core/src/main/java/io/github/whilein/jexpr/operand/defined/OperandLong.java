@@ -17,8 +17,8 @@
 package io.github.whilein.jexpr.operand.defined;
 
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.undefined.OperandBinaryNode;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefinedBinary;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
@@ -103,7 +103,7 @@ public final class OperandLong extends OperandNumber {
 
     @Override
     public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
-        return OperandUndefinedBinary.valueOf(undefined, this, operator);
+        return OperandBinaryNode.valueOf(undefined, this, operator);
     }
 
     @Override
