@@ -40,67 +40,67 @@ public final class OperatorPlus extends AbstractBinaryOperator {
     }
 
     @Override
-    public @NotNull Operand apply(final int left, final String right) {
+    public @NotNull Operand apply(final int left, final @NotNull String right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final long left, final String right) {
+    public @NotNull Operand apply(final long left, final @NotNull String right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final float left, final String right) {
+    public @NotNull Operand apply(final float left, final @NotNull String right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final double left, final String right) {
+    public @NotNull Operand apply(final double left, final @NotNull String right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final String left, final int right) {
+    public @NotNull Operand apply(final @NotNull String left, final int right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final String left, final long right) {
+    public @NotNull Operand apply(final @NotNull String left, final long right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final String left, final float right) {
+    public @NotNull Operand apply(final @NotNull String left, final float right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final String left, final double right) {
+    public @NotNull Operand apply(final @NotNull String left, final double right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final String left, final String right) {
+    public @NotNull Operand apply(final @NotNull String left, final @NotNull String right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final String left, final Object right) {
+    public @NotNull Operand apply(final @NotNull String left, final Object right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final Object left, final String right) {
+    public @NotNull Operand apply(final Object left, final @NotNull String right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final String left, final boolean right) {
+    public @NotNull Operand apply(final @NotNull String left, final boolean right) {
         return OperandString.valueOf(left + right);
     }
 
     @Override
-    public @NotNull Operand apply(final boolean left, final String right) {
+    public @NotNull Operand apply(final boolean left, final @NotNull String right) {
         return OperandString.valueOf(left + right);
     }
 

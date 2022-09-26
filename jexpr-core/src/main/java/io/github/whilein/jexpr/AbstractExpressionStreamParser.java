@@ -46,9 +46,9 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
     @NonFinal
     BinaryOperator binaryOperator;
 
-    Deque<UnaryOperator> unaryOperatorStack = new ArrayDeque<>();
+    Deque<UnaryOperator> unaryOperators = new ArrayDeque<>();
 
-    Deque<BinaryOperator> binaryOperatorStack = new ArrayDeque<>();
+    Deque<Operator> operatorStack = new ArrayDeque<>();
 
     Deque<Operand> operandStack = new ArrayDeque<>();
 
@@ -56,9 +56,6 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
 
     @NonFinal
     SelectableTokenParser activeParser;
-
-    @NonFinal
-    int state;
 
     @NonFinal
     Operand previousOperand;
@@ -70,13 +67,18 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
     protected void writeSyntaxReport(final Map<String, Object> map) {
         map.put("activeParser", activeParser);
         map.put("parsers", parsers);
-        map.put("state", state);
+        map.put("previousOperand", previousOperand);
+        map.put("previousOperator", previousOperator);
     }
 
     @Override
     public void visitUnaryOperator(final @NotNull UnaryOperator unaryOperator) {
-        unaryOperatorStack.push(unaryOperator);
-        previousOperator = unaryOperator;
+        if (binaryOperator != null && !binaryOperator.isUnaryExpected(unaryOperator)) {
+            throw new SyntaxException("Unexpected " + unaryOperator + " after " + binaryOperator);
+        }
+
+        this.unaryOperators.add(unaryOperator);
+        this.previousOperator = unaryOperator;
     }
 
     @Override
@@ -91,8 +93,6 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
 
     @Override
     public void visitOperand(final @NotNull Operand operand) {
-        Operand processedOperand = operand;
-
         val binaryOperator = this.binaryOperator;
 
         if (previousOperand != null) {
@@ -103,38 +103,43 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
             addOperator(binaryOperator);
         }
 
-        for (val unaryOperator : unaryOperatorStack) {
-            processedOperand = processedOperand.apply(unaryOperator);
+        Operator unary;
+
+        while ((unary = unaryOperators.poll()) != null) {
+            operatorStack.push(unary);
         }
 
-        addMember(processedOperand);
+        addMember(operand);
 
         this.previousOperator = null;
         this.binaryOperator = null;
-        this.unaryOperatorStack.clear();
     }
 
     private void solve(final int minOperator) {
-        while (operandStack.size() >= 2 && binaryOperatorStack.size() >= 1) {
-            val topOperator = binaryOperatorStack.getFirst();
+        Operator operator;
 
-            if (minOperator > topOperator.getPresence()) {
+        while ((operator = operatorStack.peekFirst()) != null) {
+            if (minOperator > operator.getPresence()) {
                 break;
             }
 
-            binaryOperatorStack.removeFirst();
+            operatorStack.removeFirst();
 
-            val right = operandStack.pop();
-            val left = operandStack.pop();
+            if (operator instanceof BinaryOperator) {
+                val right = operandStack.pop();
+                val left = operandStack.pop();
 
-            addMember(left.apply(right, topOperator));
+                addMember(left.apply(right, (BinaryOperator) operator));
+            } else if (operator instanceof UnaryOperator) {
+                addMember(operandStack.pop().apply((UnaryOperator) operator));
+            }
         }
     }
 
-    private void addOperator(final BinaryOperator operator) {
+    private void addOperator(final Operator operator) {
         solve(operator.getPresence());
 
-        binaryOperatorStack.push(operator);
+        operatorStack.push(operator);
     }
 
     private void addMember(final Operand operand) {
@@ -196,7 +201,7 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
                 this.activeParser = null;
             }
 
-            if (binaryOperator != null || !unaryOperatorStack.isEmpty()) {
+            if (binaryOperator != null || !unaryOperators.isEmpty()) {
                 throw invalidSyntax("Unexpected EOF");
             }
 
@@ -208,9 +213,9 @@ public abstract class AbstractExpressionStreamParser extends AbstractTokenParser
 
             return operandStack.pop();
         } finally {
-            unaryOperatorStack.clear();
+            unaryOperators.clear();
             operandStack.clear();
-            binaryOperatorStack.clear();
+            operatorStack.clear();
 
             binaryOperator = null;
             previousOperator = null;

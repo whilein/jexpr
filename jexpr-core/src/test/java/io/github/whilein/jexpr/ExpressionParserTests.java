@@ -39,6 +39,12 @@ abstract class ExpressionParserTests {
 
     protected abstract ExpressionParser getExpressionParser();
 
+    @Test
+    void testAccess() {
+        val operand = parse("-user.name");
+
+        assertEquals("-user . name", operand.toString());
+    }
 
     @Test
     void testStringNotEquals() {

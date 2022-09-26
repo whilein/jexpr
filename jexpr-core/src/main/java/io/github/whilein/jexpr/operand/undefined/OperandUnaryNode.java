@@ -24,7 +24,6 @@ import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
 import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operand.defined.OperandObject;
 import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
@@ -121,13 +120,16 @@ public final class OperandUnaryNode extends OperandBase implements OperandUndefi
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(undefined, this, operator);
+    public @NotNull Operand applyToUndefined(
+            final @NotNull OperandUndefined undefined,
+            final @NotNull BinaryOperator operator
+    ) {
+        return operator.apply(undefined, this);
     }
 
     @Override
     public @NotNull Operand applyToObject(final Object value, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandObject.valueOf(value), this, operator);
+        return operator.apply(value, this);
     }
 
     @Override

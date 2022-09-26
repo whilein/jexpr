@@ -17,24 +17,58 @@
 package io.github.whilein.jexpr.operator;
 
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
 public interface BinaryOperator extends Operator {
 
-    @NotNull Operand apply(String left, int right);
+    boolean isUnaryExpected(@NotNull UnaryOperator operator);
 
-    @NotNull Operand apply(String left, long right);
+    @NotNull Operand apply(@NotNull OperandUndefined left, @NotNull OperandUndefined right);
 
-    @NotNull Operand apply(String left, float right);
+    @NotNull Operand apply(@NotNull OperandUndefined left, int right);
 
-    @NotNull Operand apply(String left, double right);
+    @NotNull Operand apply(@NotNull OperandUndefined left, float right);
 
-    @NotNull Operand apply(String left, String right);
+    @NotNull Operand apply(@NotNull OperandUndefined left, double right);
 
-    @NotNull Operand apply(String left, boolean right);
+    @NotNull Operand apply(@NotNull OperandUndefined left, long right);
+
+    @NotNull Operand apply(@NotNull OperandUndefined left, boolean right);
+
+    @NotNull Operand apply(@NotNull OperandUndefined left, @NotNull String right);
+
+    @NotNull Operand apply(@NotNull OperandUndefined left, @Nullable Object right);
+
+    @NotNull Operand apply(int left, @NotNull OperandUndefined right);
+
+    @NotNull Operand apply(float left, @NotNull OperandUndefined right);
+
+    @NotNull Operand apply(double left, @NotNull OperandUndefined right);
+
+    @NotNull Operand apply(long left, @NotNull OperandUndefined right);
+
+    @NotNull Operand apply(boolean left, @NotNull OperandUndefined right);
+
+    @NotNull Operand apply(@NotNull String left, @NotNull OperandUndefined right);
+
+    @NotNull Operand apply(@Nullable Object left, @NotNull OperandUndefined right);
+
+    @NotNull Operand apply(@NotNull String left, int right);
+
+    @NotNull Operand apply(@NotNull String left, long right);
+
+    @NotNull Operand apply(@NotNull String left, float right);
+
+    @NotNull Operand apply(@NotNull String left, double right);
+
+    @NotNull Operand apply(@NotNull String left, @NotNull String right);
+
+    @NotNull Operand apply(@NotNull String left, boolean right);
 
     @NotNull Operand apply(boolean left, int right);
 
@@ -44,35 +78,35 @@ public interface BinaryOperator extends Operator {
 
     @NotNull Operand apply(boolean left, double right);
 
-    @NotNull Operand apply(boolean left, String right);
+    @NotNull Operand apply(boolean left, @NotNull String right);
 
     @NotNull Operand apply(boolean left, boolean right);
 
-    @NotNull Operand apply(int left, Object right);
+    @NotNull Operand apply(int left, @Nullable Object right);
 
-    @NotNull Operand apply(long left, Object right);
+    @NotNull Operand apply(long left, @Nullable Object right);
 
-    @NotNull Operand apply(float left, Object right);
+    @NotNull Operand apply(float left, @Nullable Object right);
 
-    @NotNull Operand apply(double left, Object right);
+    @NotNull Operand apply(double left, @Nullable Object right);
 
-    @NotNull Operand apply(boolean left, Object right);
+    @NotNull Operand apply(boolean left, @Nullable Object right);
 
-    @NotNull Operand apply(Object left, int right);
+    @NotNull Operand apply(@Nullable Object left, int right);
 
-    @NotNull Operand apply(Object left, long right);
+    @NotNull Operand apply(@Nullable Object left, long right);
 
-    @NotNull Operand apply(Object left, float right);
+    @NotNull Operand apply(@Nullable Object left, float right);
 
-    @NotNull Operand apply(Object left, double right);
+    @NotNull Operand apply(@Nullable Object left, double right);
 
-    @NotNull Operand apply(Object left, boolean right);
+    @NotNull Operand apply(@Nullable Object left, boolean right);
 
-    @NotNull Operand apply(String left, Object right);
+    @NotNull Operand apply(@NotNull String left, @Nullable Object right);
 
-    @NotNull Operand apply(Object left, String right);
+    @NotNull Operand apply(@Nullable Object left, @NotNull String right);
 
-    @NotNull Operand apply(Object left, Object right);
+    @NotNull Operand apply(@Nullable Object left, @Nullable Object right);
 
     @NotNull Operand apply(double left, int right);
 
@@ -82,7 +116,7 @@ public interface BinaryOperator extends Operator {
 
     @NotNull Operand apply(double left, double right);
 
-    @NotNull Operand apply(double left, String right);
+    @NotNull Operand apply(double left, @NotNull String right);
 
     @NotNull Operand apply(double left, boolean right);
 
@@ -94,7 +128,7 @@ public interface BinaryOperator extends Operator {
 
     @NotNull Operand apply(float left, double right);
 
-    @NotNull Operand apply(float left, String right);
+    @NotNull Operand apply(float left, @NotNull String right);
 
     @NotNull Operand apply(float left, boolean right);
 
@@ -106,7 +140,7 @@ public interface BinaryOperator extends Operator {
 
     @NotNull Operand apply(int left, double right);
 
-    @NotNull Operand apply(int left, String right);
+    @NotNull Operand apply(int left, @NotNull String right);
 
     @NotNull Operand apply(int left, boolean right);
 
@@ -118,7 +152,7 @@ public interface BinaryOperator extends Operator {
 
     @NotNull Operand apply(long left, double right);
 
-    @NotNull Operand apply(long left, String right);
+    @NotNull Operand apply(long left, @NotNull String right);
 
     @NotNull Operand apply(long left, boolean right);
 

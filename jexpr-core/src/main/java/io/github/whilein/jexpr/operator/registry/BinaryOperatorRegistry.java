@@ -28,6 +28,7 @@ import io.github.whilein.jexpr.operator.type.OperatorDivide;
 import io.github.whilein.jexpr.operator.type.OperatorEquals;
 import io.github.whilein.jexpr.operator.type.OperatorGreater;
 import io.github.whilein.jexpr.operator.type.OperatorLess;
+import io.github.whilein.jexpr.operator.type.OperatorMemberSelection;
 import io.github.whilein.jexpr.operator.type.OperatorMinus;
 import io.github.whilein.jexpr.operator.type.OperatorMultiply;
 import io.github.whilein.jexpr.operator.type.OperatorNotEquals;
@@ -69,7 +70,8 @@ public final class BinaryOperatorRegistry extends AbstractOperatorRegistry<Binar
                     new OperatorStrictLess(),
                     new OperatorLess(),
                     new OperatorEquals(),
-                    new OperatorNotEquals()
+                    new OperatorNotEquals(),
+                    new OperatorMemberSelection()
             ))
     );
 

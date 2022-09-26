@@ -18,7 +18,6 @@ package io.github.whilein.jexpr.operand.defined;
 
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.OperandDelegate;
-import io.github.whilein.jexpr.operand.undefined.OperandBinaryNode;
 import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
@@ -105,8 +104,11 @@ public final class OperandString extends OperandDelegate<String> implements Oper
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(undefined, this, operator);
+    public @NotNull Operand applyToUndefined(
+            final @NotNull OperandUndefined undefined,
+            final @NotNull BinaryOperator operator
+    ) {
+        return operator.apply(undefined, this.delegatedValue);
     }
 
     @Override

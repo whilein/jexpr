@@ -22,12 +22,14 @@ import io.github.whilein.jexpr.operand.defined.OperandDouble;
 import io.github.whilein.jexpr.operand.defined.OperandFloat;
 import io.github.whilein.jexpr.operand.defined.OperandInteger;
 import io.github.whilein.jexpr.operand.defined.OperandLong;
+import io.github.whilein.jexpr.operator.Operator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -36,7 +38,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public final class NumberTokenParser extends AbstractSelectableTokenParser {
+public final class NumberTokenParser extends AbstractTokenParser implements SelectableTokenParser {
 
     ByteArrayOutput buffer;
 
@@ -87,8 +89,12 @@ public final class NumberTokenParser extends AbstractSelectableTokenParser {
     }
 
     @Override
-    protected boolean shouldSelect(final int ch) {
-        return ch == '.' || (ch >= '0' && ch <= '9');
+    public boolean shouldSelect(
+            final int ch,
+            final @Nullable Operand prevOperand,
+            final @Nullable Operator prevOperator
+    ) {
+        return (prevOperator != null || prevOperand == null) && (ch == '.' || (ch >= '0' && ch <= '9'));
     }
 
     @Override

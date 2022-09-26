@@ -123,7 +123,7 @@ public final class OperatorNotEquals extends AbstractBinaryOperator {
     }
 
     @Override
-    public @NotNull Operand apply(final String left, final String right) {
+    public @NotNull Operand apply(final @NotNull String left, final @NotNull String right) {
         return OperandBoolean.valueOf(!left.equals(right));
     }
 

@@ -19,13 +19,6 @@ package io.github.whilein.jexpr.operand.undefined;
 import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.OperandBase;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandDouble;
-import io.github.whilein.jexpr.operand.defined.OperandFloat;
-import io.github.whilein.jexpr.operand.defined.OperandInteger;
-import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operand.defined.OperandObject;
-import io.github.whilein.jexpr.operand.defined.OperandString;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
@@ -78,7 +71,7 @@ public final class OperandBinaryNode extends OperandBase implements OperandUndef
             final @NotNull BinaryOperator operator
     ) {
         if (left.isDefined() && right.isDefined()) {
-            throw new IllegalStateException("Cannot create undefined expression from defined operands");
+            throw new IllegalStateException("Cannot create undefined binary node from defined operands");
         }
 
         return new OperandBinaryNode(left, right, operator);
@@ -101,42 +94,45 @@ public final class OperandBinaryNode extends OperandBase implements OperandUndef
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandInteger.valueOf(number), this, operator);
+        return operator.apply(number, this);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandLong.valueOf(number), this, operator);
+        return operator.apply(number, this);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandDouble.valueOf(number), this, operator);
+        return operator.apply(number, this);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandFloat.valueOf(number), this, operator);
+        return operator.apply(number, this);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandString.valueOf(value), this, operator);
+        return operator.apply(value, this);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandBoolean.valueOf(value), this, operator);
+        return operator.apply(value, this);
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(undefined, this, operator);
+    public @NotNull Operand applyToUndefined(
+            final @NotNull OperandUndefined undefined,
+            final @NotNull BinaryOperator operator
+    ) {
+        return operator.apply(undefined, this);
     }
 
     @Override
     public @NotNull Operand applyToObject(final Object value, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandObject.valueOf(value), this, operator);
+        return operator.apply(value, this);
     }
 
     @Override

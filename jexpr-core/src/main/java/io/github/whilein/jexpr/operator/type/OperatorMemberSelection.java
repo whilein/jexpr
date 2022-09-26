@@ -16,26 +16,26 @@
 
 package io.github.whilein.jexpr.operator.type;
 
-import lombok.experimental.UtilityClass;
+import io.github.whilein.jexpr.operator.AbstractBinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-@UtilityClass
-class OperatorPrecedenceConsts {
+public final class OperatorMemberSelection extends AbstractBinaryOperator {
+    public OperatorMemberSelection() {
+        super(".", OperatorPrecedenceConsts.MEMBER_SELECTION);
+    }
 
-    public final int OR = 30;
-    public final int AND = 40;
-    public final int BITWISE_OR = 50;
-    public final int BITWISE_XOR = 60;
-    public final int BITWISE_AND = 70;
-    public final int EQUALITY = 80;
-    public final int COMPARE = 90;
-    public final int BITWISE_SHIFT = 100;
-    public final int ADDITIVE = 110;
-    public final int MULTIPLICATIVE = 120;
-    public final int UNARY = 130;
+    @Override
+    public boolean isUnaryExpected(final @NotNull UnaryOperator operator) {
+        return false;
+    }
 
-    public final int MEMBER_SELECTION = 150;
+    @Override
+    public String toString() {
+        return "MEMBER_SELECTION";
+    }
 
 }

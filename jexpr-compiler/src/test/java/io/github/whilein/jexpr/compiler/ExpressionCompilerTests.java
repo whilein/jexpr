@@ -30,8 +30,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -382,19 +380,19 @@ final class ExpressionCompilerTests {
 
         val bytes = cw.toByteArray();
 
-        {
-            val path = Paths.get(testType.replace('/', '.') + ".class");
-            Files.write(path, bytes);
-
-            val process = new ProcessBuilder("javap", "-v", path.toAbsolutePath().toString())
-                    .redirectError(ProcessBuilder.Redirect.INHERIT)
-                    .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                    .start();
-
-            process.waitFor();
-
-            Files.delete(path);
-        }
+//        {
+//            val path = Paths.get(testType.replace('/', '.') + ".class");
+//            Files.write(path, bytes);
+//
+//            val process = new ProcessBuilder("javap", "-v", path.toAbsolutePath().toString())
+//                    .redirectError(ProcessBuilder.Redirect.INHERIT)
+//                    .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+//                    .start();
+//
+//            process.waitFor();
+//
+//            Files.delete(path);
+//        }
 
 
         val classLoader = new TestClassLoader(ExpressionCompilerTests.class.getClassLoader());
