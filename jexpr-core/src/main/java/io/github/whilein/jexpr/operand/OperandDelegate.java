@@ -20,7 +20,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
@@ -32,7 +31,7 @@ public abstract class OperandDelegate<T> extends OperandBase {
     T delegatedValue;
 
     @Override
-    public @Nullable T getValue() {
+    public T getValue() {
         return delegatedValue;
     }
 

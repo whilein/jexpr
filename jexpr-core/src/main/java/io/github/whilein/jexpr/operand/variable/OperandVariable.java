@@ -17,6 +17,9 @@
 package io.github.whilein.jexpr.operand.variable;
 
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operator.BinaryLazyOperator;
+import io.github.whilein.jexpr.operator.BinaryOperator;
+import io.github.whilein.jexpr.operator.UnaryOperator;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -31,6 +34,89 @@ public interface OperandVariable extends Operand {
     @Override
     default boolean toBoolean() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    default @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    default boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
+        return false;
+    }
+
+    @Override
+    default @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
+        return operand.applyToVariable(this, operator);
+    }
+
+    @Override
+    default @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
+        return operator.apply(number, this);
+    }
+
+    @Override
+    default @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
+        return operator.apply(number, this);
+    }
+
+    @Override
+    default @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
+        return operator.apply(number, this);
+    }
+
+    @Override
+    default @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
+        return operator.apply(number, this);
+    }
+
+    @Override
+    default @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
+        return operator.apply(value, this);
+    }
+
+    @Override
+    default @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
+        return operator.apply(value, this);
+    }
+
+    @Override
+    default @NotNull Operand applyToVariable(
+            final @NotNull OperandVariable variable,
+            final @NotNull BinaryOperator operator
+    ) {
+        return operator.apply(variable, this);
+    }
+
+    @Override
+    default @NotNull Operand applyToObject(final Object value, final @NotNull BinaryOperator operator) {
+        return operator.apply(value, this);
+    }
+
+    @Override
+    default @NotNull Operand apply(final @NotNull UnaryOperator operator) {
+        return operator.apply(this);
+    }
+
+    @Override
+    default Object getValue() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    default boolean isNumber() {
+        return false;
+    }
+
+    @Override
+    default boolean isString() {
+        return false;
+    }
+
+    @Override
+    default boolean isBoolean() {
+        return false;
     }
 
     @Override

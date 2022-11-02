@@ -17,6 +17,8 @@
 package io.github.whilein.jexpr.operator;
 
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.variable.OperandUnaryNode;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -31,6 +33,11 @@ public abstract class AbstractUnaryOperator extends AbstractOperator implements 
     private OperatorException error(final Object value) {
         throw new OperatorException("Operator " + this + " is not applicable to "
                 + "(" + value.getClass().getSimpleName() + ") " + value);
+    }
+
+    @Override
+    public @NotNull Operand apply(final @NotNull OperandVariable variable) {
+        return OperandUnaryNode.valueOf(variable, this);
     }
 
     @Override

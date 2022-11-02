@@ -50,7 +50,7 @@ public final class OperandString extends OperandDelegate<String> implements Oper
     }
 
     @Override
-    public void toString(final @NotNull StringBuilder out) {
+    public void print(final @NotNull StringBuilder out) {
         out.append('"');
 
         StringEscapeUtils.escape(delegatedValue, out, '"');

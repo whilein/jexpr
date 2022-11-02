@@ -45,7 +45,7 @@ public final class OperandFloat extends OperandNumber {
     }
 
     @Override
-    public void toString(final @NotNull StringBuilder out) {
+    public void print(final @NotNull StringBuilder out) {
         out.append(value);
     }
 

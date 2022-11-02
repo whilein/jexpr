@@ -26,7 +26,7 @@ public abstract class OperandBase implements Operand {
     @Override
     public String toString() {
         val result = new StringBuilder();
-        toString(result);
+        print(result);
         return result.toString();
     }
 

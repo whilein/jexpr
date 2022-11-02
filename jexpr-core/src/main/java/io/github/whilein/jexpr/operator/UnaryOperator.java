@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.operator;
 
 import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -36,4 +37,6 @@ public interface UnaryOperator extends Operator {
     @NotNull Operand apply(String value);
 
     @NotNull Operand apply(boolean value);
+
+    @NotNull Operand apply(@NotNull OperandVariable variable);
 }

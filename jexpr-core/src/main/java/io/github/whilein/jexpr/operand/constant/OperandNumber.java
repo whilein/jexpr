@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author whilein
  */
-public abstract class OperandNumber extends OperandDelegate<Number> implements OperandConstant {
+public abstract class OperandNumber extends OperandDelegate<@NotNull Number> implements OperandConstant {
 
     protected OperandNumber(final Number number) {
         super(number);

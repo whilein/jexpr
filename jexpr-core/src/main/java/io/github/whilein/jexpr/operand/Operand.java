@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface Operand extends Token {
 
-    void toString(@NotNull StringBuilder out);
+    void print(@NotNull StringBuilder out);
 
     @NotNull Number toNumber();
 
