@@ -277,56 +277,56 @@ final class ExpressionCompilerTests {
     }
 
     @Test
-    void testDefinedString() {
+    void testConstantString() {
         val test = createTest("'Hello world!'", String.class);
         assertEquals("Hello world!", call(test));
     }
 
     @Test
-    void testDefinedBoolean() {
+    void testConstantBoolean() {
         val test = createTest("true", boolean.class);
         assertEquals(true, call(test));
     }
 
     @Test
-    void testDefinedLong() {
+    void testConstantLong() {
         val test = createTest("1L", long.class);
         assertEquals(1L, call(test));
     }
 
     @Test
-    void testDefinedDouble() {
+    void testConstantDouble() {
         val test = createTest("1.1d", double.class);
         assertEquals(1.1d, call(test));
     }
 
     @Test
-    void testDefinedFloat() {
+    void testConstantFloat() {
         val test = createTest("1.1f", float.class);
         assertEquals(1.1f, call(test));
     }
 
     @Test
-    void testDefinedInteger() {
+    void testConstantInteger() {
         val test = createTest("3", int.class);
         assertEquals(3, call(test));
     }
 
     @Test
-    void testDefinedNull() {
+    void testConstantNull() {
         val test = createTest("null", Object.class);
         assertNull(call(test));
     }
 
     @Test
-    void testUndefinedCheck() {
+    void testVariableCompare() {
         val test = createTest("a == b", boolean.class, Object.class, Object.class);
         assertEquals(true, call(test, 1, 1));
         assertEquals(false, call(test, 1, 2));
     }
 
     @Test
-    void testUndefinedNullCheck() {
+    void testVariableNullCheck() {
         val test = createTest("a != null", boolean.class, List.class);
         assertEquals(false, call(test, new ArrayList<>()));
         assertEquals(true, call(test, (Object) null));

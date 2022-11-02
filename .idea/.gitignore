@@ -1,0 +1,6 @@
+*
+!/.gitignore
+!/copyright
+!/scopes
+!/copyright/*
+!/scopes/*

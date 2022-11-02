@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.defined;
+package io.github.whilein.jexpr.operand.constant;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
@@ -30,31 +30,23 @@ import org.jetbrains.annotations.Nullable;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class OperandInteger extends OperandNumber {
+public final class OperandFloat extends OperandNumber {
 
-    int value;
+    float value;
 
-    private OperandInteger(final int value) {
+    private OperandFloat(final float value) {
         super(value);
 
         this.value = value;
     }
 
-    private static final OperandInteger[] CACHE = new OperandInteger[256];
+    public static @NotNull Operand valueOf(final float value) {
+        return new OperandFloat(value);
+    }
 
     @Override
     public void toString(final @NotNull StringBuilder out) {
         out.append(value);
-    }
-
-    static {
-        for (int i = -128; i <= 127; i++) {
-            CACHE[i + 128] = new OperandInteger(i);
-        }
-    }
-
-    public static @NotNull Operand valueOf(final int value) {
-        return value >= -128 && value <= 127 ? CACHE[value + 128] : new OperandInteger(value);
     }
 
     @Override
@@ -66,9 +58,10 @@ public final class OperandInteger extends OperandNumber {
     public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
         return operator.getPredictedResult(value);
     }
+
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToInt(value, operator);
+        return operand.applyToFloat(value, operator);
     }
 
     @Override
@@ -102,11 +95,11 @@ public final class OperandInteger extends OperandNumber {
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(
-            final @NotNull OperandUndefined undefined,
+    public @NotNull Operand applyToVariable(
+            final @NotNull OperandVariable variable,
             final @NotNull BinaryOperator operator
     ) {
-        return operator.apply(undefined, this.value);
+        return operator.apply(variable, this.value);
     }
 
     @Override

@@ -16,8 +16,8 @@
 
 package io.github.whilein.jexpr.operand;
 
-import io.github.whilein.jexpr.UndefinedResolver;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
+import io.github.whilein.jexpr.OperandVariableResolver;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
@@ -54,9 +54,11 @@ public interface Operand extends Token {
 
     @NotNull Operand applyToBoolean(boolean value, @NotNull BinaryOperator operator);
 
-    @NotNull Operand applyToUndefined(@NotNull OperandUndefined undefined, @NotNull BinaryOperator operator);
+    @NotNull Operand applyToVariable(@NotNull OperandVariable variable, @NotNull BinaryOperator operator);
 
     @NotNull Operand applyToObject(@Nullable Object value, @NotNull BinaryOperator operator);
+
+    @NotNull Operand apply(@NotNull UnaryOperator operator);
 
     Object getValue();
 
@@ -66,10 +68,8 @@ public interface Operand extends Token {
 
     boolean isBoolean();
 
-    boolean isDefined();
+    boolean isConstant();
 
-    @NotNull Operand apply(@NotNull UnaryOperator operator);
-
-    @NotNull Operand solve(@NotNull UndefinedResolver resolver);
+    @NotNull Operand solve(@NotNull OperandVariableResolver resolver);
 
 }

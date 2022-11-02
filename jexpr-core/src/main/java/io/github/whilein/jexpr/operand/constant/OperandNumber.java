@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.defined;
+package io.github.whilein.jexpr.operand.constant;
 
 import io.github.whilein.jexpr.operand.OperandDelegate;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author whilein
  */
-public abstract class OperandNumber extends OperandDelegate<Number> implements OperandDefined {
+public abstract class OperandNumber extends OperandDelegate<Number> implements OperandConstant {
 
     protected OperandNumber(final Number number) {
         super(number);

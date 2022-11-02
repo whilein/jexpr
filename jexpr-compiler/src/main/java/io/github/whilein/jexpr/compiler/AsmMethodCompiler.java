@@ -18,10 +18,10 @@ package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandNumber;
-import io.github.whilein.jexpr.operand.defined.OperandObject;
-import io.github.whilein.jexpr.operand.defined.OperandString;
+import io.github.whilein.jexpr.operand.constant.OperandBoolean;
+import io.github.whilein.jexpr.operand.constant.OperandNumber;
+import io.github.whilein.jexpr.operand.constant.OperandObject;
+import io.github.whilein.jexpr.operand.constant.OperandString;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -305,8 +305,8 @@ public final class AsmMethodCompiler extends MethodVisitor {
         }
     }
 
-    public void writeDefinedOperand(final Operand operand) {
-        if (!operand.isDefined()) {
+    public void writeConstant(final Operand operand) {
+        if (!operand.isConstant()) {
             return;
         }
 

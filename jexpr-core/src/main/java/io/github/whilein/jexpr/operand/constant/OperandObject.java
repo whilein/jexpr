@@ -14,94 +14,101 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.undefined;
+package io.github.whilein.jexpr.operand.constant;
 
-import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.OperandDelegate;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandDouble;
-import io.github.whilein.jexpr.operand.defined.OperandFloat;
-import io.github.whilein.jexpr.operand.defined.OperandInteger;
-import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operand.defined.OperandObject;
-import io.github.whilein.jexpr.operand.defined.OperandString;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
-public final class OperandReference extends OperandDelegate<String> implements OperandUndefined {
+public final class OperandObject extends OperandDelegate<Object> implements OperandConstant {
 
-    private OperandReference(final String value) {
-        super(value);
+    private OperandObject(final Object delegatedValue) {
+        super(delegatedValue);
     }
 
-    public static @NotNull Operand valueOf(final @NotNull String reference) {
-        return new OperandReference(reference);
-    }
+    public static final Operand NULL = new OperandObject(null);
 
     @Override
     public void toString(final @NotNull StringBuilder out) {
         out.append(delegatedValue);
     }
 
-    @Override
-    public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
-        return false;
+    public static @NotNull Operand valueOf(final Object value) {
+        return value == null ? NULL : new OperandObject(value);
     }
 
     @Override
-    public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
+    public @NotNull Number toNumber() {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    public boolean toBoolean() {
+        throw new UnsupportedOperationException();
+    }
+    @Override
+    public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
+        return operator.getPredictedResult(delegatedValue);
+    }
+    @Override
+    public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
+        return operator.isPredictable(delegatedValue);
+    }
+
+    @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToUndefined(this, operator);
+        return operand.applyToObject(this.delegatedValue, operator);
     }
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandInteger.valueOf(number), this, operator);
+        return operator.apply(number, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandLong.valueOf(number), this, operator);
+        return operator.apply(number, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandDouble.valueOf(number), this, operator);
+        return operator.apply(number, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandFloat.valueOf(number), this, operator);
+        return operator.apply(number, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandString.valueOf(value), this, operator);
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandBoolean.valueOf(value), this, operator);
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(final @NotNull OperandUndefined undefined, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(undefined, this, operator);
+    public @NotNull Operand applyToVariable(
+            final @NotNull OperandVariable variable,
+            final @NotNull BinaryOperator operator
+    ) {
+        return operator.apply(variable, this.delegatedValue);
     }
 
     @Override
-    public @NotNull Operand applyToObject(final Object value, final @NotNull BinaryOperator operator) {
-        return OperandBinaryNode.valueOf(OperandObject.valueOf(value), this, operator);
+    public @NotNull Operand applyToObject(final @Nullable Object value, final @NotNull BinaryOperator operator) {
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
@@ -121,12 +128,6 @@ public final class OperandReference extends OperandDelegate<String> implements O
 
     @Override
     public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
-        return OperandUnaryNode.valueOf(this, operator);
+        return operator.apply(delegatedValue);
     }
-
-    @Override
-    public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
-        return resolver.resolve(delegatedValue);
-    }
-
 }

@@ -19,16 +19,16 @@ package io.github.whilein.jexpr.compiler.operand;
 import io.github.whilein.jexpr.compiler.LocalMap;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandDouble;
-import io.github.whilein.jexpr.operand.defined.OperandFloat;
-import io.github.whilein.jexpr.operand.defined.OperandInteger;
-import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operand.defined.OperandObject;
-import io.github.whilein.jexpr.operand.defined.OperandString;
-import io.github.whilein.jexpr.operand.undefined.OperandBinaryNode;
-import io.github.whilein.jexpr.operand.undefined.OperandReference;
-import io.github.whilein.jexpr.operand.undefined.OperandUnaryNode;
+import io.github.whilein.jexpr.operand.constant.OperandBoolean;
+import io.github.whilein.jexpr.operand.constant.OperandDouble;
+import io.github.whilein.jexpr.operand.constant.OperandFloat;
+import io.github.whilein.jexpr.operand.constant.OperandInteger;
+import io.github.whilein.jexpr.operand.constant.OperandLong;
+import io.github.whilein.jexpr.operand.constant.OperandObject;
+import io.github.whilein.jexpr.operand.constant.OperandString;
+import io.github.whilein.jexpr.operand.variable.OperandBinaryNode;
+import io.github.whilein.jexpr.operand.variable.OperandReference;
+import io.github.whilein.jexpr.operand.variable.OperandUnaryNode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -72,16 +72,16 @@ public final class SimpleTypedOperandResolver implements TypedOperandResolver {
 
     @Override
     public @NotNull TypedOperand resolve(final @NotNull Operand operand, final @NotNull LocalMap map) {
-        if (operand.isDefined()) {
+        if (operand.isConstant()) {
             if (operand instanceof OperandObject) {
                 if (operand.getValue() != null) {
                     throw new UnsupportedOperationException("Cannot compile object into bytecode");
                 }
 
-                return new TypedDefined(operand, null);
+                return new TypedConstant(operand, null);
             }
 
-            return new TypedDefined(operand, TYPE_MAP.get(operand.getClass()));
+            return new TypedConstant(operand, TYPE_MAP.get(operand.getClass()));
         } else if (operand instanceof OperandReference) {
             return new TypedReference(map.get((String) operand.getValue()));
         } else if (operand instanceof OperandUnaryNode) {

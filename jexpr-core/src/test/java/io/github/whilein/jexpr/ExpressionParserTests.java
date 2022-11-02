@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.defined.OperandObject;
+import io.github.whilein.jexpr.operand.constant.OperandObject;
 import io.github.whilein.jexpr.operator.OperatorException;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -87,7 +87,7 @@ abstract class ExpressionParserTests {
     }
 
     @Test
-    void testLogicalDefinedExpression() {
+    void testLogicalConstantExpression() {
         //noinspection ConstantConditions,PointlessBooleanExpression
         assertEquals((3 > 8) || (6 > 8) && !false, parse("(3 > 8) || (6 > 8) && !false").getValue());
     }
@@ -98,7 +98,7 @@ abstract class ExpressionParserTests {
     }
 
     @Test
-    void testUndefinedEvaluation() {
+    void testVariableEvaluation() {
         val x = 3;
         val y = 2;
         val z = 1;
@@ -120,7 +120,7 @@ abstract class ExpressionParserTests {
     }
 
     @Test
-    void testDefinedEvaluation() {
+    void testConstantEvaluation() {
         assertEquals((0xFaL ^ -~0b10) + 009_9.9_9d, parse("(0xFaL ^ -~0b10) + 009_9.9_9d").getValue());
     }
 

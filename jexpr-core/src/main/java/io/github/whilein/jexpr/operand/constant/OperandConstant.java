@@ -14,28 +14,25 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.undefined;
+package io.github.whilein.jexpr.operand.constant;
 
+import io.github.whilein.jexpr.OperandVariableResolver;
 import io.github.whilein.jexpr.operand.Operand;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public interface OperandUndefined extends Operand {
+public interface OperandConstant extends Operand {
+
     @Override
-    default @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
+    default boolean isConstant() {
+        return true;
     }
 
     @Override
-    default boolean toBoolean() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    default boolean isDefined() {
-        return false;
+    default @NotNull Operand solve(final @NotNull OperandVariableResolver resolver) {
+        return this;
     }
 
 }

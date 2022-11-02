@@ -16,12 +16,12 @@
 
 package io.github.whilein.jexpr.tools;
 
+import io.github.whilein.jexpr.OperandVariableResolver;
 import io.github.whilein.jexpr.SimpleExpressionParser;
-import io.github.whilein.jexpr.UndefinedResolver;
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.undefined.OperandBinaryNode;
-import io.github.whilein.jexpr.operand.undefined.OperandReference;
-import io.github.whilein.jexpr.operand.undefined.OperandUnaryNode;
+import io.github.whilein.jexpr.operand.variable.OperandBinaryNode;
+import io.github.whilein.jexpr.operand.variable.OperandReference;
+import io.github.whilein.jexpr.operand.variable.OperandUnaryNode;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -57,12 +57,12 @@ public class Main {
 
         double y = 0;
 
-        while (!expression.isDefined()) {
+        while (!expression.isConstant()) {
             val tree = toTree(expression, 0, y);
 
             addNode(graph, tree);
 
-            expression = expression.solve(new UndefinedResolver() {
+            expression = expression.solve(new OperandVariableResolver() {
 
                 boolean solved;
 
@@ -131,7 +131,7 @@ public class Main {
     }
 
     private static Node toTree(final Operand operand, final double x, final double y) {
-        if (operand.isDefined() || operand instanceof OperandReference) {
+        if (operand.isConstant() || operand instanceof OperandReference) {
             return new ValueNode(x, y, OPERAND_WIDTH, 20, String.valueOf(operand.getValue()), OPERAND_COLOR);
         } else if (operand instanceof OperandBinaryNode) {
             val binary = (OperandBinaryNode) operand;

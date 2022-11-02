@@ -24,7 +24,7 @@ import org.objectweb.asm.Type;
  * @author whilein
  */
 @Value
-public class TypedDefined implements TypedOperand {
+public class TypedConstant implements TypedOperand {
 
     Operand value;
     Type type;

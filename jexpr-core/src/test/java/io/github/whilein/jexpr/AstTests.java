@@ -17,9 +17,9 @@
 package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.undefined.OperandBinaryNode;
-import io.github.whilein.jexpr.operand.undefined.OperandReference;
-import io.github.whilein.jexpr.operand.undefined.OperandUnaryNode;
+import io.github.whilein.jexpr.operand.variable.OperandBinaryNode;
+import io.github.whilein.jexpr.operand.variable.OperandReference;
+import io.github.whilein.jexpr.operand.variable.OperandUnaryNode;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseComplement;

@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.defined;
+package io.github.whilein.jexpr.operand.constant;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
@@ -95,11 +95,11 @@ public final class OperandDouble extends OperandNumber {
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(
-            final @NotNull OperandUndefined undefined,
+    public @NotNull Operand applyToVariable(
+            final @NotNull OperandVariable variable,
             final @NotNull BinaryOperator operator
     ) {
-        return operator.apply(undefined, this.value);
+        return operator.apply(variable, this.value);
     }
 
     @Override

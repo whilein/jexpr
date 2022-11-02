@@ -14,11 +14,17 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.undefined;
+package io.github.whilein.jexpr.operand.variable;
 
-import io.github.whilein.jexpr.UndefinedResolver;
+import io.github.whilein.jexpr.OperandVariableResolver;
 import io.github.whilein.jexpr.operand.Operand;
 import io.github.whilein.jexpr.operand.OperandBase;
+import io.github.whilein.jexpr.operand.constant.OperandBoolean;
+import io.github.whilein.jexpr.operand.constant.OperandDouble;
+import io.github.whilein.jexpr.operand.constant.OperandFloat;
+import io.github.whilein.jexpr.operand.constant.OperandInteger;
+import io.github.whilein.jexpr.operand.constant.OperandLong;
+import io.github.whilein.jexpr.operand.constant.OperandString;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
@@ -26,7 +32,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,46 +40,34 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandBinaryNode extends OperandBase implements OperandUndefined {
+public final class OperandUnaryNode extends OperandBase implements OperandVariable {
 
-    Operand left, right;
-    BinaryOperator operator;
+    OperandVariable member;
+    UnaryOperator operator;
 
     @Override
-    public void toString(final @NotNull StringBuilder out) {
-        val presence = operator.getPresence();
-
-        if (left instanceof OperandBinaryNode
-                && ((OperandBinaryNode) left).getOperator().getPresence() <= presence) {
-            out.append('(');
-            left.toString(out);
-            out.append(')');
-        } else {
-            left.toString(out);
-        }
-
-        out.append(' ').append(operator.getValue()).append(' ');
-
-        if (right instanceof OperandBinaryNode
-                && ((OperandBinaryNode) right).getOperator().getPresence() <= presence) {
-            out.append('(');
-            right.toString(out);
-            out.append(')');
-        } else {
-            right.toString(out);
-        }
+    public String toString() {
+        return operator.getValue() + member;
     }
 
     public static @NotNull Operand valueOf(
-            final @NotNull Operand left,
-            final @NotNull Operand right,
-            final @NotNull BinaryOperator operator
+            final @NotNull OperandVariable value,
+            final @NotNull UnaryOperator operator
     ) {
-        if (left.isDefined() && right.isDefined()) {
-            throw new IllegalStateException("Cannot create undefined binary node from defined operands");
-        }
+        return new OperandUnaryNode(value, operator);
+    }
 
-        return new OperandBinaryNode(left, right, operator);
+    @Override
+    public void toString(final @NotNull StringBuilder out) {
+        out.append(operator.getValue());
+
+        if (member instanceof OperandBinaryNode) {
+            out.append('(');
+            member.toString(out);
+            out.append(')');
+        } else {
+            member.toString(out);
+        }
     }
 
     @Override
@@ -89,45 +82,45 @@ public final class OperandBinaryNode extends OperandBase implements OperandUndef
 
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToUndefined(this, operator);
+        return operand.applyToVariable(this, operator);
     }
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
-        return operator.apply(number, this);
+        return OperandBinaryNode.valueOf(OperandInteger.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
-        return operator.apply(number, this);
+        return OperandBinaryNode.valueOf(OperandLong.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
-        return operator.apply(number, this);
+        return OperandBinaryNode.valueOf(OperandDouble.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
-        return operator.apply(number, this);
+        return OperandBinaryNode.valueOf(OperandFloat.valueOf(number), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
-        return operator.apply(value, this);
+        return OperandBinaryNode.valueOf(OperandString.valueOf(value), this, operator);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
-        return operator.apply(value, this);
+        return OperandBinaryNode.valueOf(OperandBoolean.valueOf(value), this, operator);
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(
-            final @NotNull OperandUndefined undefined,
+    public @NotNull Operand applyToVariable(
+            final @NotNull OperandVariable variable,
             final @NotNull BinaryOperator operator
     ) {
-        return operator.apply(undefined, this);
+        return operator.apply(variable, this);
     }
 
     @Override
@@ -161,18 +154,7 @@ public final class OperandBinaryNode extends OperandBase implements OperandUndef
     }
 
     @Override
-    public @NotNull Operand solve(final @NotNull UndefinedResolver resolver) {
-        val solvedLeft = left.solve(resolver);
-
-        if (operator instanceof BinaryLazyOperator) {
-            val lazyOperator = (BinaryLazyOperator) operator;
-
-            if (solvedLeft.isPredicable(lazyOperator)) {
-                return solvedLeft.getPredictedResult(lazyOperator);
-            }
-        }
-
-        return solvedLeft.apply(right.solve(resolver), operator);
+    public @NotNull Operand solve(final @NotNull OperandVariableResolver resolver) {
+        return member.solve(resolver).apply(operator);
     }
-
 }

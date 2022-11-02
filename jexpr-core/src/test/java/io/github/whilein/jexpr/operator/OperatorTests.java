@@ -17,12 +17,12 @@
 package io.github.whilein.jexpr.operator;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandDouble;
-import io.github.whilein.jexpr.operand.defined.OperandFloat;
-import io.github.whilein.jexpr.operand.defined.OperandInteger;
-import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operand.defined.OperandString;
+import io.github.whilein.jexpr.operand.constant.OperandBoolean;
+import io.github.whilein.jexpr.operand.constant.OperandDouble;
+import io.github.whilein.jexpr.operand.constant.OperandFloat;
+import io.github.whilein.jexpr.operand.constant.OperandInteger;
+import io.github.whilein.jexpr.operand.constant.OperandLong;
+import io.github.whilein.jexpr.operand.constant.OperandString;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseAnd;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseOr;
 import io.github.whilein.jexpr.operator.type.OperatorBitwiseXor;

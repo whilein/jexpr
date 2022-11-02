@@ -14,39 +14,47 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.operand.defined;
+package io.github.whilein.jexpr.operand.constant;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.OperandDelegate;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import io.github.whilein.jexpr.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.operator.BinaryOperator;
 import io.github.whilein.jexpr.operator.UnaryOperator;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
-public final class OperandBoolean extends OperandDelegate<Boolean> implements OperandDefined {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public final class OperandInteger extends OperandNumber {
 
-    boolean value;
+    int value;
 
-    private OperandBoolean(final boolean value) {
+    private OperandInteger(final int value) {
         super(value);
 
         this.value = value;
     }
 
-    public static final OperandBoolean TRUE = new OperandBoolean(true), FALSE = new OperandBoolean(false);
-
-    public static @NotNull Operand valueOf(final boolean value) {
-        return value ? TRUE : FALSE;
-    }
+    private static final OperandInteger[] CACHE = new OperandInteger[256];
 
     @Override
     public void toString(final @NotNull StringBuilder out) {
         out.append(value);
+    }
+
+    static {
+        for (int i = -128; i <= 127; i++) {
+            CACHE[i + 128] = new OperandInteger(i);
+        }
+    }
+
+    public static @NotNull Operand valueOf(final int value) {
+        return value >= -128 && value <= 127 ? CACHE[value + 128] : new OperandInteger(value);
     }
 
     @Override
@@ -59,14 +67,10 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
         return operator.getPredictedResult(value);
     }
     @Override
-    public @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
+    public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
+        return operand.applyToInt(value, operator);
     }
 
-    @Override
-    public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToBoolean(value, operator);
-    }
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
         return operator.apply(number, value);
@@ -98,36 +102,16 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
     }
 
     @Override
-    public @NotNull Operand applyToUndefined(
-            final @NotNull OperandUndefined undefined,
+    public @NotNull Operand applyToVariable(
+            final @NotNull OperandVariable variable,
             final @NotNull BinaryOperator operator
     ) {
-        return operator.apply(undefined, this.value);
+        return operator.apply(variable, this.value);
     }
 
     @Override
     public @NotNull Operand applyToObject(final @Nullable Object value, final @NotNull BinaryOperator operator) {
         return operator.apply(value, this.value);
-    }
-
-    @Override
-    public boolean toBoolean() {
-        return value;
-    }
-
-    @Override
-    public boolean isNumber() {
-        return false;
-    }
-
-    @Override
-    public boolean isString() {
-        return false;
-    }
-
-    @Override
-    public boolean isBoolean() {
-        return true;
     }
 
     @Override

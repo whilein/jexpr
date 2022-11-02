@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.compiler.operand.TypedBinary;
-import io.github.whilein.jexpr.compiler.operand.TypedDefined;
+import io.github.whilein.jexpr.compiler.operand.TypedConstant;
 import io.github.whilein.jexpr.compiler.operand.TypedOperand;
 import io.github.whilein.jexpr.compiler.operand.TypedReference;
 import io.github.whilein.jexpr.compiler.operand.TypedUnary;
@@ -60,9 +60,8 @@ public final class DefaultExpressionCompiler implements ExpressionCompiler {
     }
 
     private void compile0(final OperandOrigin origin, final TypedOperand operand) {
-        if (operand instanceof TypedDefined) {
-            val defined = (TypedDefined) operand;
-            asmMethodCompiler.writeDefinedOperand(defined.getValue());
+        if (operand instanceof TypedConstant) {
+            asmMethodCompiler.writeConstant(((TypedConstant) operand).getValue());
         } else if (operand instanceof TypedReference) {
             val reference = (TypedReference) operand;
 

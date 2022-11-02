@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.operator;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,35 +28,35 @@ public interface BinaryOperator extends Operator {
 
     boolean isUnaryExpected(@NotNull UnaryOperator operator);
 
-    @NotNull Operand apply(@NotNull OperandUndefined left, @NotNull OperandUndefined right);
+    @NotNull Operand apply(@NotNull OperandVariable left, @NotNull OperandVariable right);
 
-    @NotNull Operand apply(@NotNull OperandUndefined left, int right);
+    @NotNull Operand apply(@NotNull OperandVariable left, int right);
 
-    @NotNull Operand apply(@NotNull OperandUndefined left, float right);
+    @NotNull Operand apply(@NotNull OperandVariable left, float right);
 
-    @NotNull Operand apply(@NotNull OperandUndefined left, double right);
+    @NotNull Operand apply(@NotNull OperandVariable left, double right);
 
-    @NotNull Operand apply(@NotNull OperandUndefined left, long right);
+    @NotNull Operand apply(@NotNull OperandVariable left, long right);
 
-    @NotNull Operand apply(@NotNull OperandUndefined left, boolean right);
+    @NotNull Operand apply(@NotNull OperandVariable left, boolean right);
 
-    @NotNull Operand apply(@NotNull OperandUndefined left, @NotNull String right);
+    @NotNull Operand apply(@NotNull OperandVariable left, @NotNull String right);
 
-    @NotNull Operand apply(@NotNull OperandUndefined left, @Nullable Object right);
+    @NotNull Operand apply(@NotNull OperandVariable left, @Nullable Object right);
 
-    @NotNull Operand apply(int left, @NotNull OperandUndefined right);
+    @NotNull Operand apply(int left, @NotNull OperandVariable right);
 
-    @NotNull Operand apply(float left, @NotNull OperandUndefined right);
+    @NotNull Operand apply(float left, @NotNull OperandVariable right);
 
-    @NotNull Operand apply(double left, @NotNull OperandUndefined right);
+    @NotNull Operand apply(double left, @NotNull OperandVariable right);
 
-    @NotNull Operand apply(long left, @NotNull OperandUndefined right);
+    @NotNull Operand apply(long left, @NotNull OperandVariable right);
 
-    @NotNull Operand apply(boolean left, @NotNull OperandUndefined right);
+    @NotNull Operand apply(boolean left, @NotNull OperandVariable right);
 
-    @NotNull Operand apply(@NotNull String left, @NotNull OperandUndefined right);
+    @NotNull Operand apply(@NotNull String left, @NotNull OperandVariable right);
 
-    @NotNull Operand apply(@Nullable Object left, @NotNull OperandUndefined right);
+    @NotNull Operand apply(@Nullable Object left, @NotNull OperandVariable right);
 
     @NotNull Operand apply(@NotNull String left, int right);
 

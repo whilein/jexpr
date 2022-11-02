@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.operator.type;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
+import io.github.whilein.jexpr.operand.constant.OperandBoolean;
 import io.github.whilein.jexpr.operator.AbstractBinaryLazyOperator;
 import org.jetbrains.annotations.NotNull;
 

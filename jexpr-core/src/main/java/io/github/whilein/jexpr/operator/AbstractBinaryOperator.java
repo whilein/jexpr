@@ -17,15 +17,15 @@
 package io.github.whilein.jexpr.operator;
 
 import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.defined.OperandBoolean;
-import io.github.whilein.jexpr.operand.defined.OperandDouble;
-import io.github.whilein.jexpr.operand.defined.OperandFloat;
-import io.github.whilein.jexpr.operand.defined.OperandInteger;
-import io.github.whilein.jexpr.operand.defined.OperandLong;
-import io.github.whilein.jexpr.operand.defined.OperandObject;
-import io.github.whilein.jexpr.operand.defined.OperandString;
-import io.github.whilein.jexpr.operand.undefined.OperandBinaryNode;
-import io.github.whilein.jexpr.operand.undefined.OperandUndefined;
+import io.github.whilein.jexpr.operand.constant.OperandBoolean;
+import io.github.whilein.jexpr.operand.constant.OperandDouble;
+import io.github.whilein.jexpr.operand.constant.OperandFloat;
+import io.github.whilein.jexpr.operand.constant.OperandInteger;
+import io.github.whilein.jexpr.operand.constant.OperandLong;
+import io.github.whilein.jexpr.operand.constant.OperandObject;
+import io.github.whilein.jexpr.operand.constant.OperandString;
+import io.github.whilein.jexpr.operand.variable.OperandBinaryNode;
+import io.github.whilein.jexpr.operand.variable.OperandVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,77 +51,77 @@ public abstract class AbstractBinaryOperator extends AbstractOperator implements
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull OperandUndefined left, final @NotNull OperandUndefined right) {
+    public @NotNull Operand apply(final @NotNull OperandVariable left, final @NotNull OperandVariable right) {
         return OperandBinaryNode.valueOf(left, right, this);
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull OperandUndefined left, final int right) {
+    public @NotNull Operand apply(final @NotNull OperandVariable left, final int right) {
         return OperandBinaryNode.valueOf(left, OperandInteger.valueOf(right), this);
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull OperandUndefined left, final float right) {
+    public @NotNull Operand apply(final @NotNull OperandVariable left, final float right) {
         return OperandBinaryNode.valueOf(left, OperandFloat.valueOf(right), this);
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull OperandUndefined left, final double right) {
+    public @NotNull Operand apply(final @NotNull OperandVariable left, final double right) {
         return OperandBinaryNode.valueOf(left, OperandDouble.valueOf(right), this);
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull OperandUndefined left, final long right) {
+    public @NotNull Operand apply(final @NotNull OperandVariable left, final long right) {
         return OperandBinaryNode.valueOf(left, OperandLong.valueOf(right), this);
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull OperandUndefined left, final boolean right) {
+    public @NotNull Operand apply(final @NotNull OperandVariable left, final boolean right) {
         return OperandBinaryNode.valueOf(left, OperandBoolean.valueOf(right), this);
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull OperandUndefined left, final @NotNull String right) {
+    public @NotNull Operand apply(final @NotNull OperandVariable left, final @NotNull String right) {
         return OperandBinaryNode.valueOf(left, OperandString.valueOf(right), this);
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull OperandUndefined left, final @Nullable Object right) {
+    public @NotNull Operand apply(final @NotNull OperandVariable left, final @Nullable Object right) {
         return OperandBinaryNode.valueOf(left, OperandObject.valueOf(right), this);
     }
 
     @Override
-    public @NotNull Operand apply(final int left, final @NotNull OperandUndefined right) {
+    public @NotNull Operand apply(final int left, final @NotNull OperandVariable right) {
         return OperandBinaryNode.valueOf(OperandInteger.valueOf(left), right, this);
     }
 
     @Override
-    public @NotNull Operand apply(final float left, final @NotNull OperandUndefined right) {
+    public @NotNull Operand apply(final float left, final @NotNull OperandVariable right) {
         return OperandBinaryNode.valueOf(OperandFloat.valueOf(left), right, this);
     }
 
     @Override
-    public @NotNull Operand apply(final double left, final @NotNull OperandUndefined right) {
+    public @NotNull Operand apply(final double left, final @NotNull OperandVariable right) {
         return OperandBinaryNode.valueOf(OperandDouble.valueOf(left), right, this);
     }
 
     @Override
-    public @NotNull Operand apply(final long left, final @NotNull OperandUndefined right) {
+    public @NotNull Operand apply(final long left, final @NotNull OperandVariable right) {
         return OperandBinaryNode.valueOf(OperandLong.valueOf(left), right, this);
     }
 
     @Override
-    public @NotNull Operand apply(final boolean left, final @NotNull OperandUndefined right) {
+    public @NotNull Operand apply(final boolean left, final @NotNull OperandVariable right) {
         return OperandBinaryNode.valueOf(OperandBoolean.valueOf(left), right, this);
     }
 
     @Override
-    public @NotNull Operand apply(final @NotNull String left, final @NotNull OperandUndefined right) {
+    public @NotNull Operand apply(final @NotNull String left, final @NotNull OperandVariable right) {
         return OperandBinaryNode.valueOf(OperandString.valueOf(left), right, this);
     }
 
     @Override
-    public @NotNull Operand apply(final @Nullable Object left, final @NotNull OperandUndefined right) {
+    public @NotNull Operand apply(final @Nullable Object left, final @NotNull OperandVariable right) {
         return OperandBinaryNode.valueOf(OperandObject.valueOf(left), right, this);
     }
 
