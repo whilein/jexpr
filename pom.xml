@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>jexpr-api</module>
         <module>jexpr-core</module>
         <module>jexpr-compiler</module>
         <module>jexpr-tools</module>

@@ -16,7 +16,7 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.SimpleExpressionParser;
+import io.github.whilein.jexpr.SimpleJexpr;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 final class ExpressionImplementationCompilerTests {
     @Test
     void testBridge() {
-        val parser = SimpleExpressionParser.createDefault();
+        val parser = new SimpleJexpr();
         val expression = parser.parse("a + b");
 
         @SuppressWarnings("unchecked")
@@ -47,7 +47,7 @@ final class ExpressionImplementationCompilerTests {
 
     @Test
     void testPrimitives() {
-        val parser = SimpleExpressionParser.createDefault();
+        val parser = new SimpleJexpr();
         val expression = parser.parse("a + b");
 
         val operator = ExpressionImplementationCompiler.create(expression, IntBinaryOperator.class)

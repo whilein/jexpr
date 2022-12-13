@@ -16,8 +16,8 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.ExpressionParser;
-import io.github.whilein.jexpr.SimpleExpressionParser;
+import io.github.whilein.jexpr.SimpleJexpr;
+import io.github.whilein.jexpr.api.Jexpr;
 import io.github.whilein.jexpr.compiler.operand.SimpleTypedOperandResolver;
 import io.github.whilein.jexpr.compiler.operand.TypedOperandResolver;
 import lombok.SneakyThrows;
@@ -44,12 +44,12 @@ final class ExpressionCompilerTests {
 
     String testType;
 
-    static ExpressionParser expressionParser;
+    static Jexpr jexpr;
     static TypedOperandResolver typedOperandResolver;
 
     @BeforeAll
     static void setup() {
-        expressionParser = SimpleExpressionParser.createDefault();
+        jexpr = new SimpleJexpr();
         typedOperandResolver = SimpleTypedOperandResolver.getDefault();
     }
 
@@ -355,7 +355,7 @@ final class ExpressionCompilerTests {
                         .map(Type::getType)
                         .toArray(Type[]::new)), null, null);
 
-        val result = expressionParser.parse(expression);
+        val result = jexpr.parse(expression);
 
         val localMap = SimpleLocalMap.create();
 

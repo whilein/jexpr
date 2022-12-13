@@ -16,12 +16,12 @@
 
 package io.github.whilein.jexpr.compiler;
 
+import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.constant.OperandBoolean;
-import io.github.whilein.jexpr.operand.constant.OperandNumber;
-import io.github.whilein.jexpr.operand.constant.OperandObject;
-import io.github.whilein.jexpr.operand.constant.OperandString;
+import io.github.whilein.jexpr.token.operand.constant.OperandBoolean;
+import io.github.whilein.jexpr.token.operand.constant.OperandNumber;
+import io.github.whilein.jexpr.token.operand.constant.OperandObject;
+import io.github.whilein.jexpr.token.operand.constant.OperandString;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -30,28 +30,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import static org.objectweb.asm.Opcodes.ACONST_NULL;
-import static org.objectweb.asm.Opcodes.BIPUSH;
-import static org.objectweb.asm.Opcodes.CHECKCAST;
-import static org.objectweb.asm.Opcodes.D2F;
-import static org.objectweb.asm.Opcodes.D2I;
-import static org.objectweb.asm.Opcodes.D2L;
-import static org.objectweb.asm.Opcodes.F2D;
-import static org.objectweb.asm.Opcodes.F2I;
-import static org.objectweb.asm.Opcodes.F2L;
-import static org.objectweb.asm.Opcodes.I2B;
-import static org.objectweb.asm.Opcodes.I2C;
-import static org.objectweb.asm.Opcodes.I2D;
-import static org.objectweb.asm.Opcodes.I2F;
-import static org.objectweb.asm.Opcodes.I2L;
-import static org.objectweb.asm.Opcodes.I2S;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.L2D;
-import static org.objectweb.asm.Opcodes.L2F;
-import static org.objectweb.asm.Opcodes.L2I;
-import static org.objectweb.asm.Opcodes.SIPUSH;
+import static org.objectweb.asm.Opcodes.*;
 
 /**
  * @author whilein

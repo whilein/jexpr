@@ -16,8 +16,9 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.token.SelectableTokenParser;
-import io.github.whilein.jexpr.token.TokenVisitor;
+import io.github.whilein.jexpr.api.exception.SyntaxException;
+import io.github.whilein.jexpr.api.token.SelectableTokenParser;
+import io.github.whilein.jexpr.api.token.TokenVisitor;
 import io.github.whilein.jexpr.token.TokenVisitors;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;

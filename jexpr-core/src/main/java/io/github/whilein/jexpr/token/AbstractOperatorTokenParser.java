@@ -16,10 +16,12 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.SyntaxException;
-import io.github.whilein.jexpr.operator.Operator;
-import io.github.whilein.jexpr.operator.matcher.OperatorMatcher;
-import io.github.whilein.jexpr.operator.registry.OperatorRegistry;
+import io.github.whilein.jexpr.api.exception.SyntaxException;
+import io.github.whilein.jexpr.api.token.SelectableTokenParser;
+import io.github.whilein.jexpr.api.token.TokenVisitor;
+import io.github.whilein.jexpr.api.token.operator.Operator;
+import io.github.whilein.jexpr.api.token.operator.OperatorMatcher;
+import io.github.whilein.jexpr.api.token.operator.OperatorRegistry;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -57,7 +59,7 @@ public abstract class AbstractOperatorTokenParser<T extends Operator>
     @Override
     public void update(final int ch) throws SyntaxException {
         if (operatorMatcher == null) {
-            operatorMatcher = operatorRegistry.getMatcher(ch);
+            operatorMatcher = operatorRegistry.matchOperator(ch);
         }
 
         operatorMatcher.next(ch);

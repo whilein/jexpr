@@ -16,13 +16,15 @@
 
 package io.github.whilein.jexpr.token;
 
+import io.github.whilein.jexpr.api.token.SelectableTokenParser;
+import io.github.whilein.jexpr.api.token.TokenVisitor;
+import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operator.Operator;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.constant.OperandDouble;
-import io.github.whilein.jexpr.operand.constant.OperandFloat;
-import io.github.whilein.jexpr.operand.constant.OperandInteger;
-import io.github.whilein.jexpr.operand.constant.OperandLong;
-import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.token.operand.constant.OperandDouble;
+import io.github.whilein.jexpr.token.operand.constant.OperandFloat;
+import io.github.whilein.jexpr.token.operand.constant.OperandInteger;
+import io.github.whilein.jexpr.token.operand.constant.OperandLong;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

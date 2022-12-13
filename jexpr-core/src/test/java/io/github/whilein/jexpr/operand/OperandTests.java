@@ -16,8 +16,10 @@
 
 package io.github.whilein.jexpr.operand;
 
-import io.github.whilein.jexpr.SimpleExpressionParser;
-import lombok.val;
+import io.github.whilein.jexpr.SimpleJexpr;
+import io.github.whilein.jexpr.api.Jexpr;
+import io.github.whilein.jexpr.api.token.operand.Operand;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,45 +29,46 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class OperandTests {
 
+    Jexpr jexpr;
+
+    @BeforeEach
+    void setup() {
+        jexpr = new SimpleJexpr();
+    }
+
     @Test
     void testToStringRedundantParentheses() {
-        val parser = SimpleExpressionParser.createDefault();
-
         Operand expression;
 
-        expression = parser.parse("(a + b) - (a * b)");
+        expression = jexpr.parse("(a + b) - (a * b)");
         assertEquals("(a + b) - a * b", expression.toString());
 
-        expression = parser.parse("(a * (b - c))");
+        expression = jexpr.parse("(a * (b - c))");
         assertEquals("a * (b - c)", expression.toString());
 
-        expression = parser.parse("(a + b) == (c + d)");
+        expression = jexpr.parse("(a + b) == (c + d)");
         assertEquals("a + b == c + d", expression.toString());
     }
 
     @Test
     void testToStringEscape() {
-        val parser = SimpleExpressionParser.createDefault();
-
         Operand expression;
 
-        expression = parser.parse("'Some text\\r\\nNew line 1\\tTab \"Quotes\"' == x");
+        expression = jexpr.parse("'Some text\\r\\nNew line 1\\tTab \"Quotes\"' == x");
         assertEquals("\"Some text\\r\\nNew line 1\\tTab \\\"Quotes\\\"\" == x", expression.toString());
 
-        expression = parser.parse("'\\u0FFF' == x");
+        expression = jexpr.parse("'\\u0FFF' == x");
         assertEquals("\"\\u0FFF\" == x", expression.toString());
     }
 
     @Test
     void testToStringUnary() {
-        val parser = SimpleExpressionParser.createDefault();
-
         Operand expression;
 
-        expression = parser.parse("-a - -b");
+        expression = jexpr.parse("-a - -b");
         assertEquals("-a - -b", expression.toString());
 
-        expression = parser.parse("-a - -(b + c)");
+        expression = jexpr.parse("-a - -(b + c)");
         assertEquals("-a - -(b + c)", expression.toString());
     }
 

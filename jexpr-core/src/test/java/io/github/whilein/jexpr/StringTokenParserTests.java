@@ -16,6 +16,7 @@
 
 package io.github.whilein.jexpr;
 
+import io.github.whilein.jexpr.api.exception.SyntaxException;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
 import io.github.whilein.jexpr.token.StringTokenParser;
 import org.junit.jupiter.api.BeforeEach;

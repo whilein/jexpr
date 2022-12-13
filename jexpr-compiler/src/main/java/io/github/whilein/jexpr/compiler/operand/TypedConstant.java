@@ -16,7 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.Operand;
 import lombok.Value;
 import org.objectweb.asm.Type;
 

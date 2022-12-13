@@ -16,7 +16,8 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.SyntaxException;
+import io.github.whilein.jexpr.api.exception.SyntaxException;
+import io.github.whilein.jexpr.api.token.TokenParser;
 import lombok.val;
 
 import java.util.LinkedHashMap;

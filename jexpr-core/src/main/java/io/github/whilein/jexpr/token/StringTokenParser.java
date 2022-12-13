@@ -16,9 +16,10 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.SyntaxException;
+import io.github.whilein.jexpr.api.exception.SyntaxException;
+import io.github.whilein.jexpr.api.token.TokenVisitor;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
-import io.github.whilein.jexpr.operand.constant.OperandString;
+import io.github.whilein.jexpr.token.operand.constant.OperandString;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

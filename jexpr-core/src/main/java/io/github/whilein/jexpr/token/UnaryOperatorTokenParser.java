@@ -16,10 +16,11 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operator.Operator;
-import io.github.whilein.jexpr.operator.UnaryOperator;
-import io.github.whilein.jexpr.operator.registry.OperatorRegistry;
+import io.github.whilein.jexpr.api.token.TokenVisitor;
+import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operator.Operator;
+import io.github.whilein.jexpr.api.token.operator.OperatorRegistry;
+import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.Nullable;

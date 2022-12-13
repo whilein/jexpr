@@ -16,12 +16,12 @@
 
 package io.github.whilein.jexpr.tools;
 
-import io.github.whilein.jexpr.OperandVariableResolver;
-import io.github.whilein.jexpr.SimpleExpressionParser;
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.variable.OperandBinaryNode;
-import io.github.whilein.jexpr.operand.variable.OperandReference;
-import io.github.whilein.jexpr.operand.variable.OperandUnaryNode;
+import io.github.whilein.jexpr.SimpleJexpr;
+import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
+import io.github.whilein.jexpr.token.operand.variable.OperandBinaryNode;
+import io.github.whilein.jexpr.token.operand.variable.OperandReference;
+import io.github.whilein.jexpr.token.operand.variable.OperandUnaryNode;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +47,7 @@ public class Main {
     private static final double BRANCH_GAP = 10;
 
     public void main(final String[] args) throws IOException {
-        val expressionParser = SimpleExpressionParser.createDefault();
+        val expressionParser = new SimpleJexpr();
         Operand expression = expressionParser.parse(args[0]);
 
         val solvedMap = new HashMap<String, Operand>();
@@ -138,10 +138,10 @@ public class Main {
 
             val operator = new ValueNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(binary.getOperator()), OPERATOR_COLOR);
 
-            val left = toTree(binary.getLeft(), x - BRANCH_GAP, y + 50);
+            val left = toTree(binary.getLeftMember(), x - BRANCH_GAP, y + 50);
             left.moveX(-left.getWidth() / 2);
 
-            val right = toTree(binary.getRight(), x + BRANCH_GAP, y + 50);
+            val right = toTree(binary.getRightMember(), x + BRANCH_GAP, y + 50);
             right.moveX(right.getWidth() / 2);
 
             return new BinaryNode(operator, left, right, BRANCH_GAP);

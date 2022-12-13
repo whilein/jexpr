@@ -16,8 +16,9 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.constant.OperandInteger;
+import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
+import io.github.whilein.jexpr.token.operand.constant.OperandInteger;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

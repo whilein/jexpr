@@ -16,18 +16,14 @@
 
 package io.github.whilein.jexpr;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.variable.OperandBinaryNode;
-import io.github.whilein.jexpr.operand.variable.OperandReference;
-import io.github.whilein.jexpr.operand.variable.OperandUnaryNode;
-import io.github.whilein.jexpr.operator.BinaryOperator;
-import io.github.whilein.jexpr.operator.UnaryOperator;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseComplement;
-import io.github.whilein.jexpr.operator.type.OperatorDivide;
-import io.github.whilein.jexpr.operator.type.OperatorMemberSelection;
-import io.github.whilein.jexpr.operator.type.OperatorMultiply;
-import io.github.whilein.jexpr.operator.type.OperatorPlus;
-import io.github.whilein.jexpr.operator.type.OperatorUnaryMinus;
+import io.github.whilein.jexpr.api.Jexpr;
+import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
+import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
+import io.github.whilein.jexpr.token.operand.variable.OperandBinaryNode;
+import io.github.whilein.jexpr.token.operand.variable.OperandReference;
+import io.github.whilein.jexpr.token.operand.variable.OperandUnaryNode;
+import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,11 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
  * @author whilein
  */
 class AstTests {
-    ExpressionParser expressionParser;
+    Jexpr jexpr;
 
     @BeforeEach
     void setup() {
-        expressionParser = SimpleExpressionParser.createDefault();
+        jexpr = new SimpleJexpr();
     }
 
     /**
@@ -53,7 +49,7 @@ class AstTests {
      */
     @Test
     public void testBinaryPrecedence() {
-        val root = expressionParser.parse("x + y * z");
+        val root = jexpr.parse("x + y * z");
 
         assertBinary(
                 root,
@@ -74,7 +70,7 @@ class AstTests {
      */
     @Test
     public void testUnaryPrecedence() {
-        val root = expressionParser.parse("-x.y");
+        val root = jexpr.parse("-x.y");
 
         assertUnary(
                 root,
@@ -93,7 +89,7 @@ class AstTests {
      */
     @Test
     public void testSimpleMixed0() {
-        val root = expressionParser.parse("-x / y");
+        val root = jexpr.parse("-x / y");
 
         assertBinary(
                 root,
@@ -108,7 +104,7 @@ class AstTests {
      */
     @Test
     public void testSimpleMixed1() {
-        val root = expressionParser.parse("x / -y");
+        val root = jexpr.parse("x / -y");
 
         assertBinary(
                 root,
@@ -123,7 +119,7 @@ class AstTests {
      */
     @Test
     public void testSimpleMixed2() {
-        val root = expressionParser.parse("-x / -y");
+        val root = jexpr.parse("-x / -y");
 
         assertBinary(
                 root,
@@ -135,7 +131,7 @@ class AstTests {
 
     @Test
     public void testUnaryOrder() {
-        val root = expressionParser.parse("-~x");
+        val root = jexpr.parse("-~x");
 
         assertUnary(
                 root,
@@ -146,7 +142,7 @@ class AstTests {
 
     @Test
     public void testSimpleUnary() {
-        val root = expressionParser.parse("-x");
+        val root = jexpr.parse("-x");
 
         assertUnary(
                 root,
@@ -160,7 +156,7 @@ class AstTests {
      */
     @Test
     public void testSimpleBinary() {
-        val root = expressionParser.parse("x + y");
+        val root = jexpr.parse("x + y");
 
         assertBinary(
                 root,
@@ -201,8 +197,8 @@ class AstTests {
 
         val binaryNode = (OperandBinaryNode) operand;
 
-        leftAssertion.accept(binaryNode.getLeft());
-        rightAssertion.accept(binaryNode.getRight());
+        leftAssertion.accept(binaryNode.getLeftMember());
+        rightAssertion.accept(binaryNode.getRightMember());
         assertInstanceOf(operator, binaryNode.getOperator());
     }
 

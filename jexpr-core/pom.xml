@@ -10,4 +10,11 @@
 
     <artifactId>jexpr-core</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.github.whilein</groupId>
+            <artifactId>jexpr-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

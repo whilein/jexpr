@@ -16,16 +16,12 @@
 
 package io.github.whilein.jexpr.compiler;
 
+import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.compiler.operand.SimpleTypedOperandResolver;
 import io.github.whilein.jexpr.compiler.operand.TypedOperandResolver;
-import io.github.whilein.jexpr.operand.Operand;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;

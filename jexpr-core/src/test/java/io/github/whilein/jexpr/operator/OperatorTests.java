@@ -16,25 +16,11 @@
 
 package io.github.whilein.jexpr.operator;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.constant.OperandBoolean;
-import io.github.whilein.jexpr.operand.constant.OperandDouble;
-import io.github.whilein.jexpr.operand.constant.OperandFloat;
-import io.github.whilein.jexpr.operand.constant.OperandInteger;
-import io.github.whilein.jexpr.operand.constant.OperandLong;
-import io.github.whilein.jexpr.operand.constant.OperandString;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseAnd;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseOr;
-import io.github.whilein.jexpr.operator.type.OperatorBitwiseXor;
-import io.github.whilein.jexpr.operator.type.OperatorDivide;
-import io.github.whilein.jexpr.operator.type.OperatorEquals;
-import io.github.whilein.jexpr.operator.type.OperatorMinus;
-import io.github.whilein.jexpr.operator.type.OperatorMultiply;
-import io.github.whilein.jexpr.operator.type.OperatorNegate;
-import io.github.whilein.jexpr.operator.type.OperatorNotEquals;
-import io.github.whilein.jexpr.operator.type.OperatorPlus;
-import io.github.whilein.jexpr.operator.type.OperatorRemainder;
-import io.github.whilein.jexpr.operator.type.OperatorUnaryMinus;
+import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
+import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
+import io.github.whilein.jexpr.token.operand.constant.*;
+import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 

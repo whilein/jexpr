@@ -16,8 +16,9 @@
 
 package io.github.whilein.jexpr.token;
 
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operator.Operator;
+import io.github.whilein.jexpr.api.token.SelectableTokenParser;
+import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operator.Operator;
 import org.jetbrains.annotations.Nullable;
 
 /**

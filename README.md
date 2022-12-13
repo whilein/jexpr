@@ -13,9 +13,9 @@
 class Example {
     @Test
     public void testArithmeticEvaluation() {
-        ExpressionParser expressionParser = SimpleExpressionParser.createDefault();
+        Jexpr jexpr = new SimpleJexpr();
 
-        assertEquals(30, expressionParser.parse("5 + 5 * 5").getValue());
+        assertEquals(30, jexpr.parse("5 + 5 * 5").getValue());
     }
 }
 ```
@@ -26,7 +26,7 @@ class Example {
 class Example {
     @Test
     public void testArithmeticEvaluation() {
-        ExpressionParser expressionParser = SimpleExpressionParser.createDefault();
+        Jexpr jexpr = new SimpleJexpr();
 
         // Переменные запрашиваются через UndefinedResolver,
         // реализацией которого может быть всё что угодно.
@@ -40,7 +40,7 @@ class Example {
                 "z", OperandInteger.valueOf(3)
         );
 
-        Operand undefinedOperand = expressionParser.parse("x + y * z");
+        Operand undefinedOperand = jexpr.parse("x + y * z");
         Operand solvedOperand = undefinedOperand.solve(variables::get);
 
         assertEquals(7, solvedOperand.getValue());
@@ -56,11 +56,11 @@ class Example {
 ```java
 class Example {
     public void compile(MethodVisitor mv) {
-        ExpressionParser expressionParser = SimpleExpressionParser.createDefault();
+        Jexpr jexpr = new SimpleJexpr();
         TypedOperandResolver typedOperandResolver = SimpleTypedOperandResolver.getDefault();
 
         // парсим выражение
-        Operand expression = expressionParser.parse("variable + 1");
+        Operand expression = jexpr.parse("variable + 1");
 
         // Указываем, что у нас находится в локальных переменных
         // они будут использованы компилятором
@@ -91,8 +91,8 @@ import java.util.function.IntBinaryOperator;
 
 class Example {
     public IntBinaryOperator sum() {
-        ExpressionParser parser = SimpleExpressionParser.createDefault();
-        Operand expression = parser.parse("a + b");
+        Jexpr jexpr = new SimpleJexpr();
+        Operand expression = jexpr.parse("a + b");
 
         return ExpressionImplementationCompiler.create(expression, IntBinaryOperator.class)
                 .name(0, "a")

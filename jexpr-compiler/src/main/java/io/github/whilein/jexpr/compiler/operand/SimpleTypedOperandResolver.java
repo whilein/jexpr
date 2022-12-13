@@ -16,19 +16,13 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
+import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.compiler.LocalMap;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
-import io.github.whilein.jexpr.operand.Operand;
-import io.github.whilein.jexpr.operand.constant.OperandBoolean;
-import io.github.whilein.jexpr.operand.constant.OperandDouble;
-import io.github.whilein.jexpr.operand.constant.OperandFloat;
-import io.github.whilein.jexpr.operand.constant.OperandInteger;
-import io.github.whilein.jexpr.operand.constant.OperandLong;
-import io.github.whilein.jexpr.operand.constant.OperandObject;
-import io.github.whilein.jexpr.operand.constant.OperandString;
-import io.github.whilein.jexpr.operand.variable.OperandBinaryNode;
-import io.github.whilein.jexpr.operand.variable.OperandReference;
-import io.github.whilein.jexpr.operand.variable.OperandUnaryNode;
+import io.github.whilein.jexpr.token.operand.constant.*;
+import io.github.whilein.jexpr.token.operand.variable.OperandBinaryNode;
+import io.github.whilein.jexpr.token.operand.variable.OperandReference;
+import io.github.whilein.jexpr.token.operand.variable.OperandUnaryNode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -99,8 +93,8 @@ public final class SimpleTypedOperandResolver implements TypedOperandResolver {
             );
         } else if (operand instanceof OperandBinaryNode) {
             val sequence = (OperandBinaryNode) operand;
-            val left = resolve(sequence.getLeft(), map);
-            val right = resolve(sequence.getRight(), map);
+            val left = resolve(sequence.getLeftMember(), map);
+            val right = resolve(sequence.getRightMember(), map);
 
             val operator = sequence.getOperator();
             val asmOperator = asmOperatorRegistry.getBinaryOperator(operator.getClass());
