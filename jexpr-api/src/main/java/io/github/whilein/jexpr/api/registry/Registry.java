@@ -27,6 +27,8 @@ public interface Registry<I extends RegistryItem<V>, V> {
 
     void unregister(@NotNull I item);
 
+    void unregisterAll();
+
     @Nullable I unregister(@NotNull V value);
 
     /**

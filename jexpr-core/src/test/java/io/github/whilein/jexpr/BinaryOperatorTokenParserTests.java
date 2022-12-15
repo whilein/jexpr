@@ -18,6 +18,7 @@ package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.token.BinaryOperatorTokenParser;
+import io.github.whilein.jexpr.token.operator.DefaultBinaryOperatorRegistry;
 import io.github.whilein.jexpr.token.operator.SimpleOperatorRegistry;
 import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.val;
@@ -33,27 +34,7 @@ final class BinaryOperatorTokenParserTests extends AbstractTokenParserTests {
 
     @BeforeEach
     void setup() {
-        val registry = new SimpleOperatorRegistry<BinaryOperator>();
-        registry.register(new OperatorPlus());
-        registry.register(new OperatorMinus());
-        registry.register(new OperatorMultiply());
-        registry.register(new OperatorDivide());
-        registry.register(new OperatorRemainder());
-        registry.register(new OperatorBitwiseAnd());
-        registry.register(new OperatorBitwiseOr());
-        registry.register(new OperatorBitwiseXor());
-        registry.register(new OperatorBitwiseLeftShift());
-        registry.register(new OperatorBitwiseRightShift());
-        registry.register(new OperatorBitwiseUnsignedRightShift());
-        registry.register(new OperatorOr());
-        registry.register(new OperatorAnd());
-        registry.register(new OperatorStrictGreater());
-        registry.register(new OperatorGreater());
-        registry.register(new OperatorStrictLess());
-        registry.register(new OperatorLess());
-        registry.register(new OperatorEquals());
-        registry.register(new OperatorNotEquals());
-        registry.register(new OperatorMemberSelection());
+        val registry = new DefaultBinaryOperatorRegistry();
 
         tokenParser = new BinaryOperatorTokenParser(registry);
         ignoreCannotBeSelected = true;

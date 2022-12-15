@@ -34,6 +34,17 @@ public abstract class AbstractRegistry<I extends RegistryItem<V>, V> implements 
 
     Map<V, I> map = new HashMap<>();
 
+    @Override
+    public void unregisterAll() {
+        val itemIterator = map.values().iterator();
+
+        while (itemIterator.hasNext()) {
+            onUnregister(itemIterator.next());
+
+            itemIterator.remove();
+        }
+    }
+
     protected void onRegister(I item) {
     }
 

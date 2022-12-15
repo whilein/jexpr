@@ -16,18 +16,13 @@
 
 package io.github.whilein.jexpr.keyword;
 
-import io.github.whilein.jexpr.api.keyword.Keyword;
-import io.github.whilein.jexpr.api.keyword.KeywordRegistry;
-import io.github.whilein.jexpr.registry.AbstractRegistry;
+import io.github.whilein.jexpr.token.operand.constant.OperandBoolean;
+import io.github.whilein.jexpr.token.operand.constant.OperandObject;
 
-/**
- * @author whilein
- */
-public class SimpleKeywordRegistry extends AbstractRegistry<Keyword, String> implements KeywordRegistry {
-
-    @Override
-    public String toString() {
-        return "KeywordRegistry" + this.map;
+public class DefaultKeywordRegistry extends SimpleKeywordRegistry {
+    {
+        register(new SimpleKeyword("null", OperandObject.nullValue()));
+        register(new SimpleKeyword("true", OperandBoolean.trueValue()));
+        register(new SimpleKeyword("false", OperandBoolean.falseValue()));
     }
-
 }

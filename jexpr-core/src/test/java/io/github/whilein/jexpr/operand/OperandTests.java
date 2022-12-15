@@ -16,7 +16,8 @@
 
 package io.github.whilein.jexpr.operand;
 
-import io.github.whilein.jexpr.SimpleJexpr;
+import io.github.whilein.jexpr.AbstractJexpr;
+import io.github.whilein.jexpr.DefaultJexpr;
 import io.github.whilein.jexpr.api.Jexpr;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ class OperandTests {
 
     @BeforeEach
     void setup() {
-        jexpr = new SimpleJexpr();
+        jexpr = DefaultJexpr.create();
     }
 
     @Test

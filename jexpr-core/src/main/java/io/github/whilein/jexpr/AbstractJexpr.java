@@ -24,14 +24,6 @@ import io.github.whilein.jexpr.api.token.operand.OperandParser;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.OperatorRegistry;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.io.ByteArrayOutput;
-import io.github.whilein.jexpr.keyword.SimpleKeyword;
-import io.github.whilein.jexpr.keyword.SimpleKeywordRegistry;
-import io.github.whilein.jexpr.token.*;
-import io.github.whilein.jexpr.token.operand.constant.OperandBoolean;
-import io.github.whilein.jexpr.token.operand.constant.OperandObject;
-import io.github.whilein.jexpr.token.operator.SimpleOperatorRegistry;
-import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,90 +34,29 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
-public class SimpleJexpr implements Jexpr {
+public abstract class AbstractJexpr implements Jexpr {
 
-    OperatorRegistry<BinaryOperator> binaryOperatorRegistry =
-            new SimpleOperatorRegistry<>();
-    OperatorRegistry<UnaryOperator> unaryOperatorRegistry =
-            new SimpleOperatorRegistry<>();
-
-    KeywordRegistry keywordRegistry = new SimpleKeywordRegistry();
+    OperatorRegistry<BinaryOperator> binaryOperatorRegistry;
+    OperatorRegistry<UnaryOperator> unaryOperatorRegistry;
+    KeywordRegistry keywordRegistry;
 
     OperandParser operandParser;
 
-    public SimpleJexpr() {
-        operandParser = DefaultOperandParser.create(init());
+    protected AbstractJexpr(
+            OperatorRegistry<BinaryOperator> binaryOperatorRegistry,
+            OperatorRegistry<UnaryOperator> unaryOperatorRegistry,
+            KeywordRegistry keywordRegistry,
+            List<SelectableTokenParser> parsers
+    ) {
+        this.binaryOperatorRegistry = binaryOperatorRegistry;
+        this.unaryOperatorRegistry = unaryOperatorRegistry;
+        this.keywordRegistry = keywordRegistry;
+        this.operandParser = DefaultOperandParser.create(parsers);
     }
-
-    protected List<SelectableTokenParser> init() {
-        registerDefaults();
-
-        val buffer = initBuffer();
-
-        return Arrays.asList(
-                new NumberTokenParser(buffer),
-                new StringTokenParser(buffer),
-                new UnaryOperatorTokenParser(unaryOperatorRegistry),
-                new BinaryOperatorTokenParser(binaryOperatorRegistry),
-                new ReferenceTokenParser(keywordRegistry, buffer)
-        );
-    }
-
-    protected ByteArrayOutput initBuffer() {
-        return new ByteArrayOutput(8192);
-    }
-
-    protected void registerDefaults() {
-        registerDefaultKeywords();
-        registerDefaultOperators();
-    }
-
-    protected void registerDefaultKeywords() {
-        keywordRegistry.register(new SimpleKeyword("null", OperandObject.nullValue()));
-        keywordRegistry.register(new SimpleKeyword("true", OperandBoolean.trueValue()));
-        keywordRegistry.register(new SimpleKeyword("false", OperandBoolean.falseValue()));
-    }
-
-    protected void registerDefaultOperators() {
-        registerDefaultBinaryOperators();
-        registerDefaultUnaryOperators();
-    }
-
-    protected void registerDefaultUnaryOperators() {
-        unaryOperatorRegistry.register(new OperatorUnaryPlus());
-        unaryOperatorRegistry.register(new OperatorUnaryMinus());
-        unaryOperatorRegistry.register(new OperatorBitwiseComplement());
-        unaryOperatorRegistry.register(new OperatorNegate());
-    }
-
-    protected void registerDefaultBinaryOperators() {
-        binaryOperatorRegistry.register(new OperatorPlus());
-        binaryOperatorRegistry.register(new OperatorMinus());
-        binaryOperatorRegistry.register(new OperatorMultiply());
-        binaryOperatorRegistry.register(new OperatorDivide());
-        binaryOperatorRegistry.register(new OperatorRemainder());
-        binaryOperatorRegistry.register(new OperatorBitwiseAnd());
-        binaryOperatorRegistry.register(new OperatorBitwiseOr());
-        binaryOperatorRegistry.register(new OperatorBitwiseXor());
-        binaryOperatorRegistry.register(new OperatorBitwiseLeftShift());
-        binaryOperatorRegistry.register(new OperatorBitwiseRightShift());
-        binaryOperatorRegistry.register(new OperatorBitwiseUnsignedRightShift());
-        binaryOperatorRegistry.register(new OperatorOr());
-        binaryOperatorRegistry.register(new OperatorAnd());
-        binaryOperatorRegistry.register(new OperatorStrictGreater());
-        binaryOperatorRegistry.register(new OperatorGreater());
-        binaryOperatorRegistry.register(new OperatorStrictLess());
-        binaryOperatorRegistry.register(new OperatorLess());
-        binaryOperatorRegistry.register(new OperatorEquals());
-        binaryOperatorRegistry.register(new OperatorNotEquals());
-        binaryOperatorRegistry.register(new OperatorMemberSelection());
-    }
-
 
     @Override
     public @NotNull Operand parse(final @NotNull String value) {

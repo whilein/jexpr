@@ -22,6 +22,7 @@ import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.token.operand.constant.OperandObject;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,17 +36,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 final class JexprTests {
 
-    Jexpr jexpr;
+    static Jexpr jexpr;
 
-    private @NotNull Operand parse(final String text) {
+    @BeforeAll
+    static void setup() {
+        jexpr = DefaultJexpr.create();
+    }
+
+    private static @NotNull Operand parse(final String text) {
         return jexpr.parse(text);
     }
-
-    @BeforeEach
-    public void setup() {
-        jexpr = new SimpleJexpr();
-    }
-
 
     @Test
     void testAccess() {

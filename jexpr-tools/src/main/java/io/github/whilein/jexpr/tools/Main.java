@@ -16,7 +16,8 @@
 
 package io.github.whilein.jexpr.tools;
 
-import io.github.whilein.jexpr.SimpleJexpr;
+import io.github.whilein.jexpr.AbstractJexpr;
+import io.github.whilein.jexpr.DefaultJexpr;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
 import io.github.whilein.jexpr.token.operand.variable.OperandBinaryNode;
@@ -47,8 +48,8 @@ public class Main {
     private static final double BRANCH_GAP = 10;
 
     public void main(final String[] args) throws IOException {
-        val expressionParser = new SimpleJexpr();
-        Operand expression = expressionParser.parse(args[0]);
+        val jexpr = DefaultJexpr.create();
+        Operand expression = jexpr.parse(args[0]);
 
         val solvedMap = new HashMap<String, Operand>();
         val in = new Scanner(System.in);
@@ -70,7 +71,7 @@ public class Main {
                     try {
                         System.out.print(reference + ": ");
 
-                        return expressionParser.parse(in.nextLine());
+                        return jexpr.parse(in.nextLine());
                     } finally {
                         solved = true;
                     }

@@ -16,8 +16,12 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.SimpleJexpr;
+import io.github.whilein.jexpr.AbstractJexpr;
+import io.github.whilein.jexpr.DefaultJexpr;
+import io.github.whilein.jexpr.api.Jexpr;
 import lombok.val;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.BinaryOperator;
@@ -29,10 +33,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author whilein
  */
 final class ExpressionImplementationCompilerTests {
+
+    static Jexpr jexpr;
+
+    @BeforeAll
+    static void setup() {
+        jexpr = DefaultJexpr.create();
+    }
+
     @Test
     void testBridge() {
-        val parser = new SimpleJexpr();
-        val expression = parser.parse("a + b");
+        val expression = jexpr.parse("a + b");
 
         @SuppressWarnings("unchecked")
         val operator = (BinaryOperator<Integer>) ExpressionImplementationCompiler.create(expression, BinaryOperator.class)
@@ -47,8 +58,7 @@ final class ExpressionImplementationCompilerTests {
 
     @Test
     void testPrimitives() {
-        val parser = new SimpleJexpr();
-        val expression = parser.parse("a + b");
+        val expression = jexpr.parse("a + b");
 
         val operator = ExpressionImplementationCompiler.create(expression, IntBinaryOperator.class)
                 .name(0, "a")

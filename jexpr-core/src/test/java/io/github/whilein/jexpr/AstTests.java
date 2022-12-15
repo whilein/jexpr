@@ -25,6 +25,7 @@ import io.github.whilein.jexpr.token.operand.variable.OperandReference;
 import io.github.whilein.jexpr.token.operand.variable.OperandUnaryNode;
 import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.val;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,11 +38,11 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
  * @author whilein
  */
 class AstTests {
-    Jexpr jexpr;
+    static Jexpr jexpr;
 
-    @BeforeEach
-    void setup() {
-        jexpr = new SimpleJexpr();
+    @BeforeAll
+    static void setup() {
+        jexpr = DefaultJexpr.create();
     }
 
     /**

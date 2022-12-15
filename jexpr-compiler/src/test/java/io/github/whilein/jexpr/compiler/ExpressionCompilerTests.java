@@ -16,7 +16,8 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.SimpleJexpr;
+import io.github.whilein.jexpr.AbstractJexpr;
+import io.github.whilein.jexpr.DefaultJexpr;
 import io.github.whilein.jexpr.api.Jexpr;
 import io.github.whilein.jexpr.compiler.operand.SimpleTypedOperandResolver;
 import io.github.whilein.jexpr.compiler.operand.TypedOperandResolver;
@@ -49,7 +50,7 @@ final class ExpressionCompilerTests {
 
     @BeforeAll
     static void setup() {
-        jexpr = new SimpleJexpr();
+        jexpr = DefaultJexpr.create();
         typedOperandResolver = SimpleTypedOperandResolver.getDefault();
     }
 
