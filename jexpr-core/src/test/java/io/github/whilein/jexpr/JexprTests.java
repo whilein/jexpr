@@ -19,11 +19,10 @@ package io.github.whilein.jexpr;
 import io.github.whilein.jexpr.api.Jexpr;
 import io.github.whilein.jexpr.api.exception.OperatorException;
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.constant.OperandObject;
+import io.github.whilein.jexpr.token.operand.OperandObject;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

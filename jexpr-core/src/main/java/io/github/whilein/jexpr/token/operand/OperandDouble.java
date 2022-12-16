@@ -14,9 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token.operand.constant;
+package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
@@ -30,31 +31,23 @@ import org.jetbrains.annotations.Nullable;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class OperandInteger extends OperandNumber {
+public final class OperandDouble extends OperandNumber {
 
-    int value;
+    double value;
 
-    private OperandInteger(final int value) {
+    private OperandDouble(final double value) {
         super(value);
 
         this.value = value;
     }
 
-    private static final OperandInteger[] CACHE = new OperandInteger[256];
+    public static @NotNull Operand valueOf(final double value) {
+        return new OperandDouble(value);
+    }
 
     @Override
     public void print(final @NotNull StringBuilder out) {
         out.append(value);
-    }
-
-    static {
-        for (int i = -128; i <= 127; i++) {
-            CACHE[i + 128] = new OperandInteger(i);
-        }
-    }
-
-    public static @NotNull Operand valueOf(final int value) {
-        return value >= -128 && value <= 127 ? CACHE[value + 128] : new OperandInteger(value);
     }
 
     @Override
@@ -66,9 +59,10 @@ public final class OperandInteger extends OperandNumber {
     public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
         return operator.getPredictedResult(value);
     }
+
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToInt(value, operator);
+        return operand.applyToDouble(value, operator);
     }
 
     @Override
@@ -119,4 +113,8 @@ public final class OperandInteger extends OperandNumber {
         return operator.apply(value);
     }
 
+    @Override
+    public @NotNull OperandConstantKind getKind() {
+        return OperandConstantKind.DOUBLE;
+    }
 }

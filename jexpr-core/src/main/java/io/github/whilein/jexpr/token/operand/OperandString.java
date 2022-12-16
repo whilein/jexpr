@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token.operand.constant;
+package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandConstant;
@@ -22,7 +22,6 @@ import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.OperandDelegate;
 import io.github.whilein.jexpr.util.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -14,43 +14,35 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token.operand.constant;
+package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.api.token.operand.OperandConstant;
+import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.OperandDelegate;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
-public final class OperandBoolean extends OperandDelegate<Boolean> implements OperandConstant {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public final class OperandFloat extends OperandNumber {
 
-    boolean value;
+    float value;
 
-    private OperandBoolean(final boolean value) {
+    private OperandFloat(final float value) {
         super(value);
 
         this.value = value;
     }
 
-    private static final OperandBoolean TRUE = new OperandBoolean(true), FALSE = new OperandBoolean(false);
-
-    public static @NotNull Operand trueValue() {
-        return TRUE;
-    }
-
-    public static @NotNull Operand falseValue() {
-        return FALSE;
-    }
-
-    public static @NotNull Operand valueOf(final boolean value) {
-        return value ? TRUE : FALSE;
+    public static @NotNull Operand valueOf(final float value) {
+        return new OperandFloat(value);
     }
 
     @Override
@@ -67,15 +59,12 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
     public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
         return operator.getPredictedResult(value);
     }
-    @Override
-    public @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToBoolean(value, operator);
+        return operand.applyToFloat(value, operator);
     }
+
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
         return operator.apply(number, value);
@@ -120,28 +109,12 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
     }
 
     @Override
-    public boolean toBoolean() {
-        return value;
-    }
-
-    @Override
-    public boolean isNumber() {
-        return false;
-    }
-
-    @Override
-    public boolean isString() {
-        return false;
-    }
-
-    @Override
-    public boolean isBoolean() {
-        return true;
-    }
-
-    @Override
     public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
         return operator.apply(value);
     }
 
+    @Override
+    public @NotNull OperandConstantKind getKind() {
+        return OperandConstantKind.FLOAT;
+    }
 }

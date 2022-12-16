@@ -19,7 +19,7 @@ package io.github.whilein.jexpr.operator;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.constant.*;
+import io.github.whilein.jexpr.token.operand.*;
 import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.val;
 import org.junit.jupiter.api.Test;

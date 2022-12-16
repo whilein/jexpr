@@ -18,10 +18,10 @@ package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
-import io.github.whilein.jexpr.token.operand.constant.OperandBoolean;
-import io.github.whilein.jexpr.token.operand.constant.OperandNumber;
-import io.github.whilein.jexpr.token.operand.constant.OperandObject;
-import io.github.whilein.jexpr.token.operand.constant.OperandString;
+import io.github.whilein.jexpr.token.operand.OperandBoolean;
+import io.github.whilein.jexpr.token.operand.OperandNumber;
+import io.github.whilein.jexpr.token.operand.OperandObject;
+import io.github.whilein.jexpr.token.operand.OperandString;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;

@@ -14,12 +14,11 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token.operand.variable;
+package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
-import io.github.whilein.jexpr.token.operand.OperandDelegate;
 import org.jetbrains.annotations.NotNull;
 
 /**

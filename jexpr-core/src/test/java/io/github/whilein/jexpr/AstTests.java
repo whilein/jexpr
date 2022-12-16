@@ -20,13 +20,12 @@ import io.github.whilein.jexpr.api.Jexpr;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.variable.OperandBinaryNode;
-import io.github.whilein.jexpr.token.operand.variable.OperandReference;
-import io.github.whilein.jexpr.token.operand.variable.OperandUnaryNode;
+import io.github.whilein.jexpr.token.operand.OperandBinaryNode;
+import io.github.whilein.jexpr.token.operand.OperandReference;
+import io.github.whilein.jexpr.token.operand.OperandUnaryNode;
 import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;

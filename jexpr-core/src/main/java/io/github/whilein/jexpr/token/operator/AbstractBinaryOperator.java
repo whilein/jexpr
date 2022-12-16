@@ -21,8 +21,7 @@ import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.constant.*;
-import io.github.whilein.jexpr.token.operand.variable.OperandBinaryNode;
+import io.github.whilein.jexpr.token.operand.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.token.operator.type;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.constant.OperandBoolean;
+import io.github.whilein.jexpr.token.operand.OperandBoolean;
 import io.github.whilein.jexpr.token.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 

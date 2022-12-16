@@ -20,7 +20,7 @@ import io.github.whilein.jexpr.api.exception.OperatorException;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.variable.OperandUnaryNode;
+import io.github.whilein.jexpr.token.operand.OperandUnaryNode;
 import org.jetbrains.annotations.NotNull;
 
 /**

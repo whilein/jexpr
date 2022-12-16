@@ -14,15 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.keyword;
+package io.github.whilein.jexpr.api.token.operand;
 
-import io.github.whilein.jexpr.token.operand.OperandBoolean;
-import io.github.whilein.jexpr.token.operand.OperandObject;
+public enum OperandConstantKind {
 
-public class DefaultKeywordRegistry extends SimpleKeywordRegistry {
-    {
-        register(new SimpleKeyword("null", OperandObject.nullValue()));
-        register(new SimpleKeyword("true", OperandBoolean.trueValue()));
-        register(new SimpleKeyword("false", OperandBoolean.falseValue()));
-    }
+    BOOLEAN, INT, LONG, FLOAT, DOUBLE, OBJECT, STRING
+
 }

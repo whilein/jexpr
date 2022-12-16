@@ -14,10 +14,9 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token.operand.constant;
+package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.OperandConstant;
-import io.github.whilein.jexpr.token.operand.OperandDelegate;
 import org.jetbrains.annotations.NotNull;
 
 /**

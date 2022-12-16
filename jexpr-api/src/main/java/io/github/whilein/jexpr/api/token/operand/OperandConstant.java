@@ -23,6 +23,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface OperandConstant extends Operand {
 
+    @NotNull OperandConstantKind getKind();
+
     @Override
     default boolean isConstant() {
         return true;

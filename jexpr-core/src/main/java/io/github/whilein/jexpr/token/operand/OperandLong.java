@@ -14,9 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token.operand.constant;
+package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
@@ -112,9 +113,14 @@ public final class OperandLong extends OperandNumber {
     public @NotNull Operand applyToObject(final @Nullable Object value, final @NotNull BinaryOperator operator) {
         return operator.apply(value, this.value);
     }
+
     @Override
     public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
         return operator.apply(value);
     }
 
+    @Override
+    public @NotNull OperandConstantKind getKind() {
+        return OperandConstantKind.LONG;
+    }
 }

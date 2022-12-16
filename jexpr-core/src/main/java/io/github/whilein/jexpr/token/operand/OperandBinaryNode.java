@@ -14,14 +14,13 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token.operand.variable;
+package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandBinary;
 import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
-import io.github.whilein.jexpr.token.operand.OperandBase;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
