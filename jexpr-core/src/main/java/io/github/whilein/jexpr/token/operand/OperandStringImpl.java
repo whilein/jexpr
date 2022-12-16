@@ -17,82 +17,77 @@
 package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.OperandConstant;
 import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
+import io.github.whilein.jexpr.util.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class OperandFloat extends OperandNumber {
+final class OperandStringImpl extends OperandDelegate<String> implements OperandConstant {
 
-    float value;
-
-    private OperandFloat(final float value) {
-        super(value);
-
-        this.value = value;
-    }
-
-    public static @NotNull Operand valueOf(final float value) {
-        return new OperandFloat(value);
-    }
-
-    @Override
-    public void print(final @NotNull StringBuilder out) {
-        out.append(value);
+    public OperandStringImpl(final String delegatedValue) {
+        super(delegatedValue);
     }
 
     @Override
     public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
-        return operator.isPredictable(value);
+        return operator.isPredictable(delegatedValue);
     }
 
     @Override
     public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
-        return operator.getPredictedResult(value);
+        return operator.getPredictedResult(delegatedValue);
+    }
+
+    @Override
+    public void print(final @NotNull StringBuilder out) {
+        out.append('"');
+
+        StringEscapeUtils.escape(delegatedValue, out, '"');
+
+        out.append('"');
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToFloat(value, operator);
+        return operand.applyToString(delegatedValue, operator);
     }
 
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
-        return operator.apply(number, value);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToLong(final long number, final @NotNull BinaryOperator operator) {
-        return operator.apply(number, value);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToDouble(final double number, final @NotNull BinaryOperator operator) {
-        return operator.apply(number, value);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToFloat(final float number, final @NotNull BinaryOperator operator) {
-        return operator.apply(number, value);
+        return operator.apply(number, delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToString(final @NotNull String value, final @NotNull BinaryOperator operator) {
-        return operator.apply(value, this.value);
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToBoolean(final boolean value, final @NotNull BinaryOperator operator) {
-        return operator.apply(value, this.value);
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
@@ -100,21 +95,37 @@ public final class OperandFloat extends OperandNumber {
             final @NotNull OperandVariable variable,
             final @NotNull BinaryOperator operator
     ) {
-        return operator.apply(variable, this.value);
+        return operator.apply(variable, this.delegatedValue);
     }
 
     @Override
     public @NotNull Operand applyToObject(final @Nullable Object value, final @NotNull BinaryOperator operator) {
-        return operator.apply(value, this.value);
+        return operator.apply(value, this.delegatedValue);
     }
 
     @Override
+    public boolean isNumber() {
+        return false;
+    }
+
+    @Override
+    public boolean isString() {
+        return true;
+    }
+
+    @Override
+    public boolean isBoolean() {
+        return false;
+    }
+
+
+    @Override
     public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
-        return operator.apply(value);
+        return operator.apply(delegatedValue);
     }
 
     @Override
     public @NotNull OperandConstantKind getKind() {
-        return OperandConstantKind.FLOAT;
+        return OperandConstantKind.STRING;
     }
 }

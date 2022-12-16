@@ -31,31 +31,19 @@ import org.jetbrains.annotations.Nullable;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class OperandInteger extends OperandNumber {
+final class OperandDoubleImpl extends OperandNumber {
 
-    int value;
+    double value;
 
-    private OperandInteger(final int value) {
+    public OperandDoubleImpl(final double value) {
         super(value);
 
         this.value = value;
     }
 
-    private static final OperandInteger[] CACHE = new OperandInteger[256];
-
     @Override
     public void print(final @NotNull StringBuilder out) {
         out.append(value);
-    }
-
-    static {
-        for (int i = -128; i <= 127; i++) {
-            CACHE[i + 128] = new OperandInteger(i);
-        }
-    }
-
-    public static @NotNull Operand valueOf(final int value) {
-        return value >= -128 && value <= 127 ? CACHE[value + 128] : new OperandInteger(value);
     }
 
     @Override
@@ -67,9 +55,10 @@ public final class OperandInteger extends OperandNumber {
     public @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {
         return operator.getPredictedResult(value);
     }
+
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToInt(value, operator);
+        return operand.applyToDouble(value, operator);
     }
 
     @Override
@@ -122,6 +111,6 @@ public final class OperandInteger extends OperandNumber {
 
     @Override
     public @NotNull OperandConstantKind getKind() {
-        return OperandConstantKind.INT;
+        return OperandConstantKind.DOUBLE;
     }
 }

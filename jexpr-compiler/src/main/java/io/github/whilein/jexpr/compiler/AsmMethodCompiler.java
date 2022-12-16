@@ -17,11 +17,8 @@
 package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.OperandConstant;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
-import io.github.whilein.jexpr.token.operand.OperandBoolean;
-import io.github.whilein.jexpr.token.operand.OperandNumber;
-import io.github.whilein.jexpr.token.operand.OperandObject;
-import io.github.whilein.jexpr.token.operand.OperandString;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -291,68 +288,82 @@ public final class AsmMethodCompiler extends MethodVisitor {
 
         val mv = this.mv;
 
-        if (operand instanceof OperandNumber) {
-            val number = operand.toNumber();
+        val constant = (OperandConstant) operand;
 
-            if (number instanceof Integer) {
-                val i = (int) number;
+        val value = constant.getValue();
+
+        switch (constant.getKind()) {
+            case STRING:
+                mv.visitLdcInsn(value);
+                break;
+            case OBJECT:
+                mv.visitInsn(ACONST_NULL);
+                break;
+            case BOOLEAN:
+                mv.visitInsn((boolean) value ? Opcodes.ICONST_1 : Opcodes.ICONST_0);
+                break;
+            case INT: {
+                val i = (int) value;
 
                 if (i >= -1 && i <= 5) {
                     mv.visitInsn(Opcodes.ICONST_0 + i);
-                    return;
+                    break;
                 } else if (i >= Byte.MIN_VALUE && i <= Byte.MAX_VALUE) {
                     mv.visitIntInsn(BIPUSH, i);
-                    return;
+                    break;
                 } else if (i >= Short.MIN_VALUE && i <= Short.MAX_VALUE) {
                     mv.visitIntInsn(SIPUSH, i);
-                    return;
+                    break;
                 }
-            } else if (number instanceof Long) {
-                val i = (long) number;
+
+                mv.visitLdcInsn(i);
+                break;
+            }
+            case LONG: {
+                val i = (long) value;
 
                 if (i == 0) {
                     mv.visitInsn(Opcodes.LCONST_0);
-                    return;
+                    break;
                 } else if (i == 1) {
                     mv.visitInsn(Opcodes.LCONST_1);
-                    return;
+                    break;
                 }
-            } else if (number instanceof Double) {
-                val i = (double) number;
+
+                mv.visitLdcInsn(i);
+                break;
+            }
+            case DOUBLE: {
+                val i = (double) value;
 
                 if (i == 0) {
                     mv.visitInsn(Opcodes.DCONST_0);
-                    return;
+                    break;
                 } else if (i == 1) {
                     mv.visitInsn(Opcodes.DCONST_1);
-                    return;
+                    break;
                 }
-            } else if (number instanceof Float) {
-                val i = (float) number;
+
+                mv.visitLdcInsn(i);
+                break;
+            }
+            case FLOAT: {
+                val i = (float) value;
 
                 if (i == 0) {
                     mv.visitInsn(Opcodes.FCONST_0);
-                    return;
+                    break;
                 } else if (i == 1) {
                     mv.visitInsn(Opcodes.FCONST_1);
-                    return;
+                    break;
                 } else if (i == 2) {
                     mv.visitInsn(Opcodes.FCONST_2);
-                    return;
+                    break;
                 }
-            }
 
-            mv.visitLdcInsn(number);
-        } else if (operand instanceof OperandBoolean) {
-            mv.visitInsn(operand.toBoolean() ? Opcodes.ICONST_1 : Opcodes.ICONST_0);
-        } else if (operand instanceof OperandString) {
-            mv.visitLdcInsn(operand.getValue());
-        } else if (operand instanceof OperandObject) {
-            mv.visitInsn(ACONST_NULL);
-        } else {
-            throw new UnsupportedOperationException("Unable to compile unknown operand: "
-                    + operand.getClass().getName() + " (not in standard library?)");
+                mv.visitLdcInsn(i);
+                break;
+            }
         }
     }
-
 }

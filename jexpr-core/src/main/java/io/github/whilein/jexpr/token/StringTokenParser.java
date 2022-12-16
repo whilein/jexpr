@@ -19,7 +19,7 @@ package io.github.whilein.jexpr.token;
 import io.github.whilein.jexpr.api.exception.SyntaxException;
 import io.github.whilein.jexpr.api.token.TokenVisitor;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
-import io.github.whilein.jexpr.token.operand.OperandString;
+import io.github.whilein.jexpr.token.operand.Operands;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -265,7 +265,7 @@ public final class StringTokenParser extends AbstractSelectableTokenParser {
     @Override
     public void doFinal(final @NotNull TokenVisitor tokenVisitor) throws SyntaxException {
         try {
-            tokenVisitor.visitOperand(OperandString.valueOf(buffer.getString()));
+            tokenVisitor.visitOperand(Operands.constantString(buffer.getString()));
         } finally {
             buffer.reset();
             state = STATE_LEADING_QUOTE;

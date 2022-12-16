@@ -25,15 +25,6 @@ import org.jetbrains.annotations.NotNull;
  * @author whilein
  */
 public interface OperandVariable extends Operand {
-    @Override
-    default @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    default boolean toBoolean() {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     default @NotNull Operand getPredictedResult(final @NotNull BinaryLazyOperator operator) {

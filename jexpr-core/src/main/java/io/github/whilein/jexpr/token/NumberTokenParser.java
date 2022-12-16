@@ -21,10 +21,7 @@ import io.github.whilein.jexpr.api.token.TokenVisitor;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operator.Operator;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
-import io.github.whilein.jexpr.token.operand.OperandDouble;
-import io.github.whilein.jexpr.token.operand.OperandFloat;
-import io.github.whilein.jexpr.token.operand.OperandInteger;
-import io.github.whilein.jexpr.token.operand.OperandLong;
+import io.github.whilein.jexpr.token.operand.Operands;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -272,13 +269,13 @@ public final class NumberTokenParser extends AbstractTokenParser implements Sele
         switch (type) {
             default:
             case TYPE_INT:
-                return OperandInteger.valueOf(Integer.parseInt(text, radix));
+                return Operands.constantInt(Integer.parseInt(text, radix));
             case TYPE_DOUBLE:
-                return OperandDouble.valueOf(Double.parseDouble(text));
+                return Operands.constantDouble(Double.parseDouble(text));
             case TYPE_FLOAT:
-                return OperandFloat.valueOf(Float.parseFloat(text));
+                return Operands.constantFloat(Float.parseFloat(text));
             case TYPE_LONG:
-                return OperandLong.valueOf(Long.parseLong(text, radix));
+                return Operands.constantLong(Long.parseLong(text, radix));
         }
     }
 
@@ -292,7 +289,7 @@ public final class NumberTokenParser extends AbstractTokenParser implements Sele
             final Operand number;
 
             if (state == STATE_DETERMINE_RADIX_1) {
-                number = OperandInteger.valueOf(0);
+                number = Operands.constantInt(0);
             } else {
                 val text = buffer.getString();
                 buffer.reset();

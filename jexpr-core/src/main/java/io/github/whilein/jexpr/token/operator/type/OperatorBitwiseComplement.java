@@ -17,8 +17,7 @@
 package io.github.whilein.jexpr.token.operator.type;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.OperandInteger;
-import io.github.whilein.jexpr.token.operand.OperandLong;
+import io.github.whilein.jexpr.token.operand.Operands;
 import io.github.whilein.jexpr.token.operator.AbstractUnaryOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,12 +37,12 @@ public final class OperatorBitwiseComplement extends AbstractUnaryOperator {
 
     @Override
     public @NotNull Operand apply(final int value) {
-        return OperandInteger.valueOf(~value);
+        return Operands.constantInt(~value);
     }
 
     @Override
     public @NotNull Operand apply(final long value) {
-        return OperandLong.valueOf(~value);
+        return Operands.constantLong(~value);
     }
 
 }

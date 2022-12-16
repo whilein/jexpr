@@ -16,13 +16,12 @@
 
 package io.github.whilein.jexpr.keyword;
 
-import io.github.whilein.jexpr.token.operand.OperandBoolean;
-import io.github.whilein.jexpr.token.operand.OperandObject;
+import io.github.whilein.jexpr.token.operand.Operands;
 
 public class DefaultKeywordRegistry extends SimpleKeywordRegistry {
     {
-        register(new SimpleKeyword("null", OperandObject.nullValue()));
-        register(new SimpleKeyword("true", OperandBoolean.trueValue()));
-        register(new SimpleKeyword("false", OperandBoolean.falseValue()));
+        register(new SimpleKeyword("null", Operands.constantNull()));
+        register(new SimpleKeyword("true", Operands.constantTrue()));
+        register(new SimpleKeyword("false", Operands.constantFalse()));
     }
 }

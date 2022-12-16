@@ -17,40 +17,28 @@
 package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.api.token.operand.OperandConstant;
 import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
-public final class OperandBoolean extends OperandDelegate<Boolean> implements OperandConstant {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+final class OperandLongImpl extends OperandNumber {
 
-    boolean value;
+    long value;
 
-    private OperandBoolean(final boolean value) {
+    public OperandLongImpl(final long value) {
         super(value);
 
         this.value = value;
-    }
-
-    private static final OperandBoolean TRUE = new OperandBoolean(true), FALSE = new OperandBoolean(false);
-
-    public static @NotNull Operand trueValue() {
-        return TRUE;
-    }
-
-    public static @NotNull Operand falseValue() {
-        return FALSE;
-    }
-
-    public static @NotNull Operand valueOf(final boolean value) {
-        return value ? TRUE : FALSE;
     }
 
     @Override
@@ -68,14 +56,10 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
         return operator.getPredictedResult(value);
     }
     @Override
-    public @NotNull Number toNumber() {
-        throw new UnsupportedOperationException();
+    public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
+        return operand.applyToLong(value, operator);
     }
 
-    @Override
-    public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToBoolean(value, operator);
-    }
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
         return operator.apply(number, value);
@@ -120,32 +104,12 @@ public final class OperandBoolean extends OperandDelegate<Boolean> implements Op
     }
 
     @Override
-    public boolean toBoolean() {
-        return value;
-    }
-
-    @Override
-    public boolean isNumber() {
-        return false;
-    }
-
-    @Override
-    public boolean isString() {
-        return false;
-    }
-
-    @Override
-    public boolean isBoolean() {
-        return true;
-    }
-
-    @Override
     public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
         return operator.apply(value);
     }
 
     @Override
     public @NotNull OperandConstantKind getKind() {
-        return OperandConstantKind.BOOLEAN;
+        return OperandConstantKind.LONG;
     }
 }

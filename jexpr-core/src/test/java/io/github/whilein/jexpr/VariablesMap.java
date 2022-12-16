@@ -18,7 +18,7 @@ package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
-import io.github.whilein.jexpr.token.operand.OperandInteger;
+import io.github.whilein.jexpr.token.operand.Operands;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ public class VariablesMap implements OperandVariableResolver {
     }
 
     public VariablesMap put(final String key, final int value) {
-        return put(key, OperandInteger.valueOf(value));
+        return put(key, Operands.constantInt(value));
     }
 
     public Operand get(final String key) {

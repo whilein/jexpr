@@ -14,21 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.token.operand;
+package io.github.whilein.jexpr.api.token.operand;
 
-import io.github.whilein.jexpr.api.token.operand.Operand;
-import lombok.val;
+public interface OperandReference extends OperandVariable {
 
-/**
- * @author whilein
- */
-abstract class OperandBase implements Operand {
-
-    @Override
-    public String toString() {
-        val result = new StringBuilder();
-        print(result);
-        return result.toString();
-    }
+    String getValue();
 
 }

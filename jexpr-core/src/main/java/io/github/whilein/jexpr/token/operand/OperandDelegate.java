@@ -26,7 +26,7 @@ import lombok.val;
  */
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class OperandDelegate<T> extends OperandBase {
+abstract class OperandDelegate<T> extends OperandBase {
 
     T delegatedValue;
 

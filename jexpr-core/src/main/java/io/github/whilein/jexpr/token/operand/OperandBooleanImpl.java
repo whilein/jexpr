@@ -17,46 +17,33 @@
 package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.OperandConstant;
 import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author whilein
  */
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class OperandLong extends OperandNumber {
+final class OperandBooleanImpl extends OperandDelegate<Boolean> implements OperandConstant {
 
-    long value;
+    boolean value;
 
-    private OperandLong(final long value) {
+    public OperandBooleanImpl(final boolean value) {
         super(value);
 
         this.value = value;
     }
-
-    private static final OperandLong[] CACHE = new OperandLong[256];
 
     @Override
     public void print(final @NotNull StringBuilder out) {
         out.append(value);
     }
 
-    static {
-        for (int i = -128; i <= 127; i++) {
-            CACHE[i + 128] = new OperandLong(i);
-        }
-    }
-
-    public static @NotNull Operand valueOf(final long value) {
-        return value >= -128 && value <= 127 ? CACHE[(int) (value + 128)] : new OperandLong(value);
-    }
     @Override
     public boolean isPredicable(final @NotNull BinaryLazyOperator operator) {
         return operator.isPredictable(value);
@@ -68,9 +55,8 @@ public final class OperandLong extends OperandNumber {
     }
     @Override
     public @NotNull Operand apply(final @NotNull Operand operand, final @NotNull BinaryOperator operator) {
-        return operand.applyToLong(value, operator);
+        return operand.applyToBoolean(value, operator);
     }
-
     @Override
     public @NotNull Operand applyToInt(final int number, final @NotNull BinaryOperator operator) {
         return operator.apply(number, value);
@@ -115,12 +101,27 @@ public final class OperandLong extends OperandNumber {
     }
 
     @Override
+    public boolean isNumber() {
+        return false;
+    }
+
+    @Override
+    public boolean isString() {
+        return false;
+    }
+
+    @Override
+    public boolean isBoolean() {
+        return true;
+    }
+
+    @Override
     public @NotNull Operand apply(final @NotNull UnaryOperator operator) {
         return operator.apply(value);
     }
 
     @Override
     public @NotNull OperandConstantKind getKind() {
-        return OperandConstantKind.LONG;
+        return OperandConstantKind.BOOLEAN;
     }
 }

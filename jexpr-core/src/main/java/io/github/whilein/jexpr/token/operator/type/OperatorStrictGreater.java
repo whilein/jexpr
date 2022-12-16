@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.token.operator.type;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.OperandBoolean;
+import io.github.whilein.jexpr.token.operand.Operands;
 import io.github.whilein.jexpr.token.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,82 +37,82 @@ public final class OperatorStrictGreater extends AbstractBinaryOperator {
 
     @Override
     public @NotNull Operand apply(final int left, final int right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final int left, final long right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final int left, final float right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final int left, final double right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final int right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final long right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final float right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final double right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final int right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final long right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final float right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final double right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final int right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final long right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final float right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final double right) {
-        return OperandBoolean.valueOf(left > right);
+        return Operands.constantBoolean(left > right);
     }
 
 }

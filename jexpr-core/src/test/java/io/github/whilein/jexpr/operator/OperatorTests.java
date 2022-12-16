@@ -19,7 +19,7 @@ package io.github.whilein.jexpr.operator;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.*;
+import io.github.whilein.jexpr.token.operand.Operands;
 import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -38,12 +38,12 @@ final class OperatorTests {
     private static final Map<Class<?>, Function<Object, Operand>> OBJECT_TO_OPERAND_MAP = new HashMap<>();
 
     static {
-        put(String.class, OperandString::valueOf);
-        put(Integer.class, OperandInteger::valueOf);
-        put(Long.class, OperandLong::valueOf);
-        put(Float.class, OperandFloat::valueOf);
-        put(Double.class, OperandDouble::valueOf);
-        put(Boolean.class, OperandBoolean::valueOf);
+        put(String.class, Operands::constantString);
+        put(Integer.class, Operands::constantInt);
+        put(Long.class, Operands::constantLong);
+        put(Float.class, Operands::constantFloat);
+        put(Double.class, Operands::constantDouble);
+        put(Boolean.class, Operands::constantBoolean);
     }
 
     @SuppressWarnings("unchecked")

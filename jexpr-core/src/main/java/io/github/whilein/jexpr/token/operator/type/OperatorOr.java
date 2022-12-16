@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.token.operator.type;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.OperandBoolean;
+import io.github.whilein.jexpr.token.operand.Operands;
 import io.github.whilein.jexpr.token.operator.AbstractBinaryLazyOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +37,7 @@ public final class OperatorOr extends AbstractBinaryLazyOperator {
 
     @Override
     public @NotNull Operand getPredictedResult(final boolean value) {
-        return !value ? super.getPredictedResult(false) : OperandBoolean.trueValue();
+        return !value ? super.getPredictedResult(false) : Operands.constantTrue();
     }
 
     @Override
@@ -47,6 +47,6 @@ public final class OperatorOr extends AbstractBinaryLazyOperator {
 
     @Override
     public @NotNull Operand apply(final boolean left, final boolean right) {
-        return OperandBoolean.valueOf(left || right);
+        return Operands.constantBoolean(left || right);
     }
 }

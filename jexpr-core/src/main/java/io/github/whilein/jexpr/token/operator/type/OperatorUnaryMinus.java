@@ -17,10 +17,7 @@
 package io.github.whilein.jexpr.token.operator.type;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.OperandDouble;
-import io.github.whilein.jexpr.token.operand.OperandFloat;
-import io.github.whilein.jexpr.token.operand.OperandInteger;
-import io.github.whilein.jexpr.token.operand.OperandLong;
+import io.github.whilein.jexpr.token.operand.Operands;
 import io.github.whilein.jexpr.token.operator.AbstractUnaryOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,22 +37,22 @@ public final class OperatorUnaryMinus extends AbstractUnaryOperator {
 
     @Override
     public @NotNull Operand apply(final int value) {
-        return OperandInteger.valueOf(-value);
+        return Operands.constantInt(-value);
     }
 
     @Override
     public @NotNull Operand apply(final long value) {
-        return OperandLong.valueOf(-value);
+        return Operands.constantLong(-value);
     }
 
     @Override
     public @NotNull Operand apply(final float value) {
-        return OperandFloat.valueOf(-value);
+        return Operands.constantFloat(-value);
     }
 
     @Override
     public @NotNull Operand apply(final double value) {
-        return OperandDouble.valueOf(-value);
+        return Operands.constantDouble(-value);
     }
 
 }

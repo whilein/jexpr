@@ -19,7 +19,7 @@ package io.github.whilein.jexpr;
 import io.github.whilein.jexpr.api.Jexpr;
 import io.github.whilein.jexpr.api.exception.OperatorException;
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.OperandObject;
+import io.github.whilein.jexpr.token.operand.Operands;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
@@ -82,7 +82,7 @@ final class JexprTests {
     @Test
     void testNull() {
         val operand = parse("x != null");
-        val result = operand.solve(k -> OperandObject.valueOf(null));
+        val result = operand.solve(k -> Operands.constantObject(null));
 
         assertEquals(false, result.getValue());
     }

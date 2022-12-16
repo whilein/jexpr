@@ -18,11 +18,10 @@ package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.api.Jexpr;
 import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.OperandBinary;
+import io.github.whilein.jexpr.api.token.operand.OperandUnary;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.OperandBinaryNode;
-import io.github.whilein.jexpr.token.operand.OperandReference;
-import io.github.whilein.jexpr.token.operand.OperandUnaryNode;
 import io.github.whilein.jexpr.token.operator.type.*;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
 
+import static io.github.whilein.jexpr.token.operand.Operands.reference;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
@@ -53,11 +53,11 @@ class AstTests {
 
         assertBinary(
                 root,
-                OperandReference.valueOf("x"),
+                reference("x"),
                 right -> assertBinary(
                         right,
-                        OperandReference.valueOf("y"),
-                        OperandReference.valueOf("z"),
+                        reference("y"),
+                        reference("z"),
                         OperatorMultiply.class
                 ),
                 OperatorPlus.class
@@ -76,8 +76,8 @@ class AstTests {
                 root,
                 member -> assertBinary(
                         member,
-                        OperandReference.valueOf("x"),
-                        OperandReference.valueOf("y"),
+                        reference("x"),
+                        reference("y"),
                         OperatorMemberSelection.class
                 ),
                 OperatorUnaryMinus.class
@@ -93,8 +93,8 @@ class AstTests {
 
         assertBinary(
                 root,
-                left -> assertUnary(left, OperandReference.valueOf("x"), OperatorUnaryMinus.class),
-                OperandReference.valueOf("y"),
+                left -> assertUnary(left, reference("x"), OperatorUnaryMinus.class),
+                reference("y"),
                 OperatorDivide.class
         );
     }
@@ -108,8 +108,8 @@ class AstTests {
 
         assertBinary(
                 root,
-                OperandReference.valueOf("x"),
-                right -> assertUnary(right, OperandReference.valueOf("y"), OperatorUnaryMinus.class),
+                reference("x"),
+                right -> assertUnary(right, reference("y"), OperatorUnaryMinus.class),
                 OperatorDivide.class
         );
     }
@@ -123,8 +123,8 @@ class AstTests {
 
         assertBinary(
                 root,
-                left -> assertUnary(left, OperandReference.valueOf("x"), OperatorUnaryMinus.class),
-                right -> assertUnary(right, OperandReference.valueOf("y"), OperatorUnaryMinus.class),
+                left -> assertUnary(left, reference("x"), OperatorUnaryMinus.class),
+                right -> assertUnary(right, reference("y"), OperatorUnaryMinus.class),
                 OperatorDivide.class
         );
     }
@@ -135,7 +135,7 @@ class AstTests {
 
         assertUnary(
                 root,
-                member -> assertUnary(member, OperandReference.valueOf("x"), OperatorBitwiseComplement.class),
+                member -> assertUnary(member, reference("x"), OperatorBitwiseComplement.class),
                 OperatorUnaryMinus.class
         );
     }
@@ -146,7 +146,7 @@ class AstTests {
 
         assertUnary(
                 root,
-                OperandReference.valueOf("x"),
+                reference("x"),
                 OperatorUnaryMinus.class
         );
     }
@@ -160,8 +160,8 @@ class AstTests {
 
         assertBinary(
                 root,
-                OperandReference.valueOf("x"),
-                OperandReference.valueOf("y"),
+                reference("x"),
+                reference("y"),
                 OperatorPlus.class
         );
     }
@@ -179,9 +179,9 @@ class AstTests {
             final Consumer<Operand> memberAssertion,
             final Class<? extends UnaryOperator> operator
     ) {
-        assertInstanceOf(OperandUnaryNode.class, operand);
+        assertInstanceOf(OperandUnary.class, operand);
 
-        val unaryNode = (OperandUnaryNode) operand;
+        val unaryNode = (OperandUnary) operand;
         memberAssertion.accept(unaryNode.getMember());
 
         assertInstanceOf(operator, unaryNode.getOperator());
@@ -193,9 +193,9 @@ class AstTests {
             final Consumer<Operand> rightAssertion,
             final Class<? extends BinaryOperator> operator
     ) {
-        assertInstanceOf(OperandBinaryNode.class, operand);
+        assertInstanceOf(OperandBinary.class, operand);
 
-        val binaryNode = (OperandBinaryNode) operand;
+        val binaryNode = (OperandBinary) operand;
 
         leftAssertion.accept(binaryNode.getLeftMember());
         rightAssertion.accept(binaryNode.getRightMember());

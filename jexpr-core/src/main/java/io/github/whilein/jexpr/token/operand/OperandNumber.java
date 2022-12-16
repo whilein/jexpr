@@ -22,20 +22,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author whilein
  */
-public abstract class OperandNumber extends OperandDelegate<@NotNull Number> implements OperandConstant {
+abstract class OperandNumber extends OperandDelegate<@NotNull Number> implements OperandConstant {
 
     protected OperandNumber(final Number number) {
         super(number);
-    }
-
-    @Override
-    public @NotNull Number toNumber() {
-        return delegatedValue;
-    }
-
-    @Override
-    public boolean toBoolean() {
-        throw new UnsupportedOperationException();
     }
 
     @Override

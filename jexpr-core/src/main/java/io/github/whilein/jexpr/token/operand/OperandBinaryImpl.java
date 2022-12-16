@@ -33,8 +33,8 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandBinaryNode extends OperandBase implements OperandBinary {
+@RequiredArgsConstructor
+final class OperandBinaryImpl extends OperandBase implements OperandBinary {
 
     Operand leftMember, rightMember;
     BinaryOperator operator;
@@ -62,18 +62,6 @@ public final class OperandBinaryNode extends OperandBase implements OperandBinar
         } else {
             rightMember.print(out);
         }
-    }
-
-    public static @NotNull Operand valueOf(
-            final @NotNull Operand left,
-            final @NotNull Operand right,
-            final @NotNull BinaryOperator operator
-    ) {
-        if (left.isConstant() && right.isConstant()) {
-            throw new IllegalStateException("Cannot create variable binary node from constant operands");
-        }
-
-        return new OperandBinaryNode(left, right, operator);
     }
 
     @Override

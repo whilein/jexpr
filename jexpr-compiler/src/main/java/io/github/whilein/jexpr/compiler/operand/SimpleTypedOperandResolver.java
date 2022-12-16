@@ -16,10 +16,9 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.api.token.operand.*;
 import io.github.whilein.jexpr.compiler.LocalMap;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
-import io.github.whilein.jexpr.token.operand.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +26,7 @@ import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Type;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -37,14 +36,14 @@ import java.util.Map;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class SimpleTypedOperandResolver implements TypedOperandResolver {
 
-    private static final Map<Class<? extends Operand>, Type> TYPE_MAP = new HashMap<Class<? extends Operand>, Type>() {
+    private static final Map<OperandConstantKind, Type> TYPE_MAP = new EnumMap<OperandConstantKind, Type>(OperandConstantKind.class) {
         {
-            put(OperandString.class, Type.getType(String.class));
-            put(OperandInteger.class, Type.INT_TYPE);
-            put(OperandLong.class, Type.LONG_TYPE);
-            put(OperandFloat.class, Type.FLOAT_TYPE);
-            put(OperandDouble.class, Type.DOUBLE_TYPE);
-            put(OperandBoolean.class, Type.BOOLEAN_TYPE);
+            put(OperandConstantKind.STRING, Type.getType(String.class));
+            put(OperandConstantKind.INT, Type.INT_TYPE);
+            put(OperandConstantKind.LONG, Type.LONG_TYPE);
+            put(OperandConstantKind.FLOAT, Type.FLOAT_TYPE);
+            put(OperandConstantKind.DOUBLE, Type.DOUBLE_TYPE);
+            put(OperandConstantKind.BOOLEAN, Type.BOOLEAN_TYPE);
         }
     };
 
@@ -64,7 +63,9 @@ public final class SimpleTypedOperandResolver implements TypedOperandResolver {
     @Override
     public @NotNull TypedOperand resolve(final @NotNull Operand operand, final @NotNull LocalMap map) {
         if (operand.isConstant()) {
-            if (operand instanceof OperandObject) {
+            val constant = (OperandConstant) operand;
+
+            if (constant.getKind() == OperandConstantKind.OBJECT) {
                 if (operand.getValue() != null) {
                     throw new UnsupportedOperationException("Cannot compile object into bytecode");
                 }
@@ -72,11 +73,11 @@ public final class SimpleTypedOperandResolver implements TypedOperandResolver {
                 return new TypedConstant(operand, null);
             }
 
-            return new TypedConstant(operand, TYPE_MAP.get(operand.getClass()));
+            return new TypedConstant(operand, TYPE_MAP.get(constant.getKind()));
         } else if (operand instanceof OperandReference) {
             return new TypedReference(map.get((String) operand.getValue()));
-        } else if (operand instanceof OperandUnaryNode) {
-            val member = (OperandUnaryNode) operand;
+        } else if (operand instanceof OperandUnary) {
+            val member = (OperandUnary) operand;
 
             val operator = member.getOperator();
             val asmOperator = asmOperatorRegistry.getUnaryOperator(operator.getClass());
@@ -88,8 +89,8 @@ public final class SimpleTypedOperandResolver implements TypedOperandResolver {
                     asmOperator,
                     asmOperator.getOutputType(analyzedMember.getType())
             );
-        } else if (operand instanceof OperandBinaryNode) {
-            val sequence = (OperandBinaryNode) operand;
+        } else if (operand instanceof OperandBinary) {
+            val sequence = (OperandBinary) operand;
             val left = resolve(sequence.getLeftMember(), map);
             val right = resolve(sequence.getRightMember(), map);
 

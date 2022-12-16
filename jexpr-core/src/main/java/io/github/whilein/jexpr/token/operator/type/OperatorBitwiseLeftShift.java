@@ -17,8 +17,7 @@
 package io.github.whilein.jexpr.token.operator.type;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.OperandInteger;
-import io.github.whilein.jexpr.token.operand.OperandLong;
+import io.github.whilein.jexpr.token.operand.Operands;
 import io.github.whilein.jexpr.token.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,22 +37,22 @@ public final class OperatorBitwiseLeftShift extends AbstractBinaryOperator {
 
     @Override
     public @NotNull Operand apply(final int left, final int right) {
-        return OperandInteger.valueOf(left << right);
+        return Operands.constantInt(left << right);
     }
 
     @Override
     public @NotNull Operand apply(final int left, final long right) {
-        return OperandInteger.valueOf(left << right);
+        return Operands.constantInt(left << right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final int right) {
-        return OperandLong.valueOf(left << right);
+        return Operands.constantLong(left << right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final long right) {
-        return OperandLong.valueOf(left << right);
+        return Operands.constantLong(left << right);
     }
 
 }

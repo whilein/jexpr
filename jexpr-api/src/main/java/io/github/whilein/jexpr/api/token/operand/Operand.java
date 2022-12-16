@@ -20,6 +20,7 @@ import io.github.whilein.jexpr.api.token.Token;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,10 +30,6 @@ import org.jetbrains.annotations.Nullable;
 public interface Operand extends Token {
 
     void print(@NotNull StringBuilder out);
-
-    @NotNull Number toNumber();
-
-    boolean toBoolean();
 
     boolean isPredicable(@NotNull BinaryLazyOperator operator);
 
@@ -58,14 +55,19 @@ public interface Operand extends Token {
 
     @NotNull Operand apply(@NotNull UnaryOperator operator);
 
+    @Contract(pure = true)
     Object getValue();
 
+    @Contract(pure = true)
     boolean isNumber();
 
+    @Contract(pure = true)
     boolean isString();
 
+    @Contract(pure = true)
     boolean isBoolean();
 
+    @Contract(pure = true)
     boolean isConstant();
 
     @NotNull Operand solve(@NotNull OperandVariableResolver resolver);

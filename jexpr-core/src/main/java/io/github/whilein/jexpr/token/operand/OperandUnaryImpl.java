@@ -29,8 +29,8 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class OperandUnaryNode extends OperandBase implements OperandUnary {
+@RequiredArgsConstructor
+final class OperandUnaryImpl extends OperandBase implements OperandUnary {
 
     OperandVariable member;
     UnaryOperator operator;
@@ -38,13 +38,6 @@ public final class OperandUnaryNode extends OperandBase implements OperandUnary 
     @Override
     public String toString() {
         return operator.getValue() + member;
-    }
-
-    public static @NotNull Operand valueOf(
-            final @NotNull OperandVariable value,
-            final @NotNull UnaryOperator operator
-    ) {
-        return new OperandUnaryNode(value, operator);
     }
 
     @Override

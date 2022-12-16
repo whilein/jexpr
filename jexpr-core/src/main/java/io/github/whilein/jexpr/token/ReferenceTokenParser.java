@@ -19,7 +19,7 @@ package io.github.whilein.jexpr.token;
 import io.github.whilein.jexpr.api.keyword.KeywordRegistry;
 import io.github.whilein.jexpr.api.token.TokenVisitor;
 import io.github.whilein.jexpr.io.ByteArrayOutput;
-import io.github.whilein.jexpr.token.operand.OperandReference;
+import io.github.whilein.jexpr.token.operand.Operands;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -67,7 +67,7 @@ public final class ReferenceTokenParser extends AbstractSelectableTokenParser {
             val keyword = keywordRegistry.get(reference);
 
             tokenVisitor.visitOperand(keyword == null
-                    ? OperandReference.valueOf(reference)
+                    ? Operands.reference(reference)
                     : keyword.getOperandValue());
         } finally {
             buffer.reset();

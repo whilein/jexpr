@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.token.operator.type;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.*;
+import io.github.whilein.jexpr.token.operand.Operands;
 import io.github.whilein.jexpr.token.operator.AbstractBinaryOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,147 +37,147 @@ public final class OperatorPlus extends AbstractBinaryOperator {
 
     @Override
     public @NotNull Operand apply(final int left, final @NotNull String right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final @NotNull String right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final @NotNull String right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final @NotNull String right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull String left, final int right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull String left, final long right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull String left, final float right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull String left, final double right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull String left, final @NotNull String right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull String left, final Object right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final Object left, final @NotNull String right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final @NotNull String left, final boolean right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final boolean left, final @NotNull String right) {
-        return OperandString.valueOf(left + right);
+        return Operands.constantString(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final int left, final int right) {
-        return OperandInteger.valueOf(left + right);
+        return Operands.constantInt(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final int left, final long right) {
-        return OperandLong.valueOf(left + right);
+        return Operands.constantLong(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final int left, final float right) {
-        return OperandFloat.valueOf(left + right);
+        return Operands.constantFloat(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final int left, final double right) {
-        return OperandDouble.valueOf(left + right);
+        return Operands.constantDouble(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final int right) {
-        return OperandLong.valueOf(left + right);
+        return Operands.constantLong(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final long right) {
-        return OperandLong.valueOf(left + right);
+        return Operands.constantLong(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final float right) {
-        return OperandFloat.valueOf(left + right);
+        return Operands.constantFloat(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final long left, final double right) {
-        return OperandDouble.valueOf(left + right);
+        return Operands.constantDouble(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final int right) {
-        return OperandFloat.valueOf(left + right);
+        return Operands.constantFloat(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final long right) {
-        return OperandFloat.valueOf(left + right);
+        return Operands.constantFloat(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final float right) {
-        return OperandFloat.valueOf(left + right);
+        return Operands.constantFloat(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final float left, final double right) {
-        return OperandDouble.valueOf(left + right);
+        return Operands.constantDouble(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final int right) {
-        return OperandDouble.valueOf(left + right);
+        return Operands.constantDouble(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final long right) {
-        return OperandDouble.valueOf(left + right);
+        return Operands.constantDouble(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final float right) {
-        return OperandDouble.valueOf(left + right);
+        return Operands.constantDouble(left + right);
     }
 
     @Override
     public @NotNull Operand apply(final double left, final double right) {
-        return OperandDouble.valueOf(left + right);
+        return Operands.constantDouble(left + right);
     }
 
 }

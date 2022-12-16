@@ -17,11 +17,8 @@
 package io.github.whilein.jexpr.tools;
 
 import io.github.whilein.jexpr.DefaultJexpr;
-import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
-import io.github.whilein.jexpr.token.operand.OperandUnaryImpl;
-import io.github.whilein.jexpr.token.operand.variable.OperandBinaryImpl;
-import io.github.whilein.jexpr.token.operand.variable.OperandReferenceImpl;
+import io.github.whilein.jexpr.api.token.operand.*;
+import io.github.whilein.jexpr.token.operand.Operands;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -79,7 +76,7 @@ public class Main {
                 @Override
                 public @NotNull Operand resolve(final @NotNull String reference) {
                     if (solved) {
-                        return solvedMap.getOrDefault(reference, OperandReferenceImpl.valueOf(reference));
+                        return solvedMap.getOrDefault(reference, Operands.reference(reference));
                     }
 
                     return solvedMap.computeIfAbsent(reference, this::input);
@@ -131,10 +128,10 @@ public class Main {
     }
 
     private static Node toTree(final Operand operand, final double x, final double y) {
-        if (operand.isConstant() || operand instanceof OperandReferenceImpl) {
+        if (operand.isConstant() || operand instanceof OperandReference) {
             return new ValueNode(x, y, OPERAND_WIDTH, 20, String.valueOf(operand.getValue()), OPERAND_COLOR);
-        } else if (operand instanceof OperandBinaryImpl) {
-            val binary = (OperandBinaryImpl) operand;
+        } else if (operand instanceof OperandBinary) {
+            val binary = (OperandBinary) operand;
 
             val operator = new ValueNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(binary.getOperator()), OPERATOR_COLOR);
 
@@ -145,8 +142,8 @@ public class Main {
             right.moveX(right.getWidth() / 2);
 
             return new BinaryNode(operator, left, right, BRANCH_GAP);
-        } else if (operand instanceof OperandUnaryImpl) {
-            val unary = (OperandUnaryImpl) operand;
+        } else if (operand instanceof OperandUnary) {
+            val unary = (OperandUnary) operand;
 
             val node = new ValueNode(x, y, OPERATOR_WIDTH, 20, String.valueOf(unary.getOperator()), OPERATOR_COLOR);
 

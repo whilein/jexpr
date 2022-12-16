@@ -20,7 +20,7 @@ import io.github.whilein.jexpr.api.exception.OperatorException;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.token.operand.OperandUnaryNode;
+import io.github.whilein.jexpr.token.operand.Operands;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,7 +39,7 @@ public abstract class AbstractUnaryOperator extends AbstractOperator implements 
 
     @Override
     public @NotNull Operand apply(final @NotNull OperandVariable variable) {
-        return OperandUnaryNode.valueOf(variable, this);
+        return Operands.unary(variable, this);
     }
 
     @Override

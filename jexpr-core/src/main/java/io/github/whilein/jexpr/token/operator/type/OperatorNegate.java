@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.token.operator.type;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.token.operand.OperandBoolean;
+import io.github.whilein.jexpr.token.operand.Operands;
 import io.github.whilein.jexpr.token.operator.AbstractUnaryOperator;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +37,7 @@ public final class OperatorNegate extends AbstractUnaryOperator {
 
     @Override
     public @NotNull Operand apply(final boolean value) {
-        return OperandBoolean.valueOf(!value);
+        return Operands.constantBoolean(!value);
     }
 
 }

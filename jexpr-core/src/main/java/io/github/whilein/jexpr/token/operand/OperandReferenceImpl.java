@@ -17,21 +17,17 @@
 package io.github.whilein.jexpr.token.operand;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.api.token.operand.OperandVariable;
+import io.github.whilein.jexpr.api.token.operand.OperandReference;
 import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
-public final class OperandReference extends OperandDelegate<@NotNull String> implements OperandVariable {
+final class OperandReferenceImpl extends OperandDelegate<@NotNull String> implements OperandReference {
 
-    private OperandReference(final String value) {
+    public OperandReferenceImpl(final String value) {
         super(value);
-    }
-
-    public static @NotNull Operand valueOf(final @NotNull String reference) {
-        return new OperandReference(reference);
     }
 
     @Override

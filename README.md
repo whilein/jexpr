@@ -35,9 +35,9 @@ class Example {
         // мы получаем значения переменных из Map.
 
         Map<String, Operand> variables = Map.of(
-                "x", OperandInteger.valueOf(1),
-                "y", OperandInteger.valueOf(2),
-                "z", OperandInteger.valueOf(3)
+                "x", Operands.constantInt(1),
+                "y", Operands.constantInt(2),
+                "z", Operands.constantInt(3)
         );
 
         Operand undefinedOperand = jexpr.parse("x + y * z");
