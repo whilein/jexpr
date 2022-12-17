@@ -29,6 +29,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface Operand extends Token {
 
+    <T> @NotNull T apply(@NotNull OperandMapper<T> mapper);
+
+    void accept(@NotNull OperandVisitor visitor);
+
     void print(@NotNull StringBuilder out);
 
     boolean isPredicable(@NotNull BinaryLazyOperator operator);

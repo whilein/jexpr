@@ -16,10 +16,7 @@
 
 package io.github.whilein.jexpr.token.operand;
 
-import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.api.token.operand.OperandConstant;
-import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
-import io.github.whilein.jexpr.api.token.operand.OperandVariable;
+import io.github.whilein.jexpr.api.token.operand.*;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
@@ -34,6 +31,16 @@ final class OperandStringImpl extends OperandDelegate<String> implements Operand
 
     public OperandStringImpl(final String delegatedValue) {
         super(delegatedValue);
+    }
+
+    @Override
+    public <T> @NotNull T apply(@NotNull OperandMapper<T> mapper) {
+        return mapper.mapString(delegatedValue);
+    }
+
+    @Override
+    public void accept(@NotNull OperandVisitor visitor) {
+        visitor.visitString(delegatedValue);
     }
 
     @Override

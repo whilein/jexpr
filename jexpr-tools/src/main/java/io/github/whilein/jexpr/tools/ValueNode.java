@@ -19,6 +19,7 @@ package io.github.whilein.jexpr.tools;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import lombok.experimental.NonFinal;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
@@ -52,5 +53,10 @@ public class ValueNode implements Node {
     @Override
     public double getSurfaceHeight() {
         return height;
+    }
+
+    @Override
+    public int add(@NotNull Graph graph) {
+        return graph.addNode(x, y, width, height, label, color);
     }
 }

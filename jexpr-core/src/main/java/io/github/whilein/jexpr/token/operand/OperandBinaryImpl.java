@@ -16,9 +16,7 @@
 
 package io.github.whilein.jexpr.token.operand;
 
-import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.api.token.operand.OperandBinary;
-import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
+import io.github.whilein.jexpr.api.token.operand.*;
 import io.github.whilein.jexpr.api.token.operator.BinaryLazyOperator;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import lombok.AccessLevel;
@@ -38,6 +36,16 @@ final class OperandBinaryImpl extends OperandBase implements OperandBinary {
 
     Operand leftMember, rightMember;
     BinaryOperator operator;
+
+    @Override
+    public <T> @NotNull T apply(@NotNull OperandMapper<T> mapper) {
+        return mapper.mapBinary(leftMember, rightMember, operator);
+    }
+
+    @Override
+    public void accept(@NotNull OperandVisitor visitor) {
+        visitor.visitBinary(leftMember, rightMember, operator);
+    }
 
     @Override
     public void print(final @NotNull StringBuilder out) {

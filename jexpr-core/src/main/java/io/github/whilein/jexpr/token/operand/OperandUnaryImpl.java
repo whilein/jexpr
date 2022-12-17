@@ -36,6 +36,16 @@ final class OperandUnaryImpl extends OperandBase implements OperandUnary {
     UnaryOperator operator;
 
     @Override
+    public <T> @NotNull T apply(@NotNull OperandMapper<T> mapper) {
+        return mapper.mapUnary(member, operator);
+    }
+
+    @Override
+    public void accept(@NotNull OperandVisitor visitor) {
+        visitor.visitUnary(member, operator);
+    }
+
+    @Override
     public String toString() {
         return operator.getValue() + member;
     }

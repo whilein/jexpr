@@ -16,9 +16,7 @@
 
 package io.github.whilein.jexpr.token.operand;
 
-import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.api.token.operand.OperandReference;
-import io.github.whilein.jexpr.api.token.operand.OperandVariableResolver;
+import io.github.whilein.jexpr.api.token.operand.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,6 +26,16 @@ final class OperandReferenceImpl extends OperandDelegate<@NotNull String> implem
 
     public OperandReferenceImpl(final String value) {
         super(value);
+    }
+
+    @Override
+    public <T> @NotNull T apply(@NotNull OperandMapper<T> mapper) {
+        return mapper.mapReference(delegatedValue);
+    }
+
+    @Override
+    public void accept(@NotNull OperandVisitor visitor) {
+        visitor.visitReference(delegatedValue);
     }
 
     @Override

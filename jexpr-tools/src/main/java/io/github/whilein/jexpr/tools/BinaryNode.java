@@ -18,6 +18,7 @@ package io.github.whilein.jexpr.tools;
 
 import lombok.Value;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
@@ -76,5 +77,19 @@ public class BinaryNode implements Node {
     @Override
     public double getSurfaceHeight() {
         return operator.getHeight();
+    }
+
+    @Override
+    public int add(@NotNull Graph graph) {
+        val operatorNode = graph.addNode(operator.getX(), operator.getY(), operator.getWidth(), operator.getHeight(),
+                operator.getLabel(), operator.getColor());
+
+        val leftNode = left.add(graph);
+        val rightNode = right.add(graph);
+
+        graph.addEdge(operatorNode, leftNode);
+        graph.addEdge(operatorNode, rightNode);
+
+        return operatorNode;
     }
 }

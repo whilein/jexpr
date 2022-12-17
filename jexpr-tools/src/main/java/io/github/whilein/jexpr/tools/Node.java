@@ -16,6 +16,8 @@
 
 package io.github.whilein.jexpr.tools;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author whilein
  */
@@ -36,5 +38,7 @@ public interface Node {
     double getSurfaceWidth();
 
     double getSurfaceHeight();
+
+    int add(@NotNull Graph graph);
 
 }

@@ -17,6 +17,8 @@
 package io.github.whilein.jexpr.tools;
 
 import lombok.Value;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
@@ -55,6 +57,18 @@ public class UnaryNode implements Node {
     @Override
     public double getSurfaceHeight() {
         return operator.getHeight();
+    }
+
+    @Override
+    public int add(@NotNull Graph graph) {
+        val operatorNode = graph.addNode(operator.getX(), operator.getY(), operator.getWidth(), operator.getHeight(),
+                operator.getLabel(), operator.getColor());
+
+        val unaryNode = node.add(graph);
+
+        graph.addEdge(operatorNode, unaryNode);
+
+        return operatorNode;
     }
 
     @Override
