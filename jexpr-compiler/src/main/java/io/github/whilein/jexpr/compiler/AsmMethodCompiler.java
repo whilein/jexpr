@@ -16,8 +16,6 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.api.token.operand.OperandConstant;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -281,89 +279,58 @@ public final class AsmMethodCompiler extends MethodVisitor {
         }
     }
 
-    public void writeConstant(final Operand operand) {
-        if (!operand.isConstant()) {
-            return;
-        }
-
-        val mv = this.mv;
-
-        val constant = (OperandConstant) operand;
-
-        val value = constant.getValue();
-
-        switch (constant.getKind()) {
-            case STRING:
-                mv.visitLdcInsn(value);
-                break;
-            case OBJECT:
-                mv.visitInsn(ACONST_NULL);
-                break;
-            case BOOLEAN:
-                mv.visitInsn((boolean) value ? Opcodes.ICONST_1 : Opcodes.ICONST_0);
-                break;
-            case INT: {
-                val i = (int) value;
-
-                if (i >= -1 && i <= 5) {
-                    mv.visitInsn(Opcodes.ICONST_0 + i);
-                    break;
-                } else if (i >= Byte.MIN_VALUE && i <= Byte.MAX_VALUE) {
-                    mv.visitIntInsn(BIPUSH, i);
-                    break;
-                } else if (i >= Short.MIN_VALUE && i <= Short.MAX_VALUE) {
-                    mv.visitIntInsn(SIPUSH, i);
-                    break;
-                }
-
-                mv.visitLdcInsn(i);
-                break;
-            }
-            case LONG: {
-                val i = (long) value;
-
-                if (i == 0) {
-                    mv.visitInsn(Opcodes.LCONST_0);
-                    break;
-                } else if (i == 1) {
-                    mv.visitInsn(Opcodes.LCONST_1);
-                    break;
-                }
-
-                mv.visitLdcInsn(i);
-                break;
-            }
-            case DOUBLE: {
-                val i = (double) value;
-
-                if (i == 0) {
-                    mv.visitInsn(Opcodes.DCONST_0);
-                    break;
-                } else if (i == 1) {
-                    mv.visitInsn(Opcodes.DCONST_1);
-                    break;
-                }
-
-                mv.visitLdcInsn(i);
-                break;
-            }
-            case FLOAT: {
-                val i = (float) value;
-
-                if (i == 0) {
-                    mv.visitInsn(Opcodes.FCONST_0);
-                    break;
-                } else if (i == 1) {
-                    mv.visitInsn(Opcodes.FCONST_1);
-                    break;
-                } else if (i == 2) {
-                    mv.visitInsn(Opcodes.FCONST_2);
-                    break;
-                }
-
-                mv.visitLdcInsn(i);
-                break;
-            }
+    public void writeInt(int value) {
+        if (value >= -1 && value <= 5) {
+            mv.visitInsn(Opcodes.ICONST_0 + value);
+        } else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+            mv.visitIntInsn(BIPUSH, value);
+        } else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+            mv.visitIntInsn(SIPUSH, value);
+        } else {
+            mv.visitLdcInsn(value);
         }
     }
+
+    public void writeNull() {
+        mv.visitInsn(ACONST_NULL);
+    }
+
+    public void writeString(String value) {
+        mv.visitLdcInsn(value);
+    }
+
+    public void writeBoolean(boolean value) {
+        mv.visitInsn(value ? Opcodes.ICONST_1 : Opcodes.ICONST_0);
+    }
+
+    public void writeFloat(float value) {
+        if (value == 0) {
+            mv.visitInsn(Opcodes.DCONST_0);
+        } else if (value == 1) {
+            mv.visitInsn(Opcodes.DCONST_1);
+        } else {
+            mv.visitLdcInsn(value);
+        }
+    }
+
+    public void writeDouble(double value) {
+        if (value == 0) {
+            mv.visitInsn(Opcodes.DCONST_0);
+        } else if (value == 1) {
+            mv.visitInsn(Opcodes.DCONST_1);
+        } else {
+            mv.visitLdcInsn(value);
+        }
+    }
+
+    public void writeLong(long value) {
+        if (value == 0) {
+            mv.visitInsn(Opcodes.LCONST_0);
+        } else if (value == 1) {
+            mv.visitInsn(Opcodes.LCONST_1);
+        } else {
+            mv.visitLdcInsn(value);
+        }
+    }
+
 }

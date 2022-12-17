@@ -14,20 +14,28 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operand;
+package io.github.whilein.jexpr.compiler.operand.type;
 
+import io.github.whilein.jexpr.compiler.operand.TypedOperand;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandBinary;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandVisitor;
 import io.github.whilein.jexpr.compiler.operator.AsmBinaryOperator;
 import lombok.Value;
+import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
 @Value
-public class TypedBinary implements TypedOperand {
+class TypedOperandBinaryImpl implements TypedOperandBinary {
 
-    TypedOperand left, right;
+    TypedOperand leftMember, rightMember;
     AsmBinaryOperator operator;
     Type type;
 
+    @Override
+    public void accept(@NotNull TypedOperandVisitor visitor) {
+        visitor.visitBinary(leftMember, rightMember, operator, type);
+    }
 }

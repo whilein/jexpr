@@ -17,11 +17,13 @@
 package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.compiler.operand.SimpleTypedOperandResolver;
-import io.github.whilein.jexpr.compiler.operand.TypedOperandResolver;
-import lombok.*;
+import io.github.whilein.jexpr.compiler.operand.ToTypedOperandMapperFactory;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -35,16 +37,14 @@ import java.util.Arrays;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ExpressionImplementationCompiler<T> {
+public final class SimpleOperandInterfaceImplementor<T> implements OperandInterfaceImplementor<T> {
 
-    Operand operand;
+    @Getter
+    Class<T> interfaceType;
 
-    Class<T> type;
+    ToTypedOperandMapperFactory toTypedOperandMapperFactory;
 
     Method abstractMethod;
-
-    TypedOperandResolver typedOperandResolver;
 
     Parameter[] parameters;
 
@@ -54,32 +54,24 @@ public final class ExpressionImplementationCompiler<T> {
     @NonFinal
     ClassLoader classLoader;
 
-    public static <T> @NotNull ExpressionImplementationCompiler<T> create(
-            final @NotNull Operand operand,
-            final @NotNull Class<T> type,
-            final @NotNull TypedOperandResolver typedOperandResolver
+    public SimpleOperandInterfaceImplementor(
+            final Class<T> interfaceType,
+            final ToTypedOperandMapperFactory toTypedOperandMapperFactory
     ) {
-        val abstractMethod = getAbstractMethod(type);
+        val abstractMethod = getAbstractMethod(interfaceType);
 
-        return new ExpressionImplementationCompiler<>(
-                operand,
-                type,
-                abstractMethod,
-                typedOperandResolver,
-                Arrays.stream(abstractMethod.getParameters())
-                        .map(parameter -> new Parameter(parameter.getName(), parameter.getType()))
-                        .toArray(Parameter[]::new),
-                abstractMethod.getReturnType(),
-                ExpressionImplementationCompiler.class.getClassLoader()
-        );
-    }
+        this.toTypedOperandMapperFactory = toTypedOperandMapperFactory;
 
+        this.interfaceType = interfaceType;
+        this.abstractMethod = abstractMethod;
 
-    public static <T> @NotNull ExpressionImplementationCompiler<T> create(
-            final @NotNull Operand operand,
-            final @NotNull Class<T> type
-    ) {
-        return create(operand, type, SimpleTypedOperandResolver.getDefault());
+        this.parameters = Arrays.stream(abstractMethod.getParameters())
+                .map(parameter -> new Parameter(parameter.getName(), parameter.getType()))
+                .toArray(Parameter[]::new);
+
+        this.returnType = abstractMethod.getReturnType();
+
+        this.classLoader = interfaceType.getClassLoader();
     }
 
     private static Method getAbstractMethod(final Class<?> type) {
@@ -107,31 +99,37 @@ public final class ExpressionImplementationCompiler<T> {
         return abstractMethod;
     }
 
-    public @NotNull ExpressionImplementationCompiler<T> name(final int index, final @NotNull String name) {
+    @Override
+    public @NotNull SimpleOperandInterfaceImplementor<T> name(final int index, final @NotNull String name) {
         parameters[index].setName(name);
         return this;
     }
 
-    public @NotNull ExpressionImplementationCompiler<T> returnType(final @NotNull Class<?> type) {
+    @Override
+    public @NotNull SimpleOperandInterfaceImplementor<T> returnType(final @NotNull Class<?> type) {
         returnType = type;
         return this;
     }
 
-    public @NotNull ExpressionImplementationCompiler<T> type(final int index, final @NotNull Class<?> type) {
+    @Override
+    public @NotNull SimpleOperandInterfaceImplementor<T> type(final int index, final @NotNull Class<?> type) {
         parameters[index].setType(type);
         return this;
     }
 
-    public @NotNull ExpressionImplementationCompiler<T> parameter(final int index,
-                                                                  final @NotNull String name,
-                                                                  final @NotNull Class<?> type) {
+    @Override
+    public @NotNull SimpleOperandInterfaceImplementor<T> parameter(
+            final int index,
+            final @NotNull String name,
+            final @NotNull Class<?> type
+    ) {
         val parameter = parameters[index];
         parameter.setType(type);
         parameter.setName(name);
         return this;
     }
 
-    public @NotNull ExpressionImplementationCompiler<T> classLoader(final @NotNull ClassLoader classLoader) {
+    public @NotNull SimpleOperandInterfaceImplementor<T> classLoader(final @NotNull ClassLoader classLoader) {
         this.classLoader = classLoader;
         return this;
     }
@@ -146,10 +144,11 @@ public final class ExpressionImplementationCompiler<T> {
         return Type.getMethodDescriptor(abstractMethod);
     }
 
-    public <U extends T> @NotNull U compile() {
-        val interfaceType = Type.getType(this.type);
+    @Override
+    public <U extends T> @NotNull U implement(final @NotNull Operand operand) {
+        val interfaceType = Type.getType(this.interfaceType);
         val interfaceTypeName = interfaceType.getInternalName();
-        val typeName = "io/github/whilein/jexpr/compiler/generated/ExpressionImplementation_" + this.type.getSimpleName();
+        val typeName = "io/github/whilein/jexpr/compiler/generated/ExpressionImplementation_" + this.interfaceType.getSimpleName();
 
         val classLoader = new OpenClassLoader(this.classLoader);
 
@@ -223,15 +222,15 @@ public final class ExpressionImplementationCompiler<T> {
                 local += parameterType.getSize();
             }
 
-            val operand = typedOperandResolver.resolve(this.operand, localMap);
+            val typedOperand = operand.apply(toTypedOperandMapperFactory.create(localMap));
 
-            val expressionCompiler = new DefaultExpressionCompiler(mv);
-            expressionCompiler.compile(operand);
+            val expressionCompiler = new SimpleOperandCompiler(mv);
+            expressionCompiler.compile(typedOperand);
 
             val returnType = Type.getType(this.returnType);
 
-            if (operand.getType() != null) {
-                compiler.migrateType(classLoader, operand.getType(), returnType);
+            if (typedOperand.getType() != null) {
+                compiler.migrateType(classLoader, typedOperand.getType(), returnType);
             }
 
             mv.visitInsn(returnType.getOpcode(Opcodes.IRETURN));

@@ -14,19 +14,16 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operand;
+package io.github.whilein.jexpr.compiler;
 
+import io.github.whilein.jexpr.compiler.operand.TypedOperand;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public interface TypedOperand {
+public interface OperandCompiler {
 
-    void accept(@NotNull TypedOperandVisitor visitor);
-
-    @Nullable Type getType();
+    void compile(@NotNull TypedOperand operand);
 
 }

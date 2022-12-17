@@ -14,19 +14,25 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operand;
+package io.github.whilein.jexpr.compiler.operand.type;
 
-import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.compiler.Local;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandReference;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandVisitor;
 import lombok.Value;
-import org.objectweb.asm.Type;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author whilein
  */
 @Value
-public class TypedConstant implements TypedOperand {
+class TypedOperandReferenceImpl implements TypedOperandReference {
 
-    Operand value;
-    Type type;
+    Local local;
+
+    @Override
+    public void accept(@NotNull TypedOperandVisitor visitor) {
+        visitor.visitReference(local);
+    }
 
 }

@@ -16,11 +16,11 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.AbstractJexpr;
 import io.github.whilein.jexpr.DefaultJexpr;
 import io.github.whilein.jexpr.api.Jexpr;
-import io.github.whilein.jexpr.compiler.operand.SimpleTypedOperandResolver;
-import io.github.whilein.jexpr.compiler.operand.TypedOperandResolver;
+import io.github.whilein.jexpr.compiler.operand.SimpleToTypedOperandMapperFactory;
+import io.github.whilein.jexpr.compiler.operand.ToTypedOperandMapperFactory;
+import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,17 +41,17 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * @author whilein
  */
-final class ExpressionCompilerTests {
+final class OperandCompilerTests {
 
     String testType;
 
     static Jexpr jexpr;
-    static TypedOperandResolver typedOperandResolver;
+    static ToTypedOperandMapperFactory toTypedOperandMapperFactory;
 
     @BeforeAll
     static void setup() {
         jexpr = DefaultJexpr.create();
-        typedOperandResolver = SimpleTypedOperandResolver.getDefault();
+        toTypedOperandMapperFactory = SimpleToTypedOperandMapperFactory.create(AsmOperatorRegistry.getDefault());
     }
 
     @BeforeEach
@@ -370,8 +370,8 @@ final class ExpressionCompilerTests {
             local += paramType.getSize();
         }
 
-        val compiler = new DefaultExpressionCompiler(mv);
-        compiler.compile(typedOperandResolver.resolve(result, localMap));
+        val compiler = new SimpleOperandCompiler(mv);
+        compiler.compile(result.apply(toTypedOperandMapperFactory.create(localMap)));
 
         mv.visitInsn(Type.getType(returnType).getOpcode(Opcodes.IRETURN));
         mv.visitMaxs(0, 0);
@@ -396,7 +396,7 @@ final class ExpressionCompilerTests {
 //        }
 
 
-        val classLoader = new TestClassLoader(ExpressionCompilerTests.class.getClassLoader());
+        val classLoader = new TestClassLoader(OperandCompilerTests.class.getClassLoader());
         return classLoader.defineClass(testType.replace('/', '.'), bytes);
     }
 

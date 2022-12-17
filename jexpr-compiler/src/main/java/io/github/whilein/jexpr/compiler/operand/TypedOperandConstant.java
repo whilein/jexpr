@@ -16,18 +16,14 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.compiler.operator.AsmUnaryOperator;
-import lombok.Value;
-import org.objectweb.asm.Type;
+import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author whilein
- */
-@Value
-public class TypedUnary implements TypedOperand {
+public interface TypedOperandConstant extends TypedOperand {
 
-    TypedOperand operand;
-    AsmUnaryOperator operator;
-    Type type;
+    @Nullable Object getValue();
+
+    @NotNull OperandConstantKind getKind();
 
 }

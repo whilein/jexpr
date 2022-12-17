@@ -16,22 +16,5 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.compiler.Local;
-import lombok.Value;
-import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.Type;
-
-/**
- * @author whilein
- */
-@Value
-public class TypedReference implements TypedOperand {
-
-    Local local;
-
-    @Override
-    public @NotNull Type getType() {
-        return local.getType();
-    }
-
+public interface TypedOperandVariable extends TypedOperand {
 }

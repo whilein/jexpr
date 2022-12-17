@@ -16,17 +16,18 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
+import io.github.whilein.jexpr.compiler.Local;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
 
-/**
- * @author whilein
- */
-public interface TypedOperand {
+public interface TypedOperandReference extends TypedOperandVariable {
 
-    void accept(@NotNull TypedOperandVisitor visitor);
+    @NotNull Local getLocal();
 
-    @Nullable Type getType();
+    @Override
+    default @Nullable Type getType() {
+        return getLocal().getType();
+    }
 
 }

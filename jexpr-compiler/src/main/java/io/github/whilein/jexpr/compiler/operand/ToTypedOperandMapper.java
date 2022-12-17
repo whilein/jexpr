@@ -16,17 +16,12 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
+import io.github.whilein.jexpr.api.token.operand.OperandMapper;
+import io.github.whilein.jexpr.compiler.LocalMap;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Type;
 
-/**
- * @author whilein
- */
-public interface TypedOperand {
+public interface ToTypedOperandMapper extends OperandMapper<TypedOperand> {
 
-    void accept(@NotNull TypedOperandVisitor visitor);
-
-    @Nullable Type getType();
+    @NotNull LocalMap getLocalMap();
 
 }

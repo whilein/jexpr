@@ -16,14 +16,15 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.compiler.operand.TypedOperand;
+import io.github.whilein.jexpr.compiler.operand.ToTypedOperandMapperFactory;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author whilein
- */
-public interface ExpressionCompiler {
+public interface OperandInterfaceImplementorFactory {
 
-    void compile(@NotNull TypedOperand operand);
+    @NotNull ToTypedOperandMapperFactory getToTypedOperandMapperFactory();
+
+    void setToTypedOperandMapperFactory(@NotNull ToTypedOperandMapperFactory toTypedOperandMapperFactory);
+
+    <T> @NotNull OperandInterfaceImplementor<T> create(@NotNull Class<T> interfaceType);
 
 }

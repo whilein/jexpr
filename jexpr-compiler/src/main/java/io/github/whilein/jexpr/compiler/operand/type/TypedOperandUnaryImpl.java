@@ -14,17 +14,29 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operand;
+package io.github.whilein.jexpr.compiler.operand.type;
 
-import io.github.whilein.jexpr.api.token.operand.Operand;
-import io.github.whilein.jexpr.compiler.LocalMap;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandUnary;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandVariable;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandVisitor;
+import io.github.whilein.jexpr.compiler.operator.AsmUnaryOperator;
+import lombok.Value;
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public interface TypedOperandResolver {
+@Value
+class TypedOperandUnaryImpl implements TypedOperandUnary {
 
-    @NotNull TypedOperand resolve(@NotNull Operand operand, @NotNull LocalMap localMap);
+    TypedOperandVariable member;
+    AsmUnaryOperator operator;
+    Type type;
+
+    @Override
+    public void accept(@NotNull TypedOperandVisitor visitor) {
+        visitor.visitUnary(member, operator, type);
+    }
 
 }

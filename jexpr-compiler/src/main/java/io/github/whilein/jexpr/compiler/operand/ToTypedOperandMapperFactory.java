@@ -16,17 +16,14 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
+import io.github.whilein.jexpr.compiler.LocalMap;
+import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Type;
 
-/**
- * @author whilein
- */
-public interface TypedOperand {
+public interface ToTypedOperandMapperFactory {
 
-    void accept(@NotNull TypedOperandVisitor visitor);
+    @NotNull AsmOperatorRegistry getOperatorRegistry();
 
-    @Nullable Type getType();
+    @NotNull ToTypedOperandMapper create(@NotNull LocalMap localMap);
 
 }

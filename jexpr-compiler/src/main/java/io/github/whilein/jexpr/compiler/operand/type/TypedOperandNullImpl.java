@@ -14,8 +14,12 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operand;
+package io.github.whilein.jexpr.compiler.operand.type;
 
+import io.github.whilein.jexpr.api.token.operand.OperandConstantKind;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandConstant;
+import io.github.whilein.jexpr.compiler.operand.TypedOperandVisitor;
+import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
@@ -23,10 +27,27 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public interface TypedOperand {
+@Value
+class TypedOperandNullImpl implements TypedOperandConstant {
 
-    void accept(@NotNull TypedOperandVisitor visitor);
+    @Override
+    public @Nullable Object getValue() {
+        return null;
+    }
 
-    @Nullable Type getType();
+    @Override
+    public @NotNull OperandConstantKind getKind() {
+        return OperandConstantKind.OBJECT;
+    }
+
+    @Override
+    public void accept(@NotNull TypedOperandVisitor visitor) {
+        visitor.visitNull();
+    }
+
+    @Override
+    public @Nullable Type getType() {
+        return null;
+    }
 
 }

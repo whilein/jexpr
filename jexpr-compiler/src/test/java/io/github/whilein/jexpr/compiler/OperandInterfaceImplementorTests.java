@@ -16,12 +16,10 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.AbstractJexpr;
 import io.github.whilein.jexpr.DefaultJexpr;
 import io.github.whilein.jexpr.api.Jexpr;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.BinaryOperator;
@@ -32,25 +30,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author whilein
  */
-final class ExpressionImplementationCompilerTests {
+final class OperandInterfaceImplementorTests {
 
     static Jexpr jexpr;
+
+    static OperandInterfaceImplementorFactory operandInterfaceImplementorFactory;
 
     @BeforeAll
     static void setup() {
         jexpr = DefaultJexpr.create();
+        operandInterfaceImplementorFactory = SimpleOperandInterfaceImplementorFactory.create();
     }
 
     @Test
     void testBridge() {
-        val expression = jexpr.parse("a + b");
+        val operand = jexpr.parse("a + b");
 
         @SuppressWarnings("unchecked")
-        val operator = (BinaryOperator<Integer>) ExpressionImplementationCompiler.create(expression, BinaryOperator.class)
+        val operator = (BinaryOperator<Integer>) operandInterfaceImplementorFactory.create(BinaryOperator.class)
                 .parameter(0, "a", Integer.class)
                 .parameter(1, "b", Integer.class)
                 .returnType(Integer.class)
-                .compile();
+                .implement(operand);
 
         assertEquals(30, operator.apply(10, 20));
         assertEquals(-30, operator.apply(10, -40));
@@ -58,12 +59,12 @@ final class ExpressionImplementationCompilerTests {
 
     @Test
     void testPrimitives() {
-        val expression = jexpr.parse("a + b");
+        val operand = jexpr.parse("a + b");
 
-        val operator = ExpressionImplementationCompiler.create(expression, IntBinaryOperator.class)
+        val operator = operandInterfaceImplementorFactory.create(IntBinaryOperator.class)
                 .name(0, "a")
                 .name(1, "b")
-                .compile();
+                .implement(operand);
 
         assertEquals(30, operator.applyAsInt(10, 20));
         assertEquals(-30, operator.applyAsInt(10, -40));

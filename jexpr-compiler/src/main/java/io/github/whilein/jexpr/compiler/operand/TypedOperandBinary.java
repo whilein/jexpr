@@ -16,17 +16,15 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
+import io.github.whilein.jexpr.compiler.operator.AsmBinaryOperator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Type;
 
-/**
- * @author whilein
- */
-public interface TypedOperand {
+public interface TypedOperandBinary extends TypedOperandVariable {
 
-    void accept(@NotNull TypedOperandVisitor visitor);
+    @NotNull TypedOperand getLeftMember();
 
-    @Nullable Type getType();
+    @NotNull TypedOperand getRightMember();
+
+    @NotNull AsmBinaryOperator getOperator();
 
 }
