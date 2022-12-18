@@ -55,6 +55,11 @@ public final class ReferenceTokenParser extends AbstractSelectableTokenParser {
     }
 
     @Override
+    public void reset() {
+        buffer.reset();
+    }
+
+    @Override
     public void update(final int ch) {
         buffer.put(ch);
     }
@@ -70,7 +75,7 @@ public final class ReferenceTokenParser extends AbstractSelectableTokenParser {
                     ? Operands.reference(reference)
                     : keyword.getOperandValue());
         } finally {
-            buffer.reset();
+            reset();
         }
     }
 

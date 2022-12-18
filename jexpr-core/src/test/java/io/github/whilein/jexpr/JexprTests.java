@@ -18,6 +18,7 @@ package io.github.whilein.jexpr;
 
 import io.github.whilein.jexpr.api.Jexpr;
 import io.github.whilein.jexpr.api.exception.OperatorException;
+import io.github.whilein.jexpr.api.exception.SyntaxException;
 import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.token.operand.Operands;
 import lombok.val;
@@ -100,8 +101,14 @@ final class JexprTests {
     }
 
     @Test
+    void testResetAfterFail() {
+        assertThrows(SyntaxException.class, () -> parse("(1?2)"));
+        assertEquals(2, parse("1 + 1").getValue());
+    }
+
+    @Test
     void testInapplicableOperators() {
-        assertThrows(OperatorException.class, () -> parse("1 - 'text'").getValue());
+        assertThrows(OperatorException.class, () -> parse("1 - 'text'"));
     }
 
     @Test

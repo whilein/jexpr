@@ -193,6 +193,20 @@ public abstract class AbstractOperandParser extends AbstractTokenParser
     }
 
     @Override
+    public void reset() {
+        parsers.forEach(SelectableTokenParser::reset);
+
+        unaryOperators.clear();
+        operandStack.clear();
+        operatorStack.clear();
+
+        activeParser = null;
+        binaryOperator = null;
+        previousOperator = null;
+        previousOperand = null;
+    }
+
+    @Override
     public @NotNull Operand doFinal() {
         try {
             val activeParser = this.activeParser;
@@ -215,13 +229,7 @@ public abstract class AbstractOperandParser extends AbstractTokenParser
 
             return operandStack.pop();
         } finally {
-            unaryOperators.clear();
-            operandStack.clear();
-            operatorStack.clear();
-
-            binaryOperator = null;
-            previousOperator = null;
-            previousOperand = null;
+            reset();
         }
     }
 

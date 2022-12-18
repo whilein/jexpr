@@ -24,6 +24,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface TokenParser {
 
+    void reset();
+
+
     /**
      * Обработать символ токена. Из этих символов парсер составляет целый "токен",
      * окончательный результат можно получить используя {@link #doFinal(TokenVisitor)} ()}.

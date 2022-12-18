@@ -131,6 +131,13 @@ public final class StringTokenParser extends AbstractSelectableTokenParser {
     }
 
     @Override
+    public void reset() {
+        buffer.reset();
+        state = STATE_LEADING_QUOTE;
+        quoteCharacter = 0;
+    }
+
+    @Override
     public void update(final int ch) throws SyntaxException {
         switch (state) {
             case STATE_LEADING_QUOTE: {
@@ -267,9 +274,7 @@ public final class StringTokenParser extends AbstractSelectableTokenParser {
         try {
             tokenVisitor.visitOperand(Operands.constantString(buffer.getString()));
         } finally {
-            buffer.reset();
-            state = STATE_LEADING_QUOTE;
-            quoteCharacter = 0;
+            reset();
         }
     }
 }

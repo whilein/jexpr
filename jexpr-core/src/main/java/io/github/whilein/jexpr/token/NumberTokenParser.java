@@ -97,6 +97,17 @@ public final class NumberTokenParser extends AbstractTokenParser implements Sele
     }
 
     @Override
+    public void reset() {
+        type = TYPE_INT;
+        radix = RADIX_UNKNOWN;
+        state = STATE_DETERMINE_RADIX_0;
+        completed = false;
+        illegalOctalNumber = false;
+        hasExponent = false;
+        character = prevCharacter = 0;
+    }
+
+    @Override
     public void update(final int ch) {
         prevCharacter = character;
         character = ch;
@@ -303,13 +314,7 @@ public final class NumberTokenParser extends AbstractTokenParser implements Sele
 
             tokenVisitor.visitOperand(number);
         } finally {
-            type = TYPE_INT;
-            radix = RADIX_UNKNOWN;
-            state = STATE_DETERMINE_RADIX_0;
-            completed = false;
-            illegalOctalNumber = false;
-            hasExponent = false;
-            character = prevCharacter = 0;
+            reset();
         }
     }
 

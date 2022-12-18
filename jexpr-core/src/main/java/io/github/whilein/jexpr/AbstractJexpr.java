@@ -71,13 +71,19 @@ public abstract class AbstractJexpr implements Jexpr {
     private <E extends Throwable> Operand parse(final In<E> in) throws E {
         val parser = getOperandParser();
 
-        int n;
+        try {
+            int n;
 
-        while ((n = in.read()) != -1) {
-            parser.update(n);
+            while ((n = in.read()) != -1) {
+                parser.update(n);
+            }
+
+            return parser.doFinal();
+        } catch (final RuntimeException e) {
+            parser.reset();
+
+            throw e;
         }
-
-        return parser.doFinal();
     }
 
     @Override

@@ -81,7 +81,12 @@ public abstract class AbstractOperatorTokenParser<T extends Operator>
 
             doVisit(tokenVisitor, result);
         } finally {
-            operatorMatcher = null;
+            reset();
         }
+    }
+
+    @Override
+    public void reset() {
+        operatorMatcher = null;
     }
 }
