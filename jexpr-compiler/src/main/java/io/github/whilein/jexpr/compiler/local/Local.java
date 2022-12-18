@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler;
+package io.github.whilein.jexpr.compiler.local;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Type;

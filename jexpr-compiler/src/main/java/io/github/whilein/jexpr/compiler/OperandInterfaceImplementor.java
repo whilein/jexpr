@@ -35,6 +35,6 @@ public interface OperandInterfaceImplementor<T> {
 
     @NotNull OperandInterfaceImplementor<T> classLoader(@NotNull ClassLoader classLoader);
 
-    <U extends T> U implement(@NotNull Operand operand);
+    <U extends T> U compile(@NotNull Operand operand);
 
 }

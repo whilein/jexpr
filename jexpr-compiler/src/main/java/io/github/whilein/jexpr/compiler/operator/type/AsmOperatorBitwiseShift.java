@@ -14,10 +14,13 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operator;
+package io.github.whilein.jexpr.compiler.operator.type;
 
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
+import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
+import io.github.whilein.jexpr.compiler.operator.AbstractAsmBinaryOperator;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +29,15 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public abstract class AbstractAsmOperatorBitwiseShift extends AbstractAsmBinaryOperator {
+public final class AsmOperatorBitwiseShift extends AbstractAsmBinaryOperator {
+
+    int opcode;
+
+    public AsmOperatorBitwiseShift(Class<? extends BinaryOperator> operatorType, int opcode) {
+        super(operatorType);
+
+        this.opcode = opcode;
+    }
 
     @Override
     public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
@@ -36,7 +47,17 @@ public abstract class AbstractAsmOperatorBitwiseShift extends AbstractAsmBinaryO
         return leftType;
     }
 
-    protected static Type compileShift(
+    @Override
+    public void compile(
+            final @NotNull AsmMethodCompiler compiler,
+            final @NotNull OperandOrigin origin,
+            final @NotNull StackLazyOperand left,
+            final @NotNull StackLazyOperand right
+    ) {
+        compiler.visitInsn(compileShift(compiler, left, right).getOpcode(opcode));
+    }
+
+    private static Type compileShift(
             final AsmMethodCompiler compiler,
             final StackLazyOperand left,
             final StackLazyOperand right

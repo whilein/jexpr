@@ -16,6 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.operator.type;
 
+import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
@@ -31,6 +32,10 @@ import org.objectweb.asm.Type;
  */
 public final class AsmOperatorUnaryMinus extends AbstractAsmUnaryOperator {
 
+    public AsmOperatorUnaryMinus(Class<? extends UnaryOperator> operatorType) {
+        super(operatorType);
+    }
+
     @Override
     public @NotNull Type getOutputType(final @Nullable Type value) {
         return getNumberType(value);
@@ -44,4 +49,5 @@ public final class AsmOperatorUnaryMinus extends AbstractAsmUnaryOperator {
         val type = compiler.unbox(value.getType());
         compiler.visitInsn(type.getOpcode(Opcodes.INEG));
     }
+
 }

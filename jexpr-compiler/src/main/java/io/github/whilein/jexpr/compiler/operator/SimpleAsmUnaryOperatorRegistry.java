@@ -14,18 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler;
+package io.github.whilein.jexpr.compiler.operator;
 
-import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.Type;
+import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
 
-/**
- * @author whilein
- */
-public interface LocalMap {
-
-    @NotNull LocalMap add(@NotNull String name, int index, @NotNull Type type);
-
-    @NotNull Local get(@NotNull String name);
+public class SimpleAsmUnaryOperatorRegistry extends SimpleAsmOperatorRegistry<AsmUnaryOperator, UnaryOperator> {
 
 }

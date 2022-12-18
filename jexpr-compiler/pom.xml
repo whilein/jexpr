@@ -11,17 +11,17 @@
     <artifactId>jexpr-compiler</artifactId>
 
     <dependencies>
-        <!--        <dependency>-->
-        <!--            <groupId>io.github.whilein</groupId>-->
-        <!--            <artifactId>jexpr-api</artifactId>-->
-        <!--            <version>${project.version}</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>io.github.whilein</groupId>
+            <artifactId>jexpr-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>io.github.whilein</groupId>
             <artifactId>jexpr-core</artifactId>
             <version>${project.version}</version>
-            <!--            <scope>test</scope>-->
+            <scope>test</scope>
         </dependency>
 
         <dependency>

@@ -16,7 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.operand.type;
 
-import io.github.whilein.jexpr.compiler.Local;
+import io.github.whilein.jexpr.compiler.local.Local;
 import io.github.whilein.jexpr.compiler.operand.*;
 import io.github.whilein.jexpr.compiler.operator.AsmBinaryOperator;
 import io.github.whilein.jexpr.compiler.operator.AsmUnaryOperator;

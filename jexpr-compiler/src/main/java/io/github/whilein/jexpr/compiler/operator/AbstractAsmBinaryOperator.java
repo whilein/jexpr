@@ -16,6 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
@@ -25,7 +26,14 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public abstract class AbstractAsmBinaryOperator extends AbstractAsmOperator implements AsmBinaryOperator {
+public abstract class AbstractAsmBinaryOperator
+        extends AbstractAsmOperator<BinaryOperator>
+        implements AsmBinaryOperator {
+
+    protected AbstractAsmBinaryOperator(Class<? extends BinaryOperator> operatorType) {
+        super(operatorType);
+    }
+
     protected static Type compileNumber(
             final AsmMethodCompiler compiler,
             final StackLazyOperand left,

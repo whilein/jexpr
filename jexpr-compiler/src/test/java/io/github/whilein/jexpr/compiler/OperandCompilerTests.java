@@ -18,9 +18,7 @@ package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.DefaultJexpr;
 import io.github.whilein.jexpr.api.Jexpr;
-import io.github.whilein.jexpr.compiler.operand.SimpleToTypedOperandMapperFactory;
-import io.github.whilein.jexpr.compiler.operand.ToTypedOperandMapperFactory;
-import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
+import io.github.whilein.jexpr.compiler.local.SimpleLocalMap;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,12 +44,12 @@ final class OperandCompilerTests {
     String testType;
 
     static Jexpr jexpr;
-    static ToTypedOperandMapperFactory toTypedOperandMapperFactory;
+    static JexprCompiler jexprCompiler;
 
     @BeforeAll
     static void setup() {
         jexpr = DefaultJexpr.create();
-        toTypedOperandMapperFactory = SimpleToTypedOperandMapperFactory.create(AsmOperatorRegistry.getDefault());
+        jexprCompiler = DefaultJexprCompiler.create();
     }
 
     @BeforeEach
@@ -370,8 +368,7 @@ final class OperandCompilerTests {
             local += paramType.getSize();
         }
 
-        val compiler = new SimpleOperandCompiler(mv);
-        compiler.compile(result.apply(toTypedOperandMapperFactory.create(localMap)));
+        jexprCompiler.compile(mv, localMap, result);
 
         mv.visitInsn(Type.getType(returnType).getOpcode(Opcodes.IRETURN));
         mv.visitMaxs(0, 0);

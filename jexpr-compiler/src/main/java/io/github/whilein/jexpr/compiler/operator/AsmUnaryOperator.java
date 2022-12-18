@@ -16,6 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
+import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
@@ -26,7 +27,7 @@ import org.objectweb.asm.Type;
 /**
  * @author whilein
  */
-public interface AsmUnaryOperator extends AsmOperator {
+public interface AsmUnaryOperator extends AsmOperator<UnaryOperator> {
     @Nullable Type getOutputType(@Nullable Type value);
 
     void compile(

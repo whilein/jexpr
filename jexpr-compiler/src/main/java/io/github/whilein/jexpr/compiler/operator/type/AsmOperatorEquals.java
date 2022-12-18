@@ -16,13 +16,13 @@
 
 package io.github.whilein.jexpr.compiler.operator.type;
 
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.operator.AbstractAsmBinaryOperator;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +35,15 @@ import org.objectweb.asm.Type;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
 public final class AsmOperatorEquals extends AbstractAsmBinaryOperator {
 
     boolean negate;
+
+    public AsmOperatorEquals(Class<? extends BinaryOperator> operatorType, boolean negate) {
+        super(operatorType);
+
+        this.negate = negate;
+    }
 
     @Override
     public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {

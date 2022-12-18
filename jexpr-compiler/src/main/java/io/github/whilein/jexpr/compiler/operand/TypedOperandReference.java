@@ -16,7 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.compiler.Local;
+import io.github.whilein.jexpr.compiler.local.Local;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;

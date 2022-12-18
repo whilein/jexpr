@@ -16,17 +16,8 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
-import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 
-/**
- * @author whilein
- */
-public abstract class AbstractAsmUnaryOperator
-        extends AbstractAsmOperator<UnaryOperator>
-        implements AsmUnaryOperator {
-
-    protected AbstractAsmUnaryOperator(Class<? extends UnaryOperator> operatorType) {
-        super(operatorType);
-    }
+public class SimpleAsmBinaryOperatorRegistry extends SimpleAsmOperatorRegistry<AsmBinaryOperator, BinaryOperator> {
 
 }

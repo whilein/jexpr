@@ -16,13 +16,10 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.compiler.LocalMap;
-import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
+import io.github.whilein.jexpr.compiler.local.LocalMap;
 import org.jetbrains.annotations.NotNull;
 
 public interface ToTypedOperandMapperFactory {
-
-    @NotNull AsmOperatorRegistry getOperatorRegistry();
 
     @NotNull ToTypedOperandMapper create(@NotNull LocalMap localMap);
 

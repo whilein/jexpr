@@ -17,6 +17,7 @@
 package io.github.whilein.jexpr.compiler;
 
 import io.github.whilein.jexpr.api.token.operand.Operand;
+import io.github.whilein.jexpr.compiler.local.SimpleLocalMap;
 import io.github.whilein.jexpr.compiler.operand.ToTypedOperandMapperFactory;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,6 +45,8 @@ public final class SimpleOperandInterfaceImplementor<T> implements OperandInterf
 
     ToTypedOperandMapperFactory toTypedOperandMapperFactory;
 
+    OperandCompilerFactory operandCompilerFactory;
+
     Method abstractMethod;
 
     Parameter[] parameters;
@@ -56,11 +59,13 @@ public final class SimpleOperandInterfaceImplementor<T> implements OperandInterf
 
     public SimpleOperandInterfaceImplementor(
             final Class<T> interfaceType,
-            final ToTypedOperandMapperFactory toTypedOperandMapperFactory
+            final ToTypedOperandMapperFactory toTypedOperandMapperFactory,
+            final OperandCompilerFactory operandCompilerFactory
     ) {
         val abstractMethod = getAbstractMethod(interfaceType);
 
         this.toTypedOperandMapperFactory = toTypedOperandMapperFactory;
+        this.operandCompilerFactory = operandCompilerFactory;
 
         this.interfaceType = interfaceType;
         this.abstractMethod = abstractMethod;
@@ -145,7 +150,7 @@ public final class SimpleOperandInterfaceImplementor<T> implements OperandInterf
     }
 
     @Override
-    public <U extends T> @NotNull U implement(final @NotNull Operand operand) {
+    public <U extends T> @NotNull U compile(final @NotNull Operand operand) {
         val interfaceType = Type.getType(this.interfaceType);
         val interfaceTypeName = interfaceType.getInternalName();
         val typeName = "io/github/whilein/jexpr/compiler/generated/ExpressionImplementation_" + this.interfaceType.getSimpleName();
@@ -224,7 +229,7 @@ public final class SimpleOperandInterfaceImplementor<T> implements OperandInterf
 
             val typedOperand = operand.apply(toTypedOperandMapperFactory.create(localMap));
 
-            val expressionCompiler = new SimpleOperandCompiler(mv);
+            val expressionCompiler = operandCompilerFactory.create(mv);
             expressionCompiler.compile(typedOperand);
 
             val returnType = Type.getType(this.returnType);

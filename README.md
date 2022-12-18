@@ -13,7 +13,7 @@
 class Example {
     @Test
     public void testArithmeticEvaluation() {
-        Jexpr jexpr = new SimpleJexpr();
+        Jexpr jexpr = DefaultJexpr.create();
 
         assertEquals(30, jexpr.parse("5 + 5 * 5").getValue());
     }
@@ -26,7 +26,7 @@ class Example {
 class Example {
     @Test
     public void testArithmeticEvaluation() {
-        Jexpr jexpr = new SimpleJexpr();
+        Jexpr jexpr = DefaultJexpr.create();
 
         // Переменные запрашиваются через UndefinedResolver,
         // реализацией которого может быть всё что угодно.
@@ -40,8 +40,8 @@ class Example {
                 "z", Operands.constantInt(3)
         );
 
-        Operand undefinedOperand = jexpr.parse("x + y * z");
-        Operand solvedOperand = undefinedOperand.solve(variables::get);
+        Operand operand = jexpr.parse("x + y * z");
+        Operand solvedOperand = operand.solve(variables::get);
 
         assertEquals(7, solvedOperand.getValue());
     }
@@ -56,11 +56,11 @@ class Example {
 ```java
 class Example {
     public void compile(MethodVisitor mv) {
-        Jexpr jexpr = new SimpleJexpr();
-        TypedOperandResolver typedOperandResolver = SimpleTypedOperandResolver.getDefault();
-
+        Jexpr jexpr = DefaultJexpr.create();
+        JexprCompiler jexprCompiler = DefaultJexprCompiler.create();
+        
         // парсим выражение
-        Operand expression = jexpr.parse("variable + 1");
+        Operand operand = jexpr.parse("variable + 1");
 
         // Указываем, что у нас находится в локальных переменных
         // они будут использованы компилятором
@@ -70,10 +70,7 @@ class Example {
                 // запросит его на стек из локальных параметров
                 .add("variable", 1, Type.INT_TYPE);
 
-        TypedOperand typedExpression = typedOperandResolver.resolve(expression, localMap);
-
-        ExpressionCompiler compiler = new DefaultExpressionCompiler(mv);
-        compiler.compile(typedExpression);
+        jexprCompiler.compile(mv, localMap, operand);
 
         // Результат:
         //
@@ -91,13 +88,15 @@ import java.util.function.IntBinaryOperator;
 
 class Example {
     public IntBinaryOperator sum() {
-        Jexpr jexpr = new SimpleJexpr();
-        Operand expression = jexpr.parse("a + b");
+        Jexpr jexpr = DefaultJexpr.create();
+        JexprCompiler jexprCompiler = DefaultJexprCompiler.create();
 
-        return ExpressionImplementationCompiler.create(expression, IntBinaryOperator.class)
+        Operand operand = jexpr.parse("a + b");
+
+        return jexprCompiler.implementInterface(IntBinaryOperator.class)
                 .name(0, "a")
                 .name(1, "b")
-                .compile();
+                .compile(operand);
     }
 }
 ```

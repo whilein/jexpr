@@ -18,7 +18,7 @@ package io.github.whilein.jexpr.keyword;
 
 import io.github.whilein.jexpr.api.keyword.Keyword;
 import io.github.whilein.jexpr.api.keyword.KeywordRegistry;
-import io.github.whilein.jexpr.registry.AbstractRegistry;
+import io.github.whilein.jexpr.api.registry.AbstractRegistry;
 
 /**
  * @author whilein

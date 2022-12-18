@@ -16,8 +16,20 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
+import io.github.whilein.jexpr.api.registry.RegistryItem;
+import io.github.whilein.jexpr.api.token.operator.Operator;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author whilein
  */
-public interface AsmOperator {
+public interface AsmOperator<T extends Operator> extends RegistryItem<Class<? extends T>> {
+
+    @Override
+    default @NotNull Class<? extends T> getValue() {
+        return getOperatorType();
+    }
+
+    @NotNull Class<? extends T> getOperatorType();
+
 }

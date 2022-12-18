@@ -16,6 +16,7 @@
 
 package io.github.whilein.jexpr.compiler.operator.type;
 
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
@@ -31,6 +32,10 @@ import org.objectweb.asm.Type;
  * @author whilein
  */
 public final class AsmOperatorPlus extends AbstractAsmBinaryOperator {
+
+    public AsmOperatorPlus(Class<? extends BinaryOperator> operatorType) {
+        super(operatorType);
+    }
 
     private static boolean isAnyString(final Type left, final Type right) {
         return (left != null && left.equals(TypeUtils.STRING_TYPE))

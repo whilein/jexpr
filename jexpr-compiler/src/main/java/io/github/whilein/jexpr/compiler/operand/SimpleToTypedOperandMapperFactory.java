@@ -16,27 +16,30 @@
 
 package io.github.whilein.jexpr.compiler.operand;
 
-import io.github.whilein.jexpr.compiler.LocalMap;
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
+import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
+import io.github.whilein.jexpr.compiler.local.LocalMap;
+import io.github.whilein.jexpr.compiler.operator.AsmBinaryOperator;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
-import lombok.AllArgsConstructor;
+import io.github.whilein.jexpr.compiler.operator.AsmUnaryOperator;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 
-@AllArgsConstructor
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public final class SimpleToTypedOperandMapperFactory implements ToTypedOperandMapperFactory {
 
-    @Setter
-    @Getter
-    private AsmOperatorRegistry operatorRegistry;
+    AsmOperatorRegistry<AsmBinaryOperator, BinaryOperator> binaryOperatorRegistry;
+    AsmOperatorRegistry<AsmUnaryOperator, UnaryOperator> unaryOperatorRegistry;
 
-    public static @NotNull ToTypedOperandMapperFactory create(final @NotNull AsmOperatorRegistry operatorRegistry) {
-        return new SimpleToTypedOperandMapperFactory(operatorRegistry);
-    }
 
     @NotNull
     @Override
     public ToTypedOperandMapper create(@NotNull LocalMap localMap) {
-        return new SimpleToTypedOperandMapper(operatorRegistry, localMap);
+        return new SimpleToTypedOperandMapper(binaryOperatorRegistry, unaryOperatorRegistry, localMap);
     }
 }

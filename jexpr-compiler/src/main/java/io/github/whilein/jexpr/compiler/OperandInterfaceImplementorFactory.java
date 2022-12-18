@@ -25,6 +25,10 @@ public interface OperandInterfaceImplementorFactory {
 
     void setToTypedOperandMapperFactory(@NotNull ToTypedOperandMapperFactory toTypedOperandMapperFactory);
 
+    @NotNull OperandCompilerFactory getOperandCompilerFactory();
+
+    void setOperandCompilerFactory(@NotNull OperandCompilerFactory operandCompilerFactory);
+
     <T> @NotNull OperandInterfaceImplementor<T> create(@NotNull Class<T> interfaceType);
 
 }

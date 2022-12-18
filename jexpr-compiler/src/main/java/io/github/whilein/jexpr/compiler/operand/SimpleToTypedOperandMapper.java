@@ -20,9 +20,11 @@ import io.github.whilein.jexpr.api.token.operand.Operand;
 import io.github.whilein.jexpr.api.token.operand.OperandVariable;
 import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
-import io.github.whilein.jexpr.compiler.LocalMap;
+import io.github.whilein.jexpr.compiler.local.LocalMap;
 import io.github.whilein.jexpr.compiler.operand.type.TypedOperands;
+import io.github.whilein.jexpr.compiler.operator.AsmBinaryOperator;
 import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
+import io.github.whilein.jexpr.compiler.operator.AsmUnaryOperator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -35,14 +37,20 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor
 public class SimpleToTypedOperandMapper implements ToTypedOperandMapper {
 
-    AsmOperatorRegistry asmOperatorRegistry;
+    AsmOperatorRegistry<AsmBinaryOperator, BinaryOperator> binaryOperatorRegistry;
+
+    AsmOperatorRegistry<AsmUnaryOperator, UnaryOperator> unaryOperatorRegistry;
 
     @Getter
     LocalMap localMap;
 
     @Override
     public TypedOperand mapUnary(@NotNull OperandVariable left, @NotNull UnaryOperator op) {
-        val asmOperator = asmOperatorRegistry.getUnaryOperator(op.getClass());
+        val asmOperator = unaryOperatorRegistry.get(op.getClass());
+
+        if (asmOperator == null) {
+            throw new IllegalArgumentException("Got unknown unary operator: " + op);
+        }
 
         val typedMember = left.apply(this);
 
@@ -55,10 +63,14 @@ public class SimpleToTypedOperandMapper implements ToTypedOperandMapper {
 
     @Override
     public TypedOperand mapBinary(@NotNull Operand left, @NotNull Operand right, @NotNull BinaryOperator op) {
+        val asmOperator = binaryOperatorRegistry.get(op.getClass());
+
+        if (asmOperator == null) {
+            throw new IllegalArgumentException("Got unknown binary operator: " + op);
+        }
+
         val typedLeft = left.apply(this);
         val typedRight = right.apply(this);
-
-        val asmOperator = asmOperatorRegistry.getBinaryOperator(op.getClass());
 
         return TypedOperands.binary(
                 typedLeft,

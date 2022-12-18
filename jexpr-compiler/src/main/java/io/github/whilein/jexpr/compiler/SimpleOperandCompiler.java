@@ -16,6 +16,7 @@
 
 package io.github.whilein.jexpr.compiler;
 
+import io.github.whilein.jexpr.compiler.local.Local;
 import io.github.whilein.jexpr.compiler.operand.TypedOperand;
 import io.github.whilein.jexpr.compiler.operand.TypedOperandVariable;
 import io.github.whilein.jexpr.compiler.operand.TypedOperandVisitor;
@@ -42,14 +43,9 @@ public final class SimpleOperandCompiler implements OperandCompiler, TypedOperan
     @NonFinal
     OperandOrigin actualOrigin;
 
-    public SimpleOperandCompiler(final AsmMethodCompiler asmMethodCompiler) {
-        this.asmMethodCompiler = asmMethodCompiler;
-    }
-
     public SimpleOperandCompiler(final MethodVisitor mv) {
-        this(new AsmMethodCompiler(mv));
+        this.asmMethodCompiler = new AsmMethodCompiler(mv);
     }
-
 
     @Override
     public void compile(final @NotNull TypedOperand operand) {

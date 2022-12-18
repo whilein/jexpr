@@ -16,23 +16,34 @@
 
 package io.github.whilein.jexpr.compiler.operator.type;
 
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
 import io.github.whilein.jexpr.compiler.operator.AbstractAsmBinaryOperator;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public final class AsmOperatorBitwiseOr extends AbstractAsmBinaryOperator {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public final class AsmOperatorArithmetic extends AbstractAsmBinaryOperator {
+
+    int opcode;
+
+    public AsmOperatorArithmetic(Class<? extends BinaryOperator> operatorType, int opcode) {
+        super(operatorType);
+
+        this.opcode = opcode;
+    }
 
     @Override
     public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
-        return getIntegralType(left, right);
+        return getNumberType(left, right);
     }
 
     @Override
@@ -42,7 +53,7 @@ public final class AsmOperatorBitwiseOr extends AbstractAsmBinaryOperator {
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
-        compiler.visitInsn(compileNumber(compiler, left, right).getOpcode(Opcodes.IOR));
+        compiler.visitInsn(compileNumber(compiler, left, right).getOpcode(opcode));
     }
 
 }

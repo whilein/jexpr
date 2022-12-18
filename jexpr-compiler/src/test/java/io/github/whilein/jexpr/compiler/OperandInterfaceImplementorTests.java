@@ -34,12 +34,12 @@ final class OperandInterfaceImplementorTests {
 
     static Jexpr jexpr;
 
-    static OperandInterfaceImplementorFactory operandInterfaceImplementorFactory;
+    static JexprCompiler jexprCompiler;
 
     @BeforeAll
     static void setup() {
         jexpr = DefaultJexpr.create();
-        operandInterfaceImplementorFactory = SimpleOperandInterfaceImplementorFactory.create();
+        jexprCompiler = DefaultJexprCompiler.create();
     }
 
     @Test
@@ -47,11 +47,11 @@ final class OperandInterfaceImplementorTests {
         val operand = jexpr.parse("a + b");
 
         @SuppressWarnings("unchecked")
-        val operator = (BinaryOperator<Integer>) operandInterfaceImplementorFactory.create(BinaryOperator.class)
+        val operator = (BinaryOperator<Integer>) jexprCompiler.implementInterface(BinaryOperator.class)
                 .parameter(0, "a", Integer.class)
                 .parameter(1, "b", Integer.class)
                 .returnType(Integer.class)
-                .implement(operand);
+                .compile(operand);
 
         assertEquals(30, operator.apply(10, 20));
         assertEquals(-30, operator.apply(10, -40));
@@ -61,10 +61,10 @@ final class OperandInterfaceImplementorTests {
     void testPrimitives() {
         val operand = jexpr.parse("a + b");
 
-        val operator = operandInterfaceImplementorFactory.create(IntBinaryOperator.class)
+        val operator = jexprCompiler.implementInterface(IntBinaryOperator.class)
                 .name(0, "a")
                 .name(1, "b")
-                .implement(operand);
+                .compile(operand);
 
         assertEquals(30, operator.applyAsInt(10, 20));
         assertEquals(-30, operator.applyAsInt(10, -40));

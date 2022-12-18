@@ -16,8 +16,10 @@
 
 package io.github.whilein.jexpr.compiler.operator;
 
+import io.github.whilein.jexpr.api.token.operator.Operator;
 import io.github.whilein.jexpr.compiler.util.TypeUtils;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -29,7 +31,10 @@ import org.objectweb.asm.Type;
  */
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class AbstractAsmOperator implements AsmOperator {
+public abstract class AbstractAsmOperator<T extends Operator> implements AsmOperator<T> {
+
+    @Getter
+    Class<? extends T> operatorType;
 
     protected static Type getNumberType(final Type left, final Type right) {
         try {

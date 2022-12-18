@@ -16,30 +16,25 @@
 
 package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.compiler.operand.SimpleToTypedOperandMapperFactory;
 import io.github.whilein.jexpr.compiler.operand.ToTypedOperandMapperFactory;
-import io.github.whilein.jexpr.compiler.operator.AsmOperatorRegistry;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public final class SimpleOperandInterfaceImplementorFactory implements OperandInterfaceImplementorFactory {
 
     @Getter
     @Setter
     private ToTypedOperandMapperFactory toTypedOperandMapperFactory;
 
-    public static @NotNull OperandInterfaceImplementorFactory create() {
-        return new SimpleOperandInterfaceImplementorFactory(
-                SimpleToTypedOperandMapperFactory.create(AsmOperatorRegistry.getDefault())
-        );
-    }
+    @Getter
+    @Setter
+    private OperandCompilerFactory operandCompilerFactory;
 
     @Override
     public @NotNull <T> OperandInterfaceImplementor<T> create(@NotNull Class<T> interfaceType) {
-        return new SimpleOperandInterfaceImplementor<>(interfaceType, toTypedOperandMapperFactory);
+        return new SimpleOperandInterfaceImplementor<>(interfaceType, toTypedOperandMapperFactory, operandCompilerFactory);
     }
 }

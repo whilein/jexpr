@@ -14,19 +14,15 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operator;
+package io.github.whilein.jexpr.compiler;
 
-import io.github.whilein.jexpr.api.token.operator.UnaryOperator;
+import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.MethodVisitor;
 
-/**
- * @author whilein
- */
-public abstract class AbstractAsmUnaryOperator
-        extends AbstractAsmOperator<UnaryOperator>
-        implements AsmUnaryOperator {
+public class SimpleOperandCompilerFactory implements OperandCompilerFactory {
 
-    protected AbstractAsmUnaryOperator(Class<? extends UnaryOperator> operatorType) {
-        super(operatorType);
+    @Override
+    public @NotNull OperandCompiler create(@NotNull MethodVisitor mv) {
+        return new SimpleOperandCompiler(mv);
     }
-
 }

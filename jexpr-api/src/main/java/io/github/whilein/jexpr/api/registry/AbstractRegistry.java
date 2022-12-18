@@ -14,10 +14,8 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.registry;
+package io.github.whilein.jexpr.api.registry;
 
-import io.github.whilein.jexpr.api.registry.Registry;
-import io.github.whilein.jexpr.api.registry.RegistryItem;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

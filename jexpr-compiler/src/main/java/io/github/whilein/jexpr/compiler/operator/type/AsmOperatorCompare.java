@@ -14,13 +14,14 @@
  *    limitations under the License.
  */
 
-package io.github.whilein.jexpr.compiler.operator;
+package io.github.whilein.jexpr.compiler.operator.type;
 
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
+import io.github.whilein.jexpr.compiler.operator.AbstractAsmBinaryOperator;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -33,13 +34,26 @@ import org.objectweb.asm.Type;
  * @author whilein
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
 public final class AsmOperatorCompare extends AbstractAsmBinaryOperator {
 
     int opcode;
     int compareOpcode;
     int doubleOpcode;
     int floatOpcode;
+
+    public AsmOperatorCompare(
+            Class<? extends BinaryOperator> operatorType,
+            int opcode,
+            int compareOpcode,
+            int doubleOpcode,
+            int floatOpcode
+    ) {
+        super(operatorType);
+        this.opcode = opcode;
+        this.compareOpcode = compareOpcode;
+        this.doubleOpcode = doubleOpcode;
+        this.floatOpcode = floatOpcode;
+    }
 
     @Override
     public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {

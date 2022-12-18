@@ -16,17 +16,35 @@
 
 package io.github.whilein.jexpr.compiler.operator.type;
 
+import io.github.whilein.jexpr.api.token.operator.BinaryOperator;
 import io.github.whilein.jexpr.compiler.AsmMethodCompiler;
 import io.github.whilein.jexpr.compiler.OperandOrigin;
 import io.github.whilein.jexpr.compiler.StackLazyOperand;
-import io.github.whilein.jexpr.compiler.operator.AbstractAsmOperatorBitwiseShift;
+import io.github.whilein.jexpr.compiler.operator.AbstractAsmBinaryOperator;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.Opcodes;
+import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Type;
 
 /**
  * @author whilein
  */
-public final class AsmOperatorBitwiseLeftShift extends AbstractAsmOperatorBitwiseShift {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public final class AsmOperatorBitwise extends AbstractAsmBinaryOperator {
+
+    int opcode;
+
+    public AsmOperatorBitwise(Class<? extends BinaryOperator> operatorType, int opcode) {
+        super(operatorType);
+
+        this.opcode = opcode;
+    }
+
+    @Override
+    public @NotNull Type getOutputType(final @Nullable Type left, final @Nullable Type right) {
+        return getIntegralType(left, right);
+    }
 
     @Override
     public void compile(
@@ -35,7 +53,7 @@ public final class AsmOperatorBitwiseLeftShift extends AbstractAsmOperatorBitwis
             final @NotNull StackLazyOperand left,
             final @NotNull StackLazyOperand right
     ) {
-        compiler.visitInsn(compileShift(compiler, left, right).getOpcode(Opcodes.ISHL));
+        compiler.visitInsn(compileNumber(compiler, left, right).getOpcode(opcode));
     }
 
 }

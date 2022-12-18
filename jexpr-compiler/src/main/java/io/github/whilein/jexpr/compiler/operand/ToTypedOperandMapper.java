@@ -17,7 +17,7 @@
 package io.github.whilein.jexpr.compiler.operand;
 
 import io.github.whilein.jexpr.api.token.operand.OperandMapper;
-import io.github.whilein.jexpr.compiler.LocalMap;
+import io.github.whilein.jexpr.compiler.local.LocalMap;
 import org.jetbrains.annotations.NotNull;
 
 public interface ToTypedOperandMapper extends OperandMapper<TypedOperand> {
